@@ -1,0 +1,3 @@
+[console_scripts]
+gorilla = go_cli:main
+
