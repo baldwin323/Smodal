@@ -1,0 +1,9 @@
+flask==1.1.2
+pymongo==3.11.0
+requests==2.24.0
+pytest==6.1.1
+selenium==3.141.0
+axios==0.21.1
+react==17.0.1
+redux==4.0.5
+jest==26.6.3
