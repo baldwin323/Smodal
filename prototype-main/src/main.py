@@ -1,6 +1,7 @@
 ```python
 from flask import Flask, request
 from src.user_interface import UserInterface
+from src.conversations import startConversation, generateResponse, saveConversation, saveResponse, improveModel
 from src.clone_training import startCloneTraining
 from src.social_media_integration import connectToSocialMedia
 from src.payment_processing import processPayment
@@ -44,6 +45,35 @@ def network_cloned_user():
     user_data = request.get_json()
     networkClonedUser(user_data)
     return {'message': 'ClonedUserNetworked'}
+
+@app.route('/start-conversation', methods=['POST'])
+def start_conversation():
+    user_data = request.get_json()
+    startConversation(user_data)
+    return {'message': 'ConversationStarted'}
+
+@app.route('/generate-response', methods=['POST'])
+def generate_response():
+    conversation_data = request.get_json()
+    return generateResponse(conversation_data)
+
+@app.route('/save-conversation', methods=['POST'])
+def save_conversation():
+    conversation_data = request.get_json()
+    saveConversation(conversation_data)
+    return {'message': 'ConversationSaved'}
+
+@app.route('/save-response', methods=['POST'])
+def save_response():
+    response_data = request.get_json()
+    saveResponse(response_data)
+    return {'message': 'ResponseSaved'}
+
+@app.route('/improve-model', methods=['POST'])
+def improve_model():
+    feedback_data = request.get_json()
+    improveModel(feedback_data)
+    return {'message': 'ModelImproved'}
 
 if __name__ == '__main__':
     app.run(host=APP_CONFIG['HOST'], port=APP_CONFIG['PORT'])

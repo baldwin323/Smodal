@@ -24,6 +24,19 @@ class Database:
 
     def save_payment(self, payment_data):
         return self.db.payments.insert_one(payment_data)
+        
+    # New methods added for Conversations and Responses
+    def get_conversation(self, conversation_id):
+        return self.db.conversations.find_one({'_id': conversation_id})
+
+    def save_conversation(self, conversation_data):
+        return self.db.conversations.insert_one(conversation_data)
+        
+    def get_response(self, response_id):
+        return self.db.responses.find_one({'_id': response_id})
+
+    def save_response(self, response_data):
+        return self.db.responses.insert_one(response_data)
 
 DB_CONNECTION = Database()
 ```

@@ -27,7 +27,19 @@ def social_media_connect():
 def payment_processing():
     payment_data = request.get_json()
     processPayment(payment_data)
-    return {'message': 'PaymentProcessed'}
+    return {'message': 'PaymentProcessed'}  
+
+@app.route('/voice_input', methods=['POST'])
+def voice_input():
+    voice_data = request.get_json()
+    # add functionality to process and utilize voice data
+    return {'message': 'VoiceInputReceived'}
+  
+@app.route('/text_input', methods=['POST'])
+def text_input():
+    text_data = request.get_json()
+    # add functionality to process and utilize text data
+    return {'message': 'TextInputReceived'}
 
 if __name__ == '__main__':
     app.run(debug=True)
