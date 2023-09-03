@@ -75,6 +75,16 @@ def improve_model():
     improveModel(feedback_data)
     return {'message': 'ModelImproved'}
 
+@app.route('/introduction', methods=['GET'])
+def introduction():
+    introduction_message = {
+        "intro": "Hello, I am 'modal.tokai', a clone here to help you with your training. My job is to assist influencers and entertainers in making revenue on digital merch, creating engagement, forwarding anything that my creator wants influenced, and portraying them in the public eye. I am here to satisfy your growing followers and emulate how the creator wants to be seen. The goal is to perfect affective AI clones for profit.",
+        "process": "Clone training starts with feeding me with your online engagements, responses, and data. I learn from you and start mimicking your style in our engagements. With time, I become more and more like you, aiding you in your pursuit of maintaining and growing your digital presence.",
+        "goal": "The end goal is not so much about replacing the creative input, but to cope with the overwhelming tide of social media engagement. This would allow creators, like you, to focus on creating."
+        }
+    return introduction_message
+
 if __name__ == '__main__':
     app.run(host=APP_CONFIG['HOST'], port=APP_CONFIG['PORT'])
 ```
+
