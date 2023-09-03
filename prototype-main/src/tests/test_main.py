@@ -43,6 +43,37 @@ class TestMain(unittest.TestCase):
         response = self.app.post('/network-cloned-user', data=json.dumps({'user_data': 'test'}), content_type='application/json')
         assert response.status_code == 200
 
+    # New tests
+    @patch('src.main.startConversation')
+    def test_start_conversation(self, mock_startConversation):
+        mock_startConversation.return_value = None
+        response = self.app.post('/start-conversation', data=json.dumps({'user_data': 'test'}), content_type='application/json')
+        assert response.status_code == 200
+
+    @patch('src.main.generateResponse')
+    def test_generate_response(self, mock_generateResponse):
+        mock_generateResponse.return_value = None
+        response = self.app.post('/generate-response', data=json.dumps({'conversation_data': 'test'}), content_type='application/json')
+        assert response.status_code == 200
+
+    @patch('src.main.saveConversation')
+    def test_save_conversation(self, mock_saveConversation):
+        mock_saveConversation.return_value = None
+        response = self.app.post('/save-conversation', data=json.dumps({'conversation_data': 'test'}), content_type='application/json')
+        assert response.status_code == 200
+
+    @patch('src.main.saveResponse')
+    def test_save_response(self, mock_saveResponse):
+        mock_saveResponse.return_value = None
+        response = self.app.post('/save-response', data=json.dumps({'response_data': 'test'}), content_type='application/json')
+        assert response.status_code == 200
+
+    @patch('src.main.improveModel')
+    def test_improve_model(self, mock_improveModel):
+        mock_improveModel.return_value = None
+        response = self.app.post('/improve-model', data=json.dumps({'feedback_data': 'test'}), content_type='application/json')
+        assert response.status_code == 200
+
 if __name__ == '__main__':
     unittest.main()
 ```
