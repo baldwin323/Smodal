@@ -2,6 +2,36 @@
 <html>
 <head>
     <title>Python Flask ReplAuth</title>
+    <style>
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black; 
+        opacity: 0.5;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 150px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 100%; 
+        left: 50%; 
+        margin-left: -75px;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+    </style>
 </head>
 <body>
     {% if user_id %}
@@ -25,21 +55,21 @@
 
             <h2>Upload Document for Cloning</h2>
             <form action ="/upload" method="POST" enctype="multipart/form-data">
-                <input type="file" name="doc">
-                <input type="submit" value="Upload">
+                <div class="tooltip"><input type="file" name="doc" title="Choose a document to clone."><span class="tooltiptext">Choose a document to clone.</span></div>
+                <div class="tooltip"><input type="submit" value="Upload" title="Submit the chosen document for cloning."><span class="tooltiptext">Submit the chosen document for cloning.</span></div>
             </form>
 
-            <button onclick="bankAPIIntegration()">Connect to Bank</button>
+            <div class="tooltip"><button title="Connect to Bank API for transactions." onclick="bankAPIIntegration()">Connect to Bank</button><span class="tooltiptext">Connect to Bank API for transactions.</span></div>
 
             <h2>Fine Tune Clone</h2>
             <form action="/fine-tune" method="POST">
                 <label>Engagement Level</label>
-                <select name="engagement-level">
+                <select name="engagement-level" title="Choose the level of engagement for the generated content.">
                     <option value="normal">Normal</option>
                     <option value="flirty">Flirty</option>
                     <option value="adult">Adult</option>
                 </select>
-                <input type="submit" value="Update">
+                <div class="tooltip"><input type="submit" value="Update" title="Update the level of engagement."><span class="tooltiptext">Update the level of engagement.</span></div>
             </form>
         </div>
         <img src="{{ user_profile_image }}" width="200">
@@ -53,9 +83,9 @@
             </div>
             <div class="box-button">
                 <form action="/login" method="POST">
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <input type="submit" value="Login">
+                    <div class="tooltip"><input type="email" name="email" placeholder="Email" required title="Enter your email address here."><span class="tooltiptext">Enter your email address here.</span></div>
+                    <div class="tooltip"><input type="password" name="password" placeholder="Password" required title="Enter your password here."><span class="tooltiptext">Enter your password here.</span></div>
+                    <div class="tooltip"><input type="submit" value="Login" title="Submit your credentials to login."><span class="tooltiptext">Submit your credentials to login.</span></div>
                 </form>
             </div>
         </div>
