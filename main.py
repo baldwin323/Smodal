@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-app = Flask('app')
+app = Flask('modal.tokai')
 
 
 @app.route('/')

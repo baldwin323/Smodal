@@ -49,7 +49,7 @@ X-Replit-User-Url
 ```
 </details>
 
-Once we've requested all these headers, we can show the information we've got after the user has passed through the Auth. This info will be displayed on the console, but can also be displayed in a html file.
+Once we've requested all these headers, we can show the information we've got after the user has passed through the Auth. This info will be displayed on the console, but can also be displayed in a HTML file.
 
 We can show this by displaying the variable assigned to a header in a HTML tag (it can also be shown without a tag). If we wanted to show the username of the user we would put this:
 
@@ -81,9 +81,9 @@ The question is in a quote and in italic and the answer is in a bullet point.
 
 # Template
 
-**Name**: Python Flask ReplAuth
+**Name**: modal.tokai Python Flask ReplAuth
 
-**Description**: Python Flask ReplAuth is easy and useful to use! What are you waiting for? Start using ReplAuth today!
+**Description**: modal.tokai Python Flask ReplAuth is easy and useful to use! What are you waiting for? Start using ReplAuth today!
 
 # Questions?
 

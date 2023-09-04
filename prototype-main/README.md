@@ -17,7 +17,7 @@ The ultimate aim here is not just creating a replica of yourself but to nurture 
 Install and try out the functioning of our application with these simple steps:
 
 1. Download or clone this repository to your local system
-2. Navigate to the directory of the downloaded project in your command prompt or terminal with `cd Smodal/prototype-main`
+2. Navigate to the directory of the downloaded project in your command prompt or terminal with `cd modal.tokai/prototype-main`
 3. Install the required packages by running `npm install` (Make sure you have Node.js installed on your system)
 4. Once the packages are installed, run `npm start` to start the application
 
