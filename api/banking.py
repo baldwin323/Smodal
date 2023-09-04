@@ -1,4 +1,5 @@
 import requests
+from requests.exceptions import RequestException
 from flask import jsonify
 
 class BankingAPI:
@@ -8,11 +9,13 @@ class BankingAPI:
 
     def authenticate(self):
         auth_url = f"{self.base_url}/auth"
-        response = requests.post(auth_url, headers={'Authorization': self.api_key})
-        
-        if response.status_code == 200:
+        try:
+            response = requests.post(auth_url, headers={'Authorization': self.api_key})
+            response.raise_for_status()
             return True
-        return False
+        except RequestException as e:
+            print(f"Error during authentication: {str(e)}")
+            return False
 
     def make_request(self, endpoint, method="GET", data={}):
         url = f"{self.base_url}/{endpoint}"
@@ -21,12 +24,17 @@ class BankingAPI:
             'Authorization': self.api_key,
         }
         
-        if method == "POST":
-            response = requests.post(url, headers=headers, json=data)
-        else:
-            response = requests.get(url, headers=headers)
+        try:
+            if method == "POST":
+                response = requests.post(url, headers=headers, json=data)
+            else:
+                response = requests.get(url, headers=headers)
 
-        return response.json()
+            response.raise_for_status()
+            return response.json()
+        except RequestException as e:
+            print(f"Error with {method} request to {url}: {str(e)}")
+            return None
 
 banking_api = BankingAPI('https://fakeapi.com', 'your_api_key')
 
@@ -36,6 +44,9 @@ def authenticate_and_make_request(endpoint, method="GET", data={}):
 
     response = banking_api.make_request(endpoint, method, data)
 
+    if response is None:
+        return jsonify({'error': 'Unable to complete the request.'}), 500
+        
     if 'error' in response:
         return jsonify({'error': response['error']}), 500
         

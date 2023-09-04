@@ -4,6 +4,7 @@ from Smodal import routes
 from flask import request
 from flask.testing import FlaskClient
 from werkzeug.datastructures import FileStorage
+from io import BytesIO
 
 class TestRoutes(unittest.TestCase):
     def setUp(self):
@@ -19,6 +20,10 @@ class TestRoutes(unittest.TestCase):
             session['apiName'] = routes.API_NAME
         response = self.client.post('/api')
         self.assertEqual(response.status_code, 200)
+
+    def test_invalid_api(self):
+        response = self.client.post('/api', data={'apiName': 'invalidApi'})
+        self.assertEqual(response.status_code, 400)
     
     def test_upload_file(self):
         data = {
@@ -28,6 +33,10 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'File successfully uploaded', response.data)
 
+    def test_upload_without_file(self):
+        response = self.client.post('/upload', data={}, content_type='multipart/form-data')
+        self.assertEqual(response.status_code, 400)
+    
     def test_get_file(self):
         test_id = 'test_id' 
         response = self.client.get('/files/'+test_id)
@@ -47,7 +56,6 @@ class TestRoutes(unittest.TestCase):
 
         response = self.client.get('/files/')
         self.assertEqual(response.status_code, 404)
-
 
 if __name__ == '__main__':
     unittest.main()
