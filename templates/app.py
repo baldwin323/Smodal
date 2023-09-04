@@ -1,27 +1,51 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, abort
+import re
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    try:
+        return render_template('home.html')
+    except Exception as e:
+        abort(500, description="Error occurred in rendering the home page: " + str(e))
 
 @app.route('/page1')
 def page1():
-    return render_template('page1.html')
+    try:
+        return render_template('page1.html')
+    except Exception as e:
+        abort(500, description="Error occurred in rendering page 1: " + str(e))
 
 @app.route('/page2')
 def page2():
-    return render_template('page2.html')
+    try:
+        return render_template('page2.html')
+    except Exception as e:
+        abort(500, description="Error occurred in rendering page 2: " + str(e))
 
 @app.route('/page_count')
 def page_count():
-    # Checks if the pages are completed and returns the count
-    is_page1_complete = render_template('page1.html') is not None
-    is_page2_complete = render_template('page2.html') is not None
-    page_count = sum([is_page1_complete, is_page2_complete])
-    return "The number of completed pages is: "+str(page_count)
+    # Enhanced input validation to check if pages are integers
+    def validate(value):
+        if not re.match(r"^[0-9]*$", value):
+            raise ValueError("Invalid input: " + value)
+    
+    try:
+        validate('page1')
+        validate('page2')
+
+        is_page1_complete = render_template('page1.html') is not None
+        is_page2_complete = render_template('page2.html') is not None
+        page_count = sum([is_page1_complete, is_page2_complete])
+        
+        return "The number of completed pages is: "+str(page_count)
+    
+    except ValueError as v:
+        abort(500, description="Invalid input: " + str(v))
+    
+    except Exception as e:
+        abort(500, description="Error occurred in getting page count: " + str(e))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)  # change to False to prevent debug information disclosure.
