@@ -36,56 +36,56 @@
 <body>
     {% if user_id %}
     <center>
-    <div class="box">
+    <div class="box" id="user_dashboard">
         <center>
-        <div class="box-text-auth">
+        <div class="box-text-auth" id="user_info">
           <p>
             Hello, {{ user_name }}! ({{ user_id }})
           </p>
-            <div class="sales-section">
+            <div class="sales-section" id="sales_items">
                 <h2>Merchant Sales Items</h2>
-                <div class="merchant-sales"></div>
+                <div class="merchant-sales" id="merchant_sales"></div>
 
                 <h2>Digital Content Sales Items</h2>
-                <div class="digital-sales"></div>
+                <div class="digital-sales" id="digital_sales"></div>
 
                 <h2>Subscription Sales Items</h2>
-                <div class="subscription-sales"></div>
+                <div class="subscription-sales" id="subscription_sales"></div>
             </div>
 
             <h2>Upload Document for Cloning</h2>
-            <form action ="/upload" method="POST" enctype="multipart/form-data">
-                <div class="tooltip"><input type="file" name="doc" title="Choose a document to clone."><span class="tooltiptext">Choose a document to clone.</span></div>
-                <div class="tooltip"><input type="submit" value="Upload" title="Submit the chosen document for cloning."><span class="tooltiptext">Submit the chosen document for cloning.</span></div>
+            <form action ="/upload" method="POST" enctype="multipart/form-data" id="document_upload_form">
+                <div class="tooltip"><input type="file" name="doc" id="document_upload_input" title="Choose a document to clone."><span class="tooltiptext">Choose a document to clone.</span></div>
+                <div class="tooltip"><input type="submit" value="Upload" id="document_upload_submit" title="Submit the chosen document for cloning."><span class="tooltiptext">Submit the chosen document for cloning.</span></div>
             </form>
 
-            <div class="tooltip"><button title="Connect to Bank API for transactions." onclick="bankAPIIntegration()">Connect to Bank</button><span class="tooltiptext">Connect to Bank API for transactions.</span></div>
+            <div class="tooltip"><button title="Connect to Bank API for transactions." id="bank_api_button" onclick="bankAPIIntegration()">Connect to Bank</button><span class="tooltiptext">Connect to Bank API for transactions.</span></div>
 
             <h2>Fine Tune Clone</h2>
-            <form action="/fine-tune" method="POST">
+            <form action="/fine-tune" method="POST" id="fine_tune_form">
                 <label>Engagement Level</label>
-                <select name="engagement-level" title="Choose the level of engagement for the generated content.">
+                <select name="engagement-level" id="engagement_level_selector" title="Choose the level of engagement for the generated content.">
                     <option value="normal">Normal</option>
                     <option value="flirty">Flirty</option>
                     <option value="adult">Adult</option>
                 </select>
-                <div class="tooltip"><input type="submit" value="Update" title="Update the level of engagement."><span class="tooltiptext">Update the level of engagement.</span></div>
+                <div class="tooltip"><input type="submit" value="Update" id="enagement_level_submit" title="Update the level of engagement."><span class="tooltiptext">Update the level of engagement.</span></div>
             </form>
         </div>
-        <img src="{{ user_profile_image }}" width="200">
+        <img src="{{ user_profile_image }}" width="200" id="user_profile">
         </center>
     </div>
     {% else %}
     <center>
-        <div class="box">
-            <div class="box-text">
+        <div class="box" id="login_box">
+            <div class="box-text" id="welcome_message">
                 <h1>Hello!</h1>
             </div>
-            <div class="box-button">
-                <form action="/login" method="POST">
-                    <div class="tooltip"><input type="email" name="email" placeholder="Email" required title="Enter your email address here."><span class="tooltiptext">Enter your email address here.</span></div>
-                    <div class="tooltip"><input type="password" name="password" placeholder="Password" required title="Enter your password here."><span class="tooltiptext">Enter your password here.</span></div>
-                    <div class="tooltip"><input type="submit" value="Login" title="Submit your credentials to login."><span class="tooltiptext">Submit your credentials to login.</span></div>
+            <div class="box-button" id="login_form_div">
+                <form action="/login" method="POST" id="login_form">
+                    <div class="tooltip"><input type="email" name="email" id="login_email" placeholder="Email" required title="Enter your email address here."><span class="tooltiptext">Enter your email address here.</span></div>
+                    <div class="tooltip"><input type="password" name="password" id="login_password" placeholder="Password" required title="Enter your password here."><span class="tooltiptext">Enter your password here.</span></div>
+                    <div class="tooltip"><input type="submit" value="Login" id="login_submite" title="Submit your credentials to login."><span class="tooltiptext">Submit your credentials to login.</span></div>
                 </form>
             </div>
         </div>
