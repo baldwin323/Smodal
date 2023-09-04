@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
+from src.database import DB_CONNECTION
 
 app = Flask('modal.tokai')
-
 
 @app.route('/')
 def hello_world():
@@ -16,6 +16,13 @@ def hello_world():
     user_teams=request.headers['X-Replit-User-Teams'],
     user_url=request.headers['X-Replit-User-Url'])
 
+@app.route('/clone', methods=['POST'])
+def get_clone():
+  data = request.get_json()
+  prompt = data.get('prompt')
+  tokens = data.get('tokens')
+  text = DB_CONNECTION.generate_content(prompt, tokens)
+  return {'text': text}
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', port=8080)
