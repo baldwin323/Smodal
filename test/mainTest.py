@@ -1,7 +1,7 @@
 import unittest
 from flask import Flask
 from flask.testing import FlaskClient
-from Smodal.main import app
+from modal.tokai.main import app
 
 class TestMain(unittest.TestCase):
 
