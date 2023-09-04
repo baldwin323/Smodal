@@ -1,89 +1,85 @@
 <!doctype html>
 <html>
 <head>
-	<title>Python Flask ReplAuth</title>
-<script src="https://replit.com/public/js/repl-auth-v2.js"></script>
+    <title>Python Flask ReplAuth</title>
 </head>
 <body>
-	{% if user_id %}
-	<center>
-  <div class="box">
+    {% if user_id %}
     <center>
-    <div class="box-text-auth">
-      <p>
-        Hello, {{ user_name }}! ({{ user_id }})
-      </p>
-	  <!-- New Content Here : Includes Merchant Sales, Digital Sales and Subscriptions -->
-	  	<div class="sales-section">
-			<!-- Merchant Sales -->
-			<h2>Merchant Sales Items</h2>
-			<div class="merchant-sales">
-				<!-- Contents here are dynamically generated -->
-			</div>
+    <div class="box">
+        <center>
+        <div class="box-text-auth">
+          <p>
+            Hello, {{ user_name }}! ({{ user_id }})
+          </p>
+            <div class="sales-section">
+                <h2>Merchant Sales Items</h2>
+                <div class="merchant-sales"></div>
 
-			<!-- Digital Content Sales -->
-			<h2>Digital Content Sales Items</h2>
-			<div class="digital-sales">
-				<!-- Contents here are dynamically generated -->
-			</div>
+                <h2>Digital Content Sales Items</h2>
+                <div class="digital-sales"></div>
 
-			<!-- Subscriptions Sales -->
-			<h2>Subscription Sales Items</h2>
-			<div class="subscription-sales">
-				<!-- Contents here are dynamically generated -->
-			</div>
-		</div>
+                <h2>Subscription Sales Items</h2>
+                <div class="subscription-sales"></div>
+            </div>
 
-		<h2>Upload Document for Cloning</h2>
-		<form action ="/upload" method="POST" enctype="multipart/form-data">
-			<input type="file" name="doc">
-			<input type="submit" value="Upload">
-		</form>
+            <h2>Upload Document for Cloning</h2>
+            <form action ="/upload" method="POST" enctype="multipart/form-data">
+                <input type="file" name="doc">
+                <input type="submit" value="Upload">
+            </form>
 
-		<!-- Integrate Bank API -->
-		<button onclick="bankAPIIntegration()">Connect to Bank</button>
-    </div>
-  <img src="{{ user_profile_image }}" width="200">
-    <center>
-  </center>
-  </div>
-	{% else %}
-  <center>
-    <center>
-      <div class="box">
-        <div class="box-text">
-            <h1>Hello!</h1>
+            <button onclick="bankAPIIntegration()">Connect to Bank</button>
+
+            <h2>Fine Tune Clone</h2>
+            <form action="/fine-tune" method="POST">
+                <label>Engagement Level</label>
+                <select name="engagement-level">
+                    <option value="normal">Normal</option>
+                    <option value="flirty">Flirty</option>
+                    <option value="adult">Adult</option>
+                </select>
+                <input type="submit" value="Update">
+            </form>
         </div>
-        <div class="box-button">
-          <button onclick="LoginWithReplit()"> Login w/ replit</button>
+        <img src="{{ user_profile_image }}" width="200">
+        </center>
+    </div>
+    {% else %}
+    <center>
+        <div class="box">
+            <div class="box-text">
+                <h1>Hello!</h1>
+            </div>
+            <div class="box-button">
+                <form action="/login" method="POST">
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="submit" value="Login">
+                </form>
+            </div>
         </div>
     </center>
-      </div>
-  </center>
-
-	{% endif %}
+    {% endif %}
 </body>
 <style>
-// All the previous css stylings here
-
 .sales-section {
-	width: 90%;
-	margin: auto;
+    width: 90%;
+    margin: auto;
 }
 
 .sales-section h2 {
-	font-family: "Font";
-	font-size: 30px;
-	color: #00bbf9;
+    font-family: "Font";
+    font-size: 30px;
+    color: #00bbf9;
 }
 
 .sales-section div {
-	// Add specific stylings for each of the sales sections here
 }
 
 form {
-	width: 60%;
-	margin: auto;
+    width: 60%;
+    margin: auto;
 }
 
 </style>
