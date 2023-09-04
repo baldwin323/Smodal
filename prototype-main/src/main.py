@@ -16,41 +16,31 @@ app = Flask(__name__)
 def home():
     return UserInterface().render()
 
-@app.route('/start-clone-training', methods=['POST'])
+@app.route('/clone-training', methods=['POST'])
 def clone_training():
     user_data = request.get_json()
     startCloneTraining(user_data)
     return {'message': 'CloneTrainingStarted'}
 
-@app.route('/connect-social-media', methods=['POST'])
-def social_media_connect():
-    user_data = request.get_json()
-    connectToSocialMedia(user_data)
-    return {'message': 'SocialMediaConnected'}
-
-@app.route('/process-payment', methods=['POST'])
-def payment_processing():
-    payment_data = request.get_json()
-    processPayment(payment_data)
-    return {'message': 'PaymentProcessed'}
-
-@app.route('/integrate-api', methods=['POST'])
-def api_integration():
-    api_data = request.get_json()
-    integrateAPI(api_data)
-    return {'message': 'APIIntegrated'}
-
-@app.route('/network-cloned-user', methods=['POST'])
-def network_cloned_user():
-    user_data = request.get_json()
-    networkClonedUser(user_data)
-    return {'message': 'ClonedUserNetworked'}
-
-@app.route('/start-conversation', methods=['POST'])
+@app.route('/conversation', methods=['POST'])
 def start_conversation():
     user_data = request.get_json()
     startConversation(user_data)
     return {'message': 'ConversationStarted'}
+
+@app.route('/settings', methods=['POST'])
+def save_response():
+    settings_data = request.get_json()
+    # function to save settings data
+    saveSettings(settings_data)
+    return {'message': 'SettingsSaved'}
+
+@app.route('/widgets', methods=['POST'])
+def save_response():
+    widgets_data = request.get_json()
+    # function to save widgets data
+    saveWidgets(widgets_data)
+    return {'message': 'WidgetsSaved'}
 
 @app.route('/generate-response', methods=['POST'])
 def generate_response():
@@ -69,13 +59,7 @@ def save_response():
     saveResponse(response_data)
     return {'message': 'ResponseSaved'}
 
-@app.route('/improve-model', methods=['POST'])
-def improve_model():
-    feedback_data = request.get_json()
-    improveModel(feedback_data)
-    return {'message': 'ModelImproved'}
-
-@app.route('/introduction', methods=['GET'])
+@app.route('/introduce-clone', methods=['GET'])
 def introduction():
     introduction_message = {
         "intro": "Hello, I am 'modal.tokai', a clone here to help you with your training. My job is to assist influencers and entertainers in making revenue on digital merch, creating engagement, forwarding anything that my creator wants influenced, and portraying them in the public eye. I am here to satisfy your growing followers and emulate how the creator wants to be seen. The goal is to perfect affective AI clones for profit.",
@@ -87,4 +71,3 @@ def introduction():
 if __name__ == '__main__':
     app.run(host=APP_CONFIG['HOST'], port=APP_CONFIG['PORT'])
 ```
-

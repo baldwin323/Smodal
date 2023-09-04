@@ -1,28 +1,28 @@
 ```python
-import os
-from src.database import DB_CONNECTION
-from src.api_integration import integrateAPI
-from src.networking import networkClonedUser
-from src.utils import CloneTrainingStarted
+import requests
+from config import API_KEYS
 
-def startCloneTraining(user_id):
-    user = DB_CONNECTION.find_one({"_id": user_id})
-    if not user:
-        raise Exception("User not found")
+class CloneTrainer:
+    def __init__(self, model_id):
+        self.model_id = model_id
+        self.api_key = API_KEYS['clone_training']
 
-    clone_data = integrateAPI(user["api_key"])
-    if not clone_data:
-        raise Exception("Failed to fetch clone data")
+    def start_training(self):
+        response = requests.post(
+            f"https://api.endpoint.com/train/{self.model_id}",
+            headers={'Authorization': f"Bearer {self.api_key}"}
+        )
+        if response.status_code == 200:
+            return response.json()
+        raise Exception(f'Error in starting training: {response.text}')
 
-    clone_id = DB_CONNECTION.insert_one(clone_data).inserted_id
-    if not clone_id:
-        raise Exception("Failed to save clone data")
-
-    network_status = networkClonedUser(clone_id)
-    if not network_status:
-        raise Exception("Failed to network clone")
-
-    CloneTrainingStarted.emit(clone_id)
-
-    return clone_id
+    def improve_clone_model(self, training_data):
+        response = requests.post(
+            f"https://api.endpoint.com/improve/{self.model_id}",
+            headers={'Authorization': f"Bearer {self.api_key}"},
+            json={"data": training_data}
+        )
+        if response.status_code == 200:
+            return response.json()
+        raise Exception(f'Error in improving model: {response.text}')
 ```

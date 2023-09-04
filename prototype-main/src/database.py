@@ -1,3 +1,4 @@
+
 ```python
 from pymongo import MongoClient
 from src.config import APP_CONFIG
