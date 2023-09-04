@@ -21,5 +21,15 @@ class TestMain(unittest.TestCase):
         self.assertIn('X-Replit-User-Teams', headers)
         self.assertIn('X-Replit-User-Url', headers)
 
+    # Adding more tests for headers
+    def test_headers(self):
+        response = self.app.get('/')
+        self.assertEqual(response.status_code, 200)
+
+        headers = response.headers
+        self.assertEqual('MODALTOKAISAMPLE', headers['X-Replit-User-Name'])
+        self.assertEqual('MODALTOKAISAMPLE', headers['X-Replit-User-Url'])
+
+
 if __name__ == '__main__':
     unittest.main()
