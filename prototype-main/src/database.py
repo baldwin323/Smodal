@@ -1,12 +1,14 @@
-
 ```python
 from pymongo import MongoClient
+from openai import OpenAI
 from src.config import APP_CONFIG
 
 class Database:
     def __init__(self):
         self.client = MongoClient(APP_CONFIG['DATABASE_URL'])
         self.db = self.client['modal_tok_ai']
+        self.openai = OpenAI(APP_CONFIG['OPENAI_API_KEY'])
+        self.builderio = BuilderIO(APP_CONFIG['BUILDERIO_API_KEY'])
 
     def get_user(self, user_id):
         return self.db.users.find_one({'_id': user_id})
@@ -38,6 +40,19 @@ class Database:
 
     def save_response(self, response_data):
         return self.db.responses.insert_one(response_data)
+
+    # Methods for OpenAI and Builder.io interactions
+    def generate_content(self, prompt, tokens):
+        response = self.openai.Complete.create(
+            engine="davinci-codex",
+            prompt=prompt,
+            max_tokens=tokens,
+        )
+        return response.choices[0].text.strip()
+
+    def get_builderio_template(self, template_id):
+        template = self.builderio.get(template_id)
+        return template
 
 DB_CONNECTION = Database()
 ```

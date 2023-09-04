@@ -9,5 +9,7 @@ class Config:
     TEXT_TO_SPEECH_API_KEY = os.getenv('TEXT_TO_SPEECH_API_KEY')
     NEWS_API_KEY = os.getenv('NEWS_API_KEY')
     WEATHER_API_KEY = os.getenv('WEATHER_API_KEY')
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+    BUILDERIO_API_KEY = os.getenv('BUILDERIO_API_KEY')
 
 APP_CONFIG = Config()
