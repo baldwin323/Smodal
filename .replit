@@ -1,9 +1,9 @@
 # The command that runs the program. If the interpreter field is set, it will have priority and this run command will do nothing
-run = "python3 main.py"
+run = "python3 manage.py runserver"
 
 # The primary language of the repl. There can be others, though!
 language = "python3"
-entrypoint = "main.py"
+entrypoint = "manage.py"
 # A list of globs that specify which files and directories should
 # be hidden in the workspace.
 hidden = ["venv", ".config", "**/__pycache__", "**/.mypy_cache", "**/*.pyc"]
@@ -21,7 +21,7 @@ channel = "stable-21_11"
     "prybar-python3",
     "-q",
     "--ps1",
-    "\u0001\u001b[33m\u0002\u0001\u001b[00m\u0002 ",
+    "\u0001\u001b[33m\u0002îº§\u0001\u001b[00m\u0002 ",
     "-i",
   ]
   env = { LD_LIBRARY_PATH = "$PYTHON_LD_LIBRARY_PATH" }
@@ -45,7 +45,7 @@ support = true
   # How to start the debugger.
   [debugger.interactive]
   transport = "localhost:0"
-  startCommand = ["dap-python", "main.py"]
+  startCommand = ["dap-python", "manage.py"]
 
     # How to communicate with the debugger.
     [debugger.interactive.integratedAdapter]
