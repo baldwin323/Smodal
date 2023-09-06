@@ -1,10 +1,12 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>Watch Page</title>
-    <link href="../static/css/style.css" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -18,12 +20,13 @@
 
     <div class="interact">
         <button id="takeover">Take Over Chat</button>
-        <script src="../static/js/takeover.js"></script>
     </div>
 
     <footer>
         <!-- Footer goes here -->
     </footer>
+
+    <script src="{% static 'js/takeover.js' %}"></script>
 </body>
 
 </html>

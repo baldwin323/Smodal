@@ -1,18 +1,12 @@
 ```python
-from pymongo import MongoClient
-import uuid
+from django.db import models
+from django.views import View
+from django.shortcuts import render, get_object_or_404
 
-# Connect to MongoDB instance
-client = MongoClient('mongodb://localhost:27017/')
 
-# Point to the desired database
-db = client['sale_items_db']
-
-class SaleItems:
-    def __init__(self, client):
-        self.client = client
-        self.db = self.client['sale_items_db']
-        self.items = self.db.items
+class SaleItem(models.Model):
+    item_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # other fields based on the metadata of item_data
 
     def upload_item(self, item_data):
         """
@@ -20,51 +14,33 @@ class SaleItems:
         """
         if not isinstance(item_data, dict):
             raise ValueError("Item data must be a dictionary.")
-        item_data["_id"] = str(uuid.uuid4())
-        try:
-            self.items.insert_one(item_data)
-            print("Item uploaded successfully")
-        except Exception as e:
-            print(f"An error occurred while uploading the item: {e}")
+        
+        self.objects.create(**item_data)
 
     def download_item(self, item_id):
         """
-        function to download a sale item, takes the unique item_id as string as parameter
+        function to download a sale item, takes the unique item_id as UUID as parameter
         """
-        try:
-            item = self.items.find_one({"_id": item_id})
-            if item is not None:
-                return item
-            else:
-                print("Item with given ID not found.")
-        except Exception as e:
-            print(f"An error occurred while downloading the item: {e}")
+        item = get_object_or_404(self, pk=item_id)
+        return item
 
     def delete_item(self, item_id):
         """
-        function to delete a sale item, takes the unique item_id as string as parameter
+        function to delete a sale item, takes the unique item_id as UUID as parameter
         """
-        try:
-            item = self.items.delete_one({"_id": item_id})
-            if item.deleted_count == 1:
-                print("Item was deleted successfully.")
-            else:
-                print("Item with given ID not found.")
-        except Exception as e:
-            print(f"An error occurred while deleting the item: {e}")
+        item = get_object_or_404(self, pk=item_id)
+        item.delete()
 
 
-class ChatBot:
-    def __init__(self, chat):
-        if not isinstance(chat, list):
-            raise ValueError("Chat must be a list of strings.")
-        self.chat = chat
+# Assume Chat has its own Model with a chat field being a TextField
+class ChatBot(models.Model):
+    chat = models.TextField()
 
     def viewing_window(self):
         """
-        function for viewing ongoing chat, prints the content of the chat to the console
+        function for viewing ongoing chat, returns the content of the chat
         """
-        print("\n".join(self.chat))
+        return self.chat
 
     def engage_clients(self, message):
         """
@@ -72,7 +48,7 @@ class ChatBot:
         """
         if not isinstance(message, str):
             raise ValueError("Message must be a string.")
-        self.chat.append(message)
+        self.chat += f'\n{message}'
 
     def take_over(self, new_chat):
         """
