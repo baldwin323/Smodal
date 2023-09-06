@@ -1,8 +1,8 @@
-
 ```python
 import os
 import logging
 from django.shortcuts import get_object_or_404
+from django.views import View
 from .models import User, Platform, AccessToken
 from nlp import NLP
 from machine_learning import MachineLearning
@@ -63,7 +63,6 @@ class SocialMediaBot:
         except Exception as e:
             self.logger.error(f"Failed to perform {func.__name__} for {user_id} on {platform_name}: {e}")
 
-    # Hereon, the functions use the `process_social_function` to simplify their implementations
     def post_message(self, user_id, platform_name, message):
         self.process_social_function(user_id, platform_name, social_media_api.post_message, message)
 
@@ -102,6 +101,7 @@ class SocialMediaBot:
         except Exception as e:
             self.logger.error(f"Failed to revoke access for {user_id} on {platform_name}: {e}")
 
-# create instance of social media bot
-bot = SocialMediaBot()
+# Decoupling bot instantiation from this file
+# Bot should be created during django app startup
+# bot = SocialMediaBot()
 ```
