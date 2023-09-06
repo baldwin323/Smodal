@@ -1,18 +1,20 @@
 ```
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Menu</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}">
 </head>
 <body>
     <nav>
         <ul>
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('clone_training') }}">Clone Training</a></li>
-            <li><a href="{{ url_for('database_storage') }}">Database/Storage</a></li>
-            <li><a href="{{ url_for('watch_page') }}">Watch Page</a></li>
-            <li><a href="{{ url_for('banking_api') }}">Banking API</a></li>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'clone_training' %}">Clone Training</a></li>
+            <li><a href="{% url 'database_storage' %}">Database/Storage</a></li>
+            <li><a href="{% url 'watch_page' %}">Watch Page</a></li>
+            <li><a href="{% url 'banking_api' %}">Banking API</a></li>
         </ul>
     </nav>
     <main>

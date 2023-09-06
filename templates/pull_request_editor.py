@@ -1,8 +1,13 @@
 import os
 import requests
+import logging
 
 ACCESS_TOKEN = os.getenv('GITHUB_ACCESS_TOKEN')
 API_URL = 'https://api.github.com'
+
+# define a logger for error tracking
+logger=logging.getLogger()
+logger.setLevel(logging.WARNING)
 
 def get_open_pull_requests(repo_owner, repo_name):
     url = f'{API_URL}/repos/{repo_owner}/{repo_name}/pulls'
@@ -11,7 +16,7 @@ def get_open_pull_requests(repo_owner, repo_name):
         response = requests.get(url, headers=headers)
         response.raise_for_status()
     except Exception as e:
-        print(f'Error occurred while getting pull requests: {str(e)}')
+        logger.warning(f'Error occurred while getting pull requests: {str(e)}')
         return []
         
     return response.json()
@@ -24,7 +29,7 @@ def edit_pull_request(repo_owner, repo_name, pull_id, title, body):
         response = requests.patch(url, headers=headers, json=payload)
         response.raise_for_status()
     except Exception as e:
-        print(f'Error occurred while editing pull request {pull_id}: {str(e)}')
+        logger.warning(f'Error occurred while editing pull request {pull_id}: {str(e)}')
         return None
     
     return response.json()
@@ -35,7 +40,7 @@ def main():
     try:
         open_pull_requests = get_open_pull_requests(repo_owner, repo_name)
     except Exception as e:
-        print(f'Error occurred while getting open pull requests: {str(e)}')
+        logger.warning(f'Error occurred while getting open pull requests: {str(e)}')
         return
 
     if open_pull_requests:    
@@ -48,7 +53,7 @@ def main():
                 if edited_pull_request:
                     print(f'Edited pull request {pull_id}.')
             except Exception as e:
-                print(f'Error occurred while editing pull request {pull_id}: {str(e)}')
+                logger.warning(f'Error occurred while editing pull request {pull_id}: {str(e)}')
 
 if __name__ == "__main__":
     main()

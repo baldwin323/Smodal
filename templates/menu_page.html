@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Menu Page</title>
-</head>
-<body>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('clone_training') }}">Clone Training</a></li>
-            <li><a href="{{ url_for('database_storage') }}">Database/Storage</a></li>
-            <li><a href="{{ url_for('watch_page') }}">Watch Page</a></li>
-            <li><a href="{{ url_for('banking_api') }}">Banking API</a></li>
-        </ul>
-    </nav>
-    <section>
-        <h1>Menu</h1>
-        <p>Welcome to the main menu.</p>
-        <button onclick="window.location.href = '{{ url_for('clone_training') }}'">Go to Clone Training</button>
-        <button onclick="window.location.href = '{{ url_for('database_storage') }}'">Go to Database/Storage</button>
-        <button onclick="window.location.href = '{{ url_for('watch_page') }}'">Go to Watch Page</button>
-        <button onclick="window.location.href = '{{ url_for('banking_api') }}'">Go to Banking API</button>
-    </section>
-</body>
-</html>
+{% extends "base_generic.html" %}
+
+{% block content %}
+<nav>
+    <ul>
+        <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'clone_training' %}">Clone Training</a></li>
+        <li><a href="{% url 'database_storage' %}">Database/Storage</a></li>
+        <li><a href="{% url 'watch_page' %}">Watch Page</a></li>
+        <li><a href="{% url 'banking_api' %}">Banking API</a></li>
+    </ul>
+</nav>
+<section>
+    <h1>Menu</h1>
+    <p>Welcome to the main menu.</p>
+    <a class="btn" href="{% url 'clone_training' %}">Go to Clone Training</a>
+    <a class="btn" href="{% url 'database_storage' %}">Go to Database/Storage</a>
+    <a class="btn" href="{% url 'watch_page' %}">Go to Watch Page</a>
+    <a class="btn" href="{% url 'banking_api' %}">Go to Banking API</a>
+</section>
+{% endblock %}
