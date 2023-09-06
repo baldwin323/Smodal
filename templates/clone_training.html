@@ -1,19 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Clone Training</title>
+    <title>{% block title %}Clone Training{% endblock %}</title>
+    {% block extra_head %}
+    {% endblock %}
 </head>
 <body>
-    <h1>Clone Training</h1>
-    <p>Here you can learn about the process of clone training.</p>
-    <button onclick="startTraining()">Start Training</button>
+    <h1>{% block header %}Clone Training{% endblock %}</h1>
+    <p>{% block content %}Here you can learn about the process of clone training.{% endblock %}</p>
+    {% include "button.html" %}
 
-    <script>
-        // Add the functionality for the button
-        function startTraining() {
-            // The code to start the clone training goes here
-        }
-    </script>
+    {% block extra_body %}
+    <script src="{% static 'js/startTraining.js' %}"></script>
+    {% endblock %}
 </body>
 </html>
