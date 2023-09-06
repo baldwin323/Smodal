@@ -6,7 +6,7 @@ function execute_git_command() {
     COMMAND_EXIT_STATUS=$?
 
     if [ ${COMMAND_EXIT_STATUS} -ne 0 ]; then
-        echo "Failed to execute: '${COMMAND}'"
+        echo "Failed to execute: '${COMMAND}'" 1>&2
         exit ${COMMAND_EXIT_STATUS}
     else
         echo "Successfully executed: '${COMMAND}'"
@@ -25,15 +25,21 @@ execute_git_command "git fetch origin"
 # Merge the main branch into the checked out branch
 execute_git_command "git merge main"
 
-# Fix the conflicts manually and then execute the following commands
+# Fix the conflicts manually and then execute the following commands:
+# Catch exceptions during the merge-conflict resolution process
+{
+    # Add the file with resolved conflicts
+    execute_git_command "git add ${FILENAME}"
 
-# Add the file with resolved conflicts
-execute_git_command "git add ${FILENAME}"
+    # Commit the changes with a proper message
+    execute_git_command 'git commit -m "Resolved conflicts in pull request #18"'
 
-# Commit the changes with a proper message
-execute_git_command 'git commit -m "Resolved conflicts in pull request #18"'
+    # Push the changes to the remote branch associated with PR #18
+    execute_git_command "git push origin pull/18"
+} || {
+    # Log any issues that occurred during the process
+    echo "An error has occurred during the merge-conflict resolution process" 1>&2
+    exit 1
+}
 
-# Push the changes to the remote branch associated with PR #18
-execute_git_command "git push origin pull/18"
-
-# Please replace <filename> with actual file name
+# Please replace <filename> with actual filename
