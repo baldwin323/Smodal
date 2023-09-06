@@ -34,4 +34,18 @@ class SocialMediaBotView(View):
             return HttpResponse("Invalid Access Token", status=403)
         except Exception as e:
             return HttpResponse(f"Error: {e}", status=500)
+
+    def get_data_from_github(self, user_id):
+        try:
+            self.bot.get_github_data(user_id)
+            return HttpResponse("Fetched data from GitHub")
+        except Exception as e:
+            return HttpResponse(f"Error: {e}", status=500)
+
+    def get_data_from_openai(self, user_id):
+        try:
+            self.bot.get_openai_data(user_id)
+            return HttpResponse("Fetched data from OpenAI")
+        except Exception as e:
+            return HttpResponse(f"Error: {e}", status=500)
 ```

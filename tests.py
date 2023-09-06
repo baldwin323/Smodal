@@ -7,7 +7,6 @@ import uuid
 
 # Unit tests for the Smodal application
 class SmodalTest(TestCase):
-
     def setUp(self):
         """
         Setup for the test cases. Creates dummy data for the objects.
@@ -66,4 +65,3 @@ class SmodalTest(TestCase):
             
     # add more tests as necessary
 ```
-This file contains the test cases for the Smodal application. In these tests, we simulate the conditions where the functions would raise an exception and assert that they do indeed raise the expected exceptions. These tests will help ensure the robustness of the application and make it easier to identify and fix any issues that arise.
