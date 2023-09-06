@@ -5,17 +5,19 @@ description = ""
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.8.0,<3.9"
-numpy = "^1.22.2"
-replit = "^3.2.4"
-Django = "^3.2.8"
-urllib3 = "^1.26.12"
-requests = "2.31.0"
+python = ">=3.10.0,<3.11"
+numpy = "^1.23.2"
+replit = "^3.3.1"
+Django = "^4.0.1"
+urllib3 = "^1.26.16"
+requests = "2.32.0"
+bootstrap4 = "^0.1.6" #added bootstrap for UI enhancements
 
 [tool.poetry.dev-dependencies]
 debugpy = "^1.6.2"
 replit-python-lsp-server = {extras = ["yapf", "rope", "pyflakes"], version = "^1.5.9"}
 pytest = "^6.2.5"
+selenium = "^4.7.0" #added selenium for UI testing
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
