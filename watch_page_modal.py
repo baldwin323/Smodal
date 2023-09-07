@@ -5,33 +5,8 @@
 # - Route to "Take Over Chat" button functionality
 # - Route for modal to add necessary CSS and JavaScript files
 # Also includes functionality for Github integration to get, edit open pull requests and error handling.
-from flask import Flask, render_template
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    # Renders the watch page template
-    return render_template('watch_page.html')
-
-@app.route('/chat')
-def chat():
-    # This function is responsible for the implementation of the Live Chat Bot functionality.
-    # Yet to be implemented.
-    raise NotImplementedError
-
-@app.route('/takeover')
-def takeover():
-    # This function is responsible for the "Take Over Chat" button functionality
-    # Yet to be implemented.
-    raise NotImplementedError
-
-@app.route('/modal')
-def modal():
-    # This function is responsible for the modal.html template rendering for adding necessary CSS and JavaScript files.
-    # Yet to be implemented.
-    raise NotImplementedError
-
+from django.http import HttpResponse
+from django.template import Template, Context
 from github import Github
 
 gh = Github()
@@ -52,6 +27,31 @@ def edit_pull_request(repository, number, title=None):
         pr.edit(title=title)
     return pr
 
+def home(request):
+    return HttpResponse(render_django_template('watch_page.html'))
+
+def chat(request):
+    # This function is responsible for the implementation of the Live Chat Bot functionality.
+    # Yet to be implemented.
+    raise NotImplementedError
+
+def takeover(request):
+    # This function is responsible for the "Take Over Chat" button functionality
+    # Yet to be implemented.
+    raise NotImplementedError
+
+def modal(request):
+    # This function renders the modal.html template using Django's Template and Context objects.
+    # It adds necessary CSS and JavaScript files.
+    with open('/Smodal/templates/modal.html','r') as template_file:
+        template_text = template_file.read()
+        template = Template(template_text)
+        context = Context({})
+        return HttpResponse(template.render(context))
+
 if __name__ == '__main__':
     # Runs the application with debug turned on for error handling and logging.
-    app.run(debug=True)
+    import os
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
+    from django.core.management import execute_from_command_line
+    execute_from_command_line(sys.argv)
