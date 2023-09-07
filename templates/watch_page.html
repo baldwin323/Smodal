@@ -4,29 +4,39 @@
 <html lang="en">
 
 <head>
+    <!-- The meta character set for the document, in this case UTF-8 -->
     <meta charset="UTF-8">
+    
+    <!-- The title block of the document. It can be overridden in children templates. -->
     {% block title %}<title>Watch Page</title>{% endblock %}
+    
+    <!-- Linking to an external CSS file. {% static 'css/style.css' %} is used to include static files. -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 
 <body>
+    <!-- Including the navigation bar HTML file. -->
     {% include "nav.html" %}
     
-    <!-- Server-side logic will update the frontend -->
+    <!-- Start of the server-side logic looping over interactions in order to display each interaction in the frontend. -->
     {% for interaction in interactions %}
-    <div class="container" id="live-chat">
-        <!-- Live Chat Bot interactions go here-->
-        <p>User: {{ interaction.user_input }}</p>
-        <p>Bot: {{ interaction.bot_response }}</p>
-    </div>
+        <!-- Each interaction is encapsulated in a div container for styling and layout purposes. -->
+        <div class="container" id="live-chat">
+            <!-- The user and bot interactions are placed within paragraph (p) tags for proper space distribution and line breaks. -->
+            <p>User: {{ interaction.user_input }}</p>
+            <p>Bot: {{ interaction.bot_response }}</p>
+        </div>
     {% endfor %}
     
+    <!-- Div container for for the chat interaction options, in this case a button to take over the chat session -->
     <div class="interact">
         <button id="takeover">Take Over Chat</button>
     </div>
 
+    <!-- Including the footer HTML file. -->
     {% include "footer.html" %}
 
+    <!-- Linking to an external JavaScript file for button functionality. -->
     <script src="{% static 'js/takeover.js' %}"></script>
 </body>
 
