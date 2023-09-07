@@ -2,16 +2,20 @@
 <html lang="en">
 
 <head>
-    <title>Navigation</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}">
+    <!-- Start of head section -->
+    <title>Navigation</title> <!-- Title of the page -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"> <!-- Linking CSS for this page -->
+    <!-- End of head section -->
 </head>
 
 <body>
-    <div class="navbar">
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'watch' %}">Watch</a>
-        <a href="{% url 'about' %}">About</a>
+    <!-- Start of body section -->
+    <div class="navbar"> <!-- Navbar for the application -->
+        <a href="{% url 'home' %}">Home</a> <!-- Home page link -->
+        <a href="{% url 'watch' %}">Watch</a> <!-- Watch page link -->
+        <a href="{% url 'about' %}">About</a> <!-- About page link -->
     </div>
+    <!-- End of body section -->
 </body>
 
 </html>

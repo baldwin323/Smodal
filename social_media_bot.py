@@ -6,10 +6,15 @@ from django.core.exceptions import ValidationError, SuspiciousOperation
 from django.views import View
 from .models import User, Platform, AccessToken, SocialMediaBot
 
+# This file defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
+# This bot has the ability to authenticate a user, post a message on behalf of the user, and fetch data from both GitHub and OpenAI.
+
 # Define your views here.
 class SocialMediaBotView(View):
+    # The bot attribute will store an instance of the SocialMediaBot class.
     bot = None
 
+    # The get method allows the bot to authenticate a user.
     def get(self, request, user_id):
         try:
             self.bot = SocialMediaBot()
@@ -20,9 +25,10 @@ class SocialMediaBotView(View):
         except Exception as e:
             return HttpResponse(f"Error: {e}", status=500)
 
+    # The post method allows the bot  to post a message to a specified platform on behalf of the user.
     def post(self, request, user_id, platform_name, message):
         if not all([user_id, platform_name, message]):
-          # validate the data
+          # Data validation for the request params.
           raise SuspiciousOperation("Invalid form data")
 
         try:
@@ -35,6 +41,7 @@ class SocialMediaBotView(View):
         except Exception as e:
             return HttpResponse(f"Error: {e}", status=500)
 
+    # The get_data_from_github method will fetch data from GitHub.
     def get_data_from_github(self, user_id):
         try:
             self.bot.get_github_data(user_id)
@@ -42,6 +49,7 @@ class SocialMediaBotView(View):
         except Exception as e:
             return HttpResponse(f"Error: {e}", status=500)
 
+    # The get_data_from_openai method will fetch data from OpenAI.
     def get_data_from_openai(self, user_id):
         try:
             self.bot.get_openai_data(user_id)
