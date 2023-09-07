@@ -11,11 +11,16 @@
 
 <body>
     {% include "nav.html" %}
-
+    
+    <!-- Server-side logic will update the frontend -->
+    {% for interaction in interactions %}
     <div class="container" id="live-chat">
         <!-- Live Chat Bot interactions go here-->
+        <p>User: {{ interaction.user_input }}</p>
+        <p>Bot: {{ interaction.bot_response }}</p>
     </div>
-
+    {% endfor %}
+    
     <div class="interact">
         <button id="takeover">Take Over Chat</button>
     </div>

@@ -20,6 +20,25 @@ def main():
         )
         raise exc
 
+    # Run the necessary Django migrations here using execute_from_command_line function.
+    try:
+        execute_from_command_line(['./manage.py', 'makemigrations'])
+        execute_from_command_line(['./manage.py', 'migrate'])
+    except Exception as e:
+        logging.exception("Exception in running Django migrations", exc_info=True)
+        raise e
+
+    # Check if all required packages are installed.
+    required_packages = ['numpy', 'replit', 'Django', 'urllib3', 'requests', 'bootstrap4',
+                         'pytest', 'pytest-django', 'django-debug-toolbar', 'logging', 'caching',
+                         'django-allauth', 'django-crispy-forms', 'django-environ']
+    installed_packages = [pkg.key for pkg in pkg_resources.working_set]
+    for package in required_packages:
+        if package not in installed_packages:
+            logging.error(f"{package} is not installed. Please install required package.")
+            sys.exit(1)
+
+    # Execute the command line commands
     try:
         execute_from_command_line(sys.argv)
     except Exception as e:
