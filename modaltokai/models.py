@@ -1,40 +1,42 @@
 ```python
 from django.db import models
-from django.shortcuts import get_object_or_404
-import uuid
+from django.contrib.auth.models import User
 
+class SocialMediaApp(models.Model):
+    name = models.CharField(max_length=200)
+    key = models.CharField(max_length=200)
+    secret = models.CharField(max_length=200)
 
-class SaleItem(models.Model):
-    item_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # other fields based on the metadata of item_data
-   
-    def upload_item(self, item_data):
-        if not isinstance(item_data, dict):
-            raise ValueError("Item data must be a dictionary.")
-        self.objects.create(**item_data)
+class SocialMediaAccount(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    app = models.ForeignKey(SocialMediaApp, on_delete=models.CASCADE)
+    access_token = models.CharField(max_length=200)
+    refresh_token = models.CharField(max_length=200, null=True, blank=True)
+    token_authorized_at = models.DateTimeField(auto_now_add=True)
 
-    def download_item(self, item_id):
-        item = get_object_or_404(self, pk=item_id)
-        return item
+class BotConfiguration(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    schedule_time = models.TimeField()
+    engage_actions = models.TextField()
+    monitor_keywords = models.TextField()
 
-    def delete_item(self, item_id):
-        item = get_object_or_404(self, pk=item_id)
-        item.delete()
+class BotActivity(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    account = models.ForeignKey(SocialMediaAccount, on_delete=models.CASCADE)
+    action = models.CharField(max_length=200)
+    content = models.TextField()
+    performed_at = models.DateTimeField(auto_now_add=True)
 
-
-class ChatBot(models.Model):
-    chat = models.TextField()
- 
-    def viewing_window(self):
-        return self.chat
-   
-    def engage_clients(self, message):
-        if not isinstance(message, str):
-            raise ValueError("Message must be a string.")
-        self.chat += f'\n{message}'
-   
-    def take_over(self, new_chat):
-        if not isinstance(new_chat, ChatBot):
-            raise ValueError("Argument must be a ChatBot object.")
-        self.chat = new_chat.chat
+class ErrorLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    account = models.ForeignKey(SocialMediaAccount, on_delete=models.CASCADE, null=True, blank=True)
+    error_message = models.TextField()
+    happened_at = models.DateTimeField(auto_now_add=True)
 ```
+Here, we have created models for 
+- SocialMediaApp: represents the social media platforms for which you need access tokens.
+- SocialMediaAccount: represent the authenticated social media accounts for each user.
+- BotConfiguration: represents bot configurations that the user sets.
+- BotActivity: keeps a record of each bot activity.
+- ErrorLog: logs all errors happened during bot activity. This will include any exceptions caught during bot activity.
+These models should ensure a smooth user experience and maintain all relevant data. The data you are storing should be enough to carry out all bot activities. Please make sure that all secret data are stored securely.
