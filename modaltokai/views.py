@@ -33,7 +33,7 @@ class SocialMediaBotView(View):
                 return HttpResponse(f"Scheduled message {message} to be posted at {schedule_time} to {platform_name} for user {user_id}!")
             except Exception as e:
                 return HttpResponse(f"Error: {e}")
-                
+
     def monitor_keywords(self, request, user_id, platform_name, keywords):
         try:
             keywords_list = keywords.split(", ")
@@ -48,4 +48,21 @@ class SocialMediaBotView(View):
             return HttpResponse(f"{action.capitalize()}d with {target} for user {user_id} successfully!")
         except Exception as e:
             return HttpResponse(f"Error: {e}")
+
+def general_pricing(request):
+    return render(request, 'pricing.html')
+
+def free_trial(request):
+    return render(request, 'free_trial.html')
+
+def backend_control(request):
+    if request.method == 'POST':
+        control_form = BackendControlForm(request.POST)
+        if control_form.is_valid():
+            control_form.save()
+
+    else:
+        control_form = BackendControlForm()
+
+    return render(request, 'backend_control.html', {'control_form': control_form})
 ```
