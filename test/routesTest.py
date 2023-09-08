@@ -15,16 +15,19 @@ class TestRoutes(unittest.TestCase):
     def tearDown(self):
         pass
 
+    # Test for valid API requests.
     def test_api_request(self):
         with self.client.session_transaction() as session:
             session['apiName'] = routes.API_NAME
         response = self.client.post('/api')
         self.assertEqual(response.status_code, 200)
 
+    # Test for invalid API requests.
     def test_invalid_api(self):
         response = self.client.post('/api', data={'apiName': 'invalidApi'})
         self.assertEqual(response.status_code, 400)
-    
+
+    # Test for valid file uploads.
     def test_upload_file(self):
         data = {
             'file': (BytesIO(b'content'), 'test.txt')
@@ -33,10 +36,12 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'File successfully uploaded', response.data)
 
+    # Test for uploads without files.
     def test_upload_without_file(self):
         response = self.client.post('/upload', data={}, content_type='multipart/form-data')
         self.assertEqual(response.status_code, 400)
-    
+
+    # Test for valid file retrieval.
     def test_get_file(self):
         test_id = 'test_id' 
         response = self.client.get('/files/'+test_id)
@@ -45,6 +50,7 @@ class TestRoutes(unittest.TestCase):
         else:
             self.assertIn(b'File not found!', response.data)
 
+    # Test for invalid request cases.
     def test_missing_request_cases(self):
         response = self.client.post('/api')
         self.assertEqual(response.status_code, 400)
