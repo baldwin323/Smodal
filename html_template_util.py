@@ -17,9 +17,14 @@ def other_page_view(request):
     """Render other HTML templates"""
     return render(request, 'other_page.html', {})
 
+def title_page_view(request):
+    """Render the Title HTML template"""
+    return render(request, 'title.html', {'title': 'modaltokai'})
+
 urlpatterns = [
     path('navbar', navbar_view, name='navbar-url-name'),
     path('footer', footer_view, name='footer-url-name'),
     path('modal', modal_view, name='modal-url-name'),
     path('other_page', other_page_view, name='other-page-url-name'),
-]  
+    path('title', title_page_view, name='title-page-url-name'),
+]
