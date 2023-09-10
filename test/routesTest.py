@@ -63,5 +63,21 @@ class TestRoutes(unittest.TestCase):
         response = self.client.get('/files/')
         self.assertEqual(response.status_code, 404)
 
+    # Additional tests for routes.py functions.
+
+    # Test for valid session creation.
+    def test_session_creation(self):
+        with self.client.session_transaction() as session:
+            session['session'] = 'test_session' 
+        response = self.client.get('/session')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('test_session', response.data.decode())
+
+    # Test for invalid session retrieval.
+    def test_invalid_session(self):
+        response = self.client.get('/session')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Invalid session!', response.data)
+
 if __name__ == '__main__':
     unittest.main()
