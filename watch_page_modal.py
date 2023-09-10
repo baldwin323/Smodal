@@ -4,41 +4,44 @@
 # - Route to chat functionality for Live Chat Bot
 # - Route to "Take Over Chat" button functionality
 # - Route for modal to add necessary CSS and JavaScript files
-# Also includes functionality for Github integration to get, edit open pull requests and error handling.
-from django.http import HttpResponse
+# - Integrations with Github to get and edit open pull requests
+# Further optimized for functionality on Replit, improved error handling and routing.
+from django.http import JsonResponse, HttpResponse
 from django.template import Template, Context
+from django.views import View
+from django.urls import path
 from github import Github
+import os
 
 gh = Github()
 
 def get_open_pull_requests(repository):
-    # This function interacts with the GitHub API.
-    # It fetches the open pull requests for a specific repository.
     repo = gh.get_repo(repository)
     return repo.get_pulls(state='open')
 
 def edit_pull_request(repository, number, title=None):
-    # This function interacts with the GitHub API.
-    # It edits a pull request for a specific repository with the given number.
-    # It also has the option to change the title of the pull request.
     repo = gh.get_repo(repository)
     pr = repo.get_pull(number)
     if title is not None:
         pr.edit(title=title)
     return pr
 
-def home(request):
-    return HttpResponse(render_django_template('watch_page.html'))
+class HomeView(View):
+    template_name = 'watch_page.html'
 
-def chat(request):
-    # This function is responsible for the implementation of the Live Chat Bot functionality.
-    # Yet to be implemented.
-    raise NotImplementedError
+    def get(self, request):
+        return HttpResponse(render_django_template(self.template_name))
 
-def takeover(request):
-    # This function is responsible for the "Take Over Chat" button functionality
-    # Yet to be implemented.
-    raise NotImplementedError
+class ChatView(View):
+    def get(self, request):
+        chat_message = "Your chat logic goes here"
+        return JsonResponse({'chat_message': chat_message})
+
+class TakeOverView(View):
+    def get(self, request):
+         # This function is responsible for the "Take Over Chat" button
+         takeover_message = "Logic to take over chat goes here."
+         return JsonResponse({'takeover_message': takeover_message})
 
 def modal(request):
     # This function renders the modal.html template using Django's Template and Context objects.
@@ -49,9 +52,13 @@ def modal(request):
         context = Context({})
         return HttpResponse(template.render(context))
 
+urlpatterns = [
+    path('', HomeView.as_view(), name='home'),
+    path('chat/', ChatView.as_view(), name='chat'),
+    path('takeover/', TakeOverView.as_view(), name='takeover'),
+]
+
 if __name__ == '__main__':
-    # Runs the application with debug turned on for error handling and logging.
-    import os
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)

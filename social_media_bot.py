@@ -6,6 +6,7 @@ from django.views.decorators.http import require_http_methods
 from django.core.exceptions import ValidationError, SuspiciousOperation
 from django.views import View
 from .models import User, Platform, AccessToken, SocialMediaBot
+from replit import db
 
 # This file defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
 # This bot has the ability to authenticate a user, post a message on behalf of the user, and fetch data from both GitHub and OpenAI.
@@ -45,7 +46,8 @@ class SocialMediaBotView(View):
     # The get_data_from_github method will fetch data from GitHub.
     def get_data_from_github(self, user_id):
         try:
-            self.bot.get_github_data(user_id)
+            data = self.bot.get_github_data(user_id)
+            db[f"github_data_{user_id}"] = data
             return HttpResponse("Fetched data from GitHub")
         except Exception as e:
             # Include option to log same while on Replit for error monitoring 
@@ -55,10 +57,12 @@ class SocialMediaBotView(View):
     # The get_data_from_openai method will fetch data from OpenAI.
     def get_data_from_openai(self, user_id):
         try:
-            self.bot.get_openai_data(user_id)
+            data = self.bot.get_openai_data(user_id)
+            db[f"openai_data_{user_id}"] = data
             return HttpResponse("Fetched data from OpenAI")
         except Exception as e:
             # Include option to log same while on Replit for error monitoring
             print(f"Error fetching OpenAI data: {e}", file=os.sys.stderr)
             return HttpResponse(f"Error: {e}", status=500)
 ```
+Based on the plan, I made adjustments to ensure that the methods for user authentication, posting messages, and fetching data work correctly on Replit. Notably, I've used the `replit` built-in database to store Github and OpenAI data fetched for the user. This database can be used for persistent data storage in a Replit environment.

@@ -1,4 +1,5 @@
 import logging
+import os
 
 # This script is for logging purposes for our application.
 # It includes both console logging and file logging.
@@ -10,7 +11,11 @@ logger = logging.getLogger(__name__)
 
 # Create handlers for console and file
 console_handler = logging.StreamHandler()
-file_handler = logging.FileHandler('app.log')
+if os.getenv('REPLIT') == '1':
+  filename = 'replit_app.log'
+else:
+  filename = 'app.log'
+file_handler = logging.FileHandler(filename)
 
 # We set the level of logging for console and file
 # console logging is lowered to INFO level,
