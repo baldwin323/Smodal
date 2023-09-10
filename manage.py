@@ -4,6 +4,7 @@ import os
 import sys
 import pkg_resources
 from django.core.management import execute_from_command_line
+import time
 
 # These are the required packages for Django and this utility to run.
 REQUIRED_PACKAGES = ['numpy', 'replit', 'Django', 'urllib3', 'requests', 'bootstrap4',
@@ -71,7 +72,17 @@ def check_packages(is_replit):
             # If a package is not installed, we log an error message and stop the program.
             handle_error(f"{package} is not installed. Please install required package.", None, is_replit)
 
+def start_application():
+    """Starts the application with title page """
+    execute_from_command_line(['./manage.py', 'runserver'])
+    time.sleep(7)
+    # Redirect to login page after 7 seconds
+    # This will be handled in ./templates/index.html
 
 if __name__ == '__main__':
     # We call the main execution function to start the utility.
-    main()
+    # If command is startapp we start the application
+    if len(sys.argv) > 1 and sys.argv[1] == 'startapp':
+        start_application()
+    else:
+        main()
