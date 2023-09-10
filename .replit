@@ -1,7 +1,6 @@
 # Updated configuration settings for Python development environment on Replit
 run = "python3 manage.py runserver"
 language = "python3"
-entrypoint = "manage.py"
 
 # Hidden files and directories in the workspace
 hidden = ["venv", ".config", "**/__pycache__", "**/.mypy_cache", "**/*.pyc"]
