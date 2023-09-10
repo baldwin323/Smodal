@@ -10,21 +10,25 @@ class TestHtmlTemplateUtil(unittest.TestCase):
         request = self.factory.get('/navbar')
         response = navbar_view(request)
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'navbar.html')
 
     def test_footer_view(self):
         request = self.factory.get('/footer')
         response = footer_view(request)
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'footer.html')
 
     def test_modal_view(self):
         request = self.factory.get('/modal')
         response = modal_view(request)
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'modal.html')
 
     def test_other_page_view(self):
         request = self.factory.get('/other_page')
         response = other_page_view(request)
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'other_page.html')
 
 if __name__ == '__main__':
     unittest.main()
