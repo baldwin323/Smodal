@@ -3,13 +3,20 @@
 import os
 import sys
 import logging
+import replit
 
 # This is the main function. It runs administrative tasks.
 def main():
     """Run administrative tasks."""
+    
+    is_replit = os.environ.get('REPLIT', False)
+
     # Here we specify the default settings module for the 'django-admin' utility to 
     # use when it runs. 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'modaltokai.settings')
+    if is_replit:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'modaltokai.replit_settings')
+    else:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'modaltokai.settings')
 
     try:
         # Here we import execute_from_command_line from django.core.management,
@@ -19,11 +26,17 @@ def main():
         # This error message will show up if you haven't installed Django, or have
         # forgotten to include it in your PYTHONPATH environment variable, or if you 
         # forgot to activate Python virtual environment.
-        logging.exception(
+        log_message = (
             "Couldn't import Django. Are you sure it's installed and "
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         )
+
+        if is_replit:
+            replit.log.error(log_message)
+        else:
+            logging.exception(log_message)
+            
         raise exc
 
     # In this section, we run the necessary Django migrations using execute_from_command_line function.
@@ -32,7 +45,10 @@ def main():
         execute_from_command_line(['./manage.py', 'migrate'])
     except Exception as e:
         # Log an error message if there's an exception while running migrations.
-        logging.exception("Exception in running Django migrations", exc_info=True)
+        if is_replit:
+            replit.log.error("Exception in running Django migrations")
+        else:
+            logging.exception("Exception in running Django migrations", exc_info=True)
         raise e
 
     # Here, we are checking if all required packages are installed.
@@ -43,7 +59,10 @@ def main():
     for package in required_packages:
         if package not in installed_packages:
             # If a package is not installed, we log an error message and stop the program.
-            logging.error(f"{package} is not installed. Please install required package.")
+            if is_replit:
+                replit.log.error(f"{package} is not installed. Please install required package.")
+            else:
+                logging.error(f"{package} is not installed. Please install required package.")
             sys.exit(1)
 
     # Lastly, we try to execute the command line commands
@@ -51,13 +70,19 @@ def main():
         execute_from_command_line(sys.argv)
     except Exception as e:
         # If there's an error during execution, we log the error message and raise the exception.
-        logging.exception("Exception in command line execution:", exc_info=True)
+        if is_replit:
+            replit.log.error("Exception in command line execution:")
+        else:
+            logging.exception("Exception in command line execution:", exc_info=True)
+
         raise e
 
 if __name__ == '__main__':
     # Setup the logging configuration. It creates or opens the file 'app.log' for writing and 
     # log messages of level 'ERROR' or higher are added to the file.
-    logging.basicConfig(filename='app.log', filemode='w', level=logging.ERROR)
+    is_replit = os.environ.get('REPLIT', False)
+    if not is_replit: 
+        logging.basicConfig(filename='app.log', filemode='w', level=logging.ERROR)
 
     # We call the main execution function to start the utility.
     main()

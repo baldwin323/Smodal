@@ -1,4 +1,5 @@
 ```python
+import os
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
@@ -47,6 +48,8 @@ class SocialMediaBotView(View):
             self.bot.get_github_data(user_id)
             return HttpResponse("Fetched data from GitHub")
         except Exception as e:
+            # Include option to log same while on Replit for error monitoring 
+            print(f"Error fetching Github data: {e}", file=os.sys.stderr)
             return HttpResponse(f"Error: {e}", status=500)
 
     # The get_data_from_openai method will fetch data from OpenAI.
@@ -55,5 +58,7 @@ class SocialMediaBotView(View):
             self.bot.get_openai_data(user_id)
             return HttpResponse("Fetched data from OpenAI")
         except Exception as e:
+            # Include option to log same while on Replit for error monitoring
+            print(f"Error fetching OpenAI data: {e}", file=os.sys.stderr)
             return HttpResponse(f"Error: {e}", status=500)
 ```
