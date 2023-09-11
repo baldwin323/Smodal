@@ -89,3 +89,4 @@ start = "pylsp"
 
 [deployment]
 run = ["sh", "-c", "python3 main.py"]
+deploymentTarget = "cloudrun"
