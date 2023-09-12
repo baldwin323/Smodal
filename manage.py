@@ -5,21 +5,24 @@ import sys
 import pkg_resources
 from django.core.management import execute_from_command_line
 import time
-if 'runserver' in sys.argv:    
+
+# Setting the environment variable 'MUTABLE_DEPLOY' to '1' when the server is run.
+if 'runserver' in sys.argv:
     os.environ['MUTABLE_DEPLOY'] = '1'
-execute_from_command_line(sys.argv)   
-# These are the required packages for Django and this utility to run.
-REQUIRED_PACKAGES = ['numpy', 'replit', 'Django', 'urllib3', 'requests', 'bootstrap4',
-                     'pytest', 'pytest-django', 'django-debug-toolbar', 'logging', 'caching',
-                     'django-allauth', 'django-crispy-forms', 'django-environ']
+
+execute_from_command_line(sys.argv)
+
+REQUIRED_PACKAGES = [
+    'numpy', 'replit', 'Django', 'urllib3', 'requests', 'bootstrap4',
+    'pytest', 'pytest-django', 'django-debug-toolbar', 'logging', 'caching',
+    'django-allauth', 'django-crispy-forms', 'django-environ'
+]
 
 def main():
     """Run administrative tasks."""
-    
+
     is_replit = os.environ.get('REPLIT', False)
 
-    # Here we specify the default settings module for the 'django-admin' utility to 
-    # use when it runs. 
     if is_replit:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'modaltokai.replit_settings')
     else:
@@ -28,12 +31,8 @@ def main():
     if is_replit:
         import replit
 
-    # In this section, we run the necessary Django migrations using execute_from_command_line function.
     handle_migrations(is_replit)
-    # Ensure all necessary packages are installed.
     check_packages(is_replit)
-
-    # Execute any command line commands.
     handle_execution(is_replit)
 
 
@@ -43,7 +42,6 @@ def handle_migrations(is_replit):
         execute_from_command_line(['./manage.py', 'makemigrations'])
         execute_from_command_line(['./manage.py', 'migrate'])
     except Exception as e:
-        # Log an error message if there's an exception while running migrations.
         handle_error("Exception in running Django migrations", e, is_replit)
         raise e
 
@@ -53,7 +51,6 @@ def handle_execution(is_replit):
     try:
         execute_from_command_line(sys.argv)
     except Exception as e:
-        # If there's an error during execution, we log the error message and raise the exception.
         handle_error("Exception in command line execution:", e, is_replit)
         raise e
 
@@ -71,12 +68,9 @@ def check_packages(is_replit):
     installed_packages = [pkg.key for pkg in pkg_resources.working_set]
     for package in REQUIRED_PACKAGES:
         if package not in installed_packages:
-            # If a package is not installed, we log an error message and stop the program.
             handle_error(f"{package} is not installed. Please install required package.", None, is_replit)
 
 if __name__ == '__main__':
-    # We call the main execution function to start the utility.
-    # If command is startapp we start the application
     if len(sys.argv) > 1 and sys.argv[1] == 'startapp':
         start_application()
     else:
