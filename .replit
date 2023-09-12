@@ -1,5 +1,5 @@
 # Updated configuration settings for Python development environment on Replit
-run = "python3 manage.py runserver"
+run = "/usr/bin/python3 manage.py runserver"
 language = "python3"
 
 # Hidden files and directories in the workspace
@@ -88,11 +88,11 @@ pattern = "**/*.py"
 start = "pylsp"
 
 #[deployment]
-#run = ["sh", "-c", "python3 main.py"]
+#run = ["sh", "-c", "/usr/bin/python3 main.py"]
 #deploymentTarget = "cloudrun"
 
 # Install command moved to a separate function, avoiding code execution during deployment process
 def install_packages():
-  pip install mutableai
+    pip install mutableai
 
 install_packages()
