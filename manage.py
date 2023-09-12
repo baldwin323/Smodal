@@ -5,7 +5,9 @@ import sys
 import pkg_resources
 from django.core.management import execute_from_command_line
 import time
+import mutableai
 
+mutableai.init("NyaHS2u74eanmkzzf4bNqaAjQooFJuia7XeOwLdy")
 # These are the required packages for Django and this utility to run.
 REQUIRED_PACKAGES = ['numpy', 'replit', 'Django', 'urllib3', 'requests', 'bootstrap4',
                      'pytest', 'pytest-django', 'django-debug-toolbar', 'logging', 'caching',
