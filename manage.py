@@ -5,9 +5,9 @@ import sys
 import pkg_resources
 from django.core.management import execute_from_command_line
 import time
-import mutableai
-
-mutableai.init("NyaHS2u74eanmkzzf4bNqaAjQooFJuia7XeOwLdy")
+if 'runserver' in sys.argv:    
+    os.environ['MUTABLE_DEPLOY'] = '1'
+execute_from_command_line(sys.argv)   
 # These are the required packages for Django and this utility to run.
 REQUIRED_PACKAGES = ['numpy', 'replit', 'Django', 'urllib3', 'requests', 'bootstrap4',
                      'pytest', 'pytest-django', 'django-debug-toolbar', 'logging', 'caching',
@@ -73,13 +73,6 @@ def check_packages(is_replit):
         if package not in installed_packages:
             # If a package is not installed, we log an error message and stop the program.
             handle_error(f"{package} is not installed. Please install required package.", None, is_replit)
-
-def start_application():
-    """Starts the application with title page """
-    execute_from_command_line(['./manage.py', 'runserver'])
-    time.sleep(7)
-    # Redirect to login page after 7 seconds
-    # This will be handled in ./templates/index.html
 
 if __name__ == '__main__':
     # We call the main execution function to start the utility.
