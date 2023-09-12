@@ -91,5 +91,8 @@ start = "pylsp"
 run = ["sh", "-c", "python3 main.py"]
 deploymentTarget = "cloudrun"
 
-pip install mutableai
+# Install command moved to a separate function, avoiding code execution during deployment process
+def install_packages():
+  pip install mutableai
 
+install_packages()
