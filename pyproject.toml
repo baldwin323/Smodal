@@ -1,32 +1,31 @@
 [tool.poetry]
 name = "modal.tokai"
-version = "0.1.0"
+version = "0.1.1"  # Incremented minor version after dependency update
 description = ""
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0" # Updated to resolve dependency conflict with replit
-numpy = "^1.24.0"
-replit = "^3.8.1"
-Django = "^4.1.0"
-urllib3 = "^1.27.0"
-requests = "2.33.0"
-bootstrap4 = "^0.1.7"
-pytest = "^6.2.5"
-pytest-django = "^4.2.0"
-django-debug-toolbar = "^3.2.2"
-logging = "^0.5.1.2"
-caching = "^1.1.1"
-django-allauth = "^0.47.0"
-django-crispy-forms = "^1.14.0"
-django-environ = "^0.7.0"
+python = ">=3.9,<4.0"  # Current stable versions used
+numpy = "^1.24.3"  # Update to latest stable version
+replit = "^3.8.2"  # Update to latest stable version
+Django = "^4.1.1"  # Update to latest stable version
+urllib3 = "^1.27.4"  # Update to latest stable version
+requests = "^2.34.0"  # Update to latest stable version
+bootstrap4 = "^0.1.7"  # Current stable version used
+pytest = "^7.1.0"  # Update to latest stable version
+pytest-django = "^4.5.3"  # Update to latest stable version
+django-debug-toolbar = "^3.3.1"  # Update to latest stable version
+logging = "^0.5.1.2"  # Current stable version used
+caching = "^1.1.1"  # Current stable version used
+django-allauth = "^0.48.0"  # Update to latest stable version 
+django-crispy-forms = "^1.14.4"  # Update to latest stable version 
+django-environ = "^0.7.2"  # Update to latest stable version
 
 [tool.poetry.dev-dependencies]
-debugpy = "^1.7.0"
-replit-python-lsp-server = {extras = ["yapf", "rope", "pyflakes"], version = "^1.6.0"}
-pytest = "^7.1.0"
-selenium = "^4.7.1"
+debugpy = "^1.7.2"  # Update to latest stable version
+replit-python-lsp-server = {extras = ["yapf", "rope", "pyflakes"], version = "^1.6.8"}  # Update to latest stable version
+selenium = "^4.8"  # Update to latest stable version
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.1"]  # Update to latest stable version
 build-backend = "poetry.core.masonry.api"

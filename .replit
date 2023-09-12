@@ -89,6 +89,13 @@ pattern = "**/*.py"
 start = "pylsp"
 
 def install_packages():
-    pip install mutableai
+    # Adding pip functionality
+    import pip
+    # List of packages to be installed
+    packages = ["mutableai"]
+    # Iterate over the list of packages and install them one by one
+    for package in packages:
+        pip.main(['install', package])
 
+# Call the function to install the packages
 install_packages()
