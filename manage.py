@@ -4,15 +4,10 @@ import os
 import sys
 import pkg_resources
 from django.core.management import execute_from_command_line
-from django.core.cache import cache
 import time
-
-# Add Mutable.ai library
-import mutableai
-
-# Initialize Mutable.ai
-mutableai.init("NyaHS2u74eanmkzzf4bNqaAjQooFJuia7XeOwLdy")
-
+if 'runserver' in sys.argv:    
+    os.environ['MUTABLE_DEPLOY'] = '1'
+execute_from_command_line(sys.argv)   
 # These are the required packages for Django and this utility to run.
 REQUIRED_PACKAGES = ['numpy', 'replit', 'Django', 'urllib3', 'requests', 'bootstrap4',
                      'pytest', 'pytest-django', 'django-debug-toolbar', 'logging', 'caching',
@@ -38,14 +33,10 @@ def main():
     # Ensure all necessary packages are installed.
     check_packages(is_replit)
 
-    # Cache frequently used data.
-    cache_frequently_used_data()
-
     # Execute any command line commands.
     handle_execution(is_replit)
 
 
-@mutableai.patch
 def handle_migrations(is_replit):
     """Run the necessary Django migrations."""
     try:
@@ -60,8 +51,6 @@ def handle_migrations(is_replit):
 def handle_execution(is_replit):
     """Attempt to execute the command line commands."""
     try:
-        if 'runserver' in sys.argv:
-            os.environ['MUTABLE_DEPLOY'] = '1'
         execute_from_command_line(sys.argv)
     except Exception as e:
         # If there's an error during execution, we log the error message and raise the exception.
@@ -75,9 +64,8 @@ def handle_error(message, exception, is_replit):
         replit.log.error(message)
     else:
         logging.exception(message, exc_info=True)
+        
 
-
-@mutableai.patch
 def check_packages(is_replit):
     """Check if all required packages are installed."""
     installed_packages = [pkg.key for pkg in pkg_resources.working_set]
@@ -92,10 +80,6 @@ def start_application():
     time.sleep(7)
     # Redirect to login page after 7 seconds
     # This will be handled in ./templates/index.html
-
-def cache_frequently_used_data():
-    """Cache frequently used data to reduce database queries."""
-    # Implement caching logic here
 
 if __name__ == '__main__':
     # We call the main execution function to start the utility.
