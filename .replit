@@ -1,11 +1,11 @@
 # Updated configuration settings for Python development environment on Replit
-run = "/usr/bin/python3 manage.py runserver"
+run = "/usr/bin/python3.9 manage.py runserver"
 language = "python3"
 
 # Hidden files and directories in the workspace
 hidden = ["venv", ".config", "**/__pycache__", "**/.mypy_cache", "**/*.pyc"]
 entrypoint = "main.py"
-modules = ["python-3.10:v18-20230807-322e88b"]
+modules = ["python-3.9:v18-20230807-322e88b"]
 
 [nix]
 channel = "stable-21_11"
@@ -26,10 +26,11 @@ channel = "stable-21_11"
 [env]
 VIRTUAL_ENV = "/home/runner/${REPL_SLUG}/venv"
 PATH = "${VIRTUAL_ENV}/bin"
-PYTHONPATH = "${VIRTUAL_ENV}/lib/python3.8/site-packages"
+PYTHONPATH = "${VIRTUAL_ENV}/lib/python3.9/site-packages"
 REPLIT_POETRY_PYPI_REPOSITORY = "https://package-proxy.replit.com/pypi/"
 MPLBACKEND = "TkAgg"
 POETRY_CACHE_DIR = "${HOME}/${REPL_SLUG}/.cache/pypoetry"
+SECRET_KEY = "Your Secret Key Here"
 
 [unitTest]
 language = "python3"
@@ -87,11 +88,6 @@ pattern = "**/*.py"
 [languages.python3.languageServer]
 start = "pylsp"
 
-#[deployment]
-#run = ["sh", "-c", "/usr/bin/python3 main.py"]
-#deploymentTarget = "cloudrun"
-
-# Install command moved to a separate function, avoiding code execution during deployment process
 def install_packages():
     pip install mutableai
 
