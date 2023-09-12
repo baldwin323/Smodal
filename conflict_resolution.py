@@ -29,4 +29,4 @@ def install_dependencies_in_separate_envs():
 # CHECK YOUR CONFLICTS in your specific codebase and determine the optimal fix then uncomment related method and run it.
 # constrain_dependency_version()
 # upgrade_to_latest_compatible_pytest()
-# install_dependencies_in_separate_envs()
+install_dependencies_in_separate_envs()
