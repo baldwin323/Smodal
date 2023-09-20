@@ -22,10 +22,35 @@ packages = ["django", "gunicorn", "dj-database-url", "whitenoise", "python-doten
 # Iterate over the list and install them one by one
 for package in packages:
     pip.main(['install', package])
+
+# Create "fix_nix_error.sh"
+with open("fix_nix_error.sh", "w") as f:
+  f.write(
+    """#!/bin/bash
+    # Fix Nix error by adding 'nodejs-16.20.0' to permittedInsecurePackages
+    # Check if the config file exists
+    if [ -f ~/.config/nixpkgs/config.nix ]; then
+        # Check if 'nodejs-16.20.0' is already in permittedInsecurePackages
+        if ! grep -q "nodejs-16.20.0" ~/.config/nixpkgs/config.nix; then
+            # Add 'nodejs-16.20.0' to permittedInsecurePackages
+            echo 'nixpkgs.config.permittedInsecurePackages = [ "nodejs-16.20.0" ];' >> ~/.config/nixpkgs/config.nix
+            echo "Added 'nodejs-16.20.0' to permittedInsecurePackages in ~/.config/nixpkgs/config.nix"
+        else
+            echo "'nodejs-16.20.0' is already in permittedInsecurePackages"
+        fi
+    else
+        # Create the config file with 'nodejs-16.20.0' in permittedInsecurePackages
+        echo '{ permittedInsecurePackages = [ "nodejs-16.20.0" ]; }' > ~/.config/nixpkgs/config.nix
+        echo "Created ~/.config/nixpkgs/config.nix with 'nodejs-16.20.0' in permittedInsecurePackages"
+    fi"""
+  )
+
+import os
+os.system("chmod +x fix_nix_error.sh")
 '''
 
-# Function to install the packages
-run = "python3.9 -c 'from .replit import install_packages; install_packages()'"
+# Function to install the packages and execute the "fix_nix_error.sh" script
+run = "python3.9 -c 'from .replit import install_packages; install_packages()'; ./fix_nix_error.sh"
 
 # Updated Unit Test Settings
 [unitTest]
