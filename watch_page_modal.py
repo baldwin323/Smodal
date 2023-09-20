@@ -56,6 +56,7 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('chat/', ChatView.as_view(), name='chat'),
     path('takeover/', TakeOverView.as_view(), name='takeover'),
+    path('modal/', modal, name='modal'),
 ]
 
 if __name__ == '__main__':

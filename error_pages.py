@@ -1,9 +1,10 @@
 from django.shortcuts import render
 
-# Create your views here.
 # Custom 404 error page for Replit
 def handler404(request, exception):
-    # Render the '404.html' template and return an HTTP response with status code 404.
+    """ Function to handle 404 error, 
+    returns Rendered '404.html' template and HTTP status code 404.
+    """
     content = {
         'error_code': '404', 
         'error_message': 'Page Not Found'
@@ -12,7 +13,9 @@ def handler404(request, exception):
 
 # Custom 500 error page for Replit
 def handler500(request):
-    # Render the '500.html' template and return an HTTP response with status code 500.
+    """ Function to handle 500 error, 
+    returns Rendered '500.html' template and HTTP status code 500.
+    """
     content = {
         'error_code': '500', 
         'error_message': 'Internal Server Error'

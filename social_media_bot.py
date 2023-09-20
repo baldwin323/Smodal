@@ -65,4 +65,3 @@ class SocialMediaBotView(View):
             print(f"Error fetching OpenAI data: {e}", file=os.sys.stderr)
             return HttpResponse(f"Error: {e}", status=500)
 ```
-Based on the plan, I made adjustments to ensure that the methods for user authentication, posting messages, and fetching data work correctly on Replit. Notably, I've used the `replit` built-in database to store Github and OpenAI data fetched for the user. This database can be used for persistent data storage in a Replit environment.
