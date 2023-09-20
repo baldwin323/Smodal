@@ -13,17 +13,19 @@ entrypoint = "main.py"
 SECRET_KEY = "Your Updated Secret Key Here"
 
 # Packages to be installed
-def install_packages():
-    # Adding pip functionality
-    import pip
-    # List of packages to be installed
-    packages = ["django", "gunicorn", "dj-database-url", "whitenoise", "python-dotenv"]
-    # Iterate over the list and install them one by one
-    for package in packages:
-        pip.main(['install', package])
+[scripts]
+install_packages = '''
+# Adding pip functionality
+import pip
+# List of packages to be installed
+packages = ["django", "gunicorn", "dj-database-url", "whitenoise", "python-dotenv"]
+# Iterate over the list and install them one by one
+for package in packages:
+    pip.main(['install', package])
+'''
 
-# Call the function to install the packages
-install_packages()
+# Function to install the packages
+run = "python3.9 -c 'from .replit import install_packages; install_packages()'"
 
 # Updated Unit Test Settings
 [unitTest]
