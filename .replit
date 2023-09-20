@@ -1,101 +1,43 @@
-# Updated configuration settings for Python development environment on Replit
-run = "/usr/bin/python3.9 manage.py runserver"
+# Configuration settings for Python 3.9 development environment on Replit
+run = "python3.9 main.py"
 language = "python3"
 
-# Hidden files and directories in the workspace
-hidden = ["venv", ".config", "**/__pycache__", "**/.mypy_cache", "**/*.pyc"]
+# Hidden files and directories
+hidden = [".env", ".git", "**/__pycache__","**/.mypy_cache","**/*.pyc"]
+
+# Entry-point for the project
 entrypoint = "main.py"
-modules = ["python-3.9:v18-20230807-322e88b"]
 
-[nix]
-channel = "stable-21_11"
-
-[interpreter]
-  [interpreter.command]
-  args = [
-    "stderred",
-    "--",
-    "prybar-python3",
-    "-q",
-    "--ps1",
-    "\u0001\u001b[33m\u0002îº§\u0001\u001b[00m\u0002 ",
-    "-i",
-  ]
-  env = { LD_LIBRARY_PATH = "$PYTHON_LD_LIBRARY_PATH" }
-
+# Environment variables
 [env]
-VIRTUAL_ENV = "/home/runner/${REPL_SLUG}/venv"
-PATH = "${VIRTUAL_ENV}/bin"
-PYTHONPATH = "${VIRTUAL_ENV}/lib/python3.9/site-packages"
-REPLIT_POETRY_PYPI_REPOSITORY = "https://package-proxy.replit.com/pypi/"
-MPLBACKEND = "TkAgg"
-POETRY_CACHE_DIR = "${HOME}/${REPL_SLUG}/.cache/pypoetry"
-SECRET_KEY = "Your Secret Key Here"
+SECRET_KEY = "Your Updated Secret Key Here"
 
-[unitTest]
-language = "python3"
-
-[debugger]
-support = true
-
-  [debugger.interactive]
-  transport = "localhost:0"
-  startCommand = ["dap-python", "manage.py"]
-
-    [debugger.interactive.integratedAdapter]
-    dapTcpAddress = "localhost:0"
-
-    [debugger.interactive.initializeMessage]
-    command = "initialize"
-    type = "request"
-      [debugger.interactive.initializeMessage.arguments]
-      adapterID = "debugpy"
-      clientID = "replit"
-      clientName = "replit.com"
-      columnsStartAt1 = true
-      linesStartAt1 = true
-      locale = "en-us"
-      pathFormat = "path"
-      supportsInvalidatedEvent = true
-      supportsProgressReporting = true
-      supportsRunInTerminalRequest = true
-      supportsVariablePaging = true
-      supportsVariableType = true
-
-    [debugger.interactive.launchMessage]
-    command = "attach"
-    type = "request"
-      [debugger.interactive.launchMessage.arguments]
-      logging = {}
-
-[packager]
-language = "python3"
-ignoredPackages = ["unit_tests"]
-
-  [packager.features]
-  enabledForHosting = false
-  packageSearch = true
-  guessImports = true
-
-[gitHubImport]
-requiredFiles = [".replit", "replit.nix", ".config", "venv"]
-
-[languages]
-
-[languages.python3]
-pattern = "**/*.py"
-
-[languages.python3.languageServer]
-start = "pylsp"
-
+# Packages to be installed
 def install_packages():
     # Adding pip functionality
     import pip
     # List of packages to be installed
-    packages = ["mutableai"]
-    # Iterate over the list of packages and install them one by one
+    packages = ["django", "gunicorn", "dj-database-url", "whitenoise", "python-dotenv"]
+    # Iterate over the list and install them one by one
     for package in packages:
         pip.main(['install', package])
 
 # Call the function to install the packages
 install_packages()
+
+# Updated Unit Test Settings
+[unitTest]
+language = "python3"
+
+# Updated Debugger Settings
+[debugger]
+support = true
+
+# Updated GitHub Import Settings
+[gitHubImport]
+requiredFiles = ["README.md", "LICENSE", "requirements.txt", ".env"]
+
+# Language Specification
+[languages.python3]
+pattern = "**/*.py"
+languageServer = "pylsp"

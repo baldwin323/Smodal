@@ -37,7 +37,7 @@ class SmodalTest(TestCase):
     def test_take_over(self):
         with self.assertRaises(ValueError): self.chat_bot.take_over("This is a strings!")
 
-    # added thorough testing for all functionalities
+    # Added thorough testing for all functionalities
     def test_successful_authentication(self):
         self.bot.authenticate(1000)  # assuming 1000 is a valid id
         self.assertEqual(self.bot.authenticated, True)

@@ -17,7 +17,6 @@ REQUIRED_PACKAGES = [
 
 def main():
     """Run administrative tasks."""
-
     is_replit = os.environ.get('REPLIT', False)
 
     if is_replit:
@@ -39,16 +38,11 @@ def handle_migrations(is_replit):
         execute_from_command_line(['./manage.py', 'makemigrations'])
         execute_from_command_line(['./manage.py', 'migrate'])
     except Exception as e:
-        raise e
-
-
-def handle_error(message, exception, is_replit):
-    """Handle any thrown exceptions and output to the correct log."""
-    if is_replit:
-        import replit
-        replit.log.error(message)
-    else:
-        print(f"{message} : {exception}")
+        if is_replit:
+            import replit
+            replit.log.error('Migrations failed: {}'.format(e))
+        else:
+            print('Migrations failed: {}'.format(e))
 
 
 def check_packages(is_replit):
@@ -56,7 +50,11 @@ def check_packages(is_replit):
     installed_packages = [pkg.key for pkg in pkg_resources.working_set]
     for package in REQUIRED_PACKAGES:
         if package not in installed_packages:
-            handle_error("Attempted to perform a '--user' install. Please install the package in the virtual environment.", None, is_replit)
+            if is_replit:
+                import replit
+                replit.log.error('Package {} is not installed'.format(package))
+            else:
+                print('Package {} is not installed'.format(package))
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'startapp':
