@@ -42,4 +42,4 @@ requiredFiles = ["README.md", "LICENSE", "requirements.txt", ".env"]
 # Language Specification
 [languages.python3]
 pattern = "**/*.py"
-languageServer = "pylsp"
+languageServer = { command = "pylsp"}
