@@ -5,7 +5,6 @@
 # - Route to "Take Over Chat" button functionality
 # - Route for modal to add necessary CSS and JavaScript files
 # - Integrations with Github to get and edit open pull requests
-# Further optimized for functionality on Replit, improved error handling and routing.
 from django.http import JsonResponse, HttpResponse
 from django.template import Template, Context
 from django.views import View
@@ -39,14 +38,11 @@ class ChatView(View):
 
 class TakeOverView(View):
     def get(self, request):
-         # This function is responsible for the "Take Over Chat" button
-         takeover_message = "Logic to take over chat goes here."
-         return JsonResponse({'takeover_message': takeover_message})
+        takeover_message = "Logic to take over chat goes here."
+        return JsonResponse({'takeover_message': takeover_message})
 
 def modal(request):
-    # This function renders the modal.html template using Django's Template and Context objects.
-    # It adds necessary CSS and JavaScript files.
-    with open('/Smodal/templates/modal.html','r') as template_file:
+    with open('templates/modal.html','r') as template_file:
         template_text = template_file.read()
         template = Template(template_text)
         context = Context({})
