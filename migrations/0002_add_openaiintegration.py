@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('api_key', models.CharField(max_length=255)),
+                ('ui_state', models.BooleanField(default=False)),
             ],
         ),
     ]
