@@ -1,0 +1,8 @@
+{
+    "sourcery.token": "user_uNGMPegg6XJ6A55yWZ5vJ2UFvXweYafwb6mgR6OkvGsitqLCb8jpq8CkCz4",
+    "editor.defaultFormatter": "mutable-ai.mutable-ai",
+    "python.globalModuleInstallation": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.terminal.focusAfterLaunch": true,
+    "python.terminal.executeInFileDir": true
+}
