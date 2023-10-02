@@ -18,7 +18,6 @@ class SmodalTest(TestCase):
             self.sale_item.base_url = os.getenv('REPLIT_DB_URL')
             self.chat_bot.base_url = os.getenv('REPLIT_DB_URL')
 
-    # Replit-friendly test
     def test_authenticate(self):
         with self.assertRaises(AssertionError): self.bot.authenticate(999)
 
@@ -37,7 +36,6 @@ class SmodalTest(TestCase):
     def test_take_over(self):
         with self.assertRaises(ValueError): self.chat_bot.take_over("This is a strings!")
 
-    # added thorough testing for all functionalities
     def test_successful_authentication(self):
         self.bot.authenticate(1000)  # assuming 1000 is a valid id
         self.assertEqual(self.bot.authenticated, True)

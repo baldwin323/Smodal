@@ -5,9 +5,8 @@
 # - Route to "Take Over Chat" button functionality
 # - Route for modal to add necessary CSS and JavaScript files
 # - Integrations with Github to get and edit open pull requests
-# Further optimized for functionality on Replit, improved error handling and routing.
 from django.http import JsonResponse, HttpResponse
-from django.template import Template, Context
+from django.shortcuts import render
 from django.views import View
 from django.urls import path
 from github import Github
@@ -30,7 +29,7 @@ class HomeView(View):
     template_name = 'watch_page.html'
 
     def get(self, request):
-        return HttpResponse(render_django_template(self.template_name))
+        return render(request, self.template_name)
 
 class ChatView(View):
     def get(self, request):
@@ -39,23 +38,20 @@ class ChatView(View):
 
 class TakeOverView(View):
     def get(self, request):
-         # This function is responsible for the "Take Over Chat" button
-         takeover_message = "Logic to take over chat goes here."
-         return JsonResponse({'takeover_message': takeover_message})
+        takeover_message = "Logic to take over chat goes here."
+        return JsonResponse({'takeover_message': takeover_message})
 
-def modal(request):
-    # This function renders the modal.html template using Django's Template and Context objects.
-    # It adds necessary CSS and JavaScript files.
-    with open('/Smodal/templates/modal.html','r') as template_file:
-        template_text = template_file.read()
-        template = Template(template_text)
-        context = Context({})
-        return HttpResponse(template.render(context))
+class ModalView(View):
+    template_name = 'modal.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('chat/', ChatView.as_view(), name='chat'),
     path('takeover/', TakeOverView.as_view(), name='takeover'),
+    path('modal/', ModalView.as_view(), name='modal'),
 ]
 
 if __name__ == '__main__':
