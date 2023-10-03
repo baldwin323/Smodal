@@ -21,6 +21,13 @@ handler = SysLogHandler(address=(LOGGING_HOST, LOGGING_PORT))
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-        
+
 # Applying configuration
 logging.config.dictConfig(LOGGING_CONFIG)
+
+# Function to log pactflow response
+def log_pactflow_response(headers, body):
+    # Logging the pactflow response headers
+    logger.info('Pactflow Response Headers: %s', str(headers))
+    # Logging the pactflow response body
+    logger.info('Pactflow Response Body: %s', str(body))
