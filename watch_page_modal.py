@@ -11,7 +11,7 @@ gh = Github()
 def get_open_pull_requests(repository):
     repo = gh.get_repo(repository)
     prs = repo.get_pulls(state='open')
-    logger.info("{} pull requests found in the repo: {}.".format(len(prs), repository))
+    logger.info(f"{len(prs)} pull requests found in the repo: {repository}.")
     return prs
 
 def edit_pull_request(repository, number, title=None):
@@ -19,7 +19,9 @@ def edit_pull_request(repository, number, title=None):
     pr = repo.get_pull(number)
     if title is not None:
         pr.edit(title=title)
-        logger.info("The pull request number {} has been edited with title: {}".format(number, title))
+        logger.info(
+            f"The pull request number {number} has been edited with title: {title}"
+        )
     return pr
 
 class HomeView(View):
