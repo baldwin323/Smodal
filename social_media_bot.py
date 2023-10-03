@@ -4,22 +4,59 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.core.exceptions import ValidationError, SuspiciousOperation
 from django.views import View
-from .models import User, Platform, AccessToken, SocialMediaBot
+from .models import User, Platform, AccessToken, SocialMediaBot, Credentials, EncryptedSensitiveData
 from .logging import logger
+
+import hashlib, binascii, os
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import pad, unpad
+
+
+SECRET_KEY = "This is a secret"
+BLOCK_SIZE = 16
+
 
 # This file defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
 # This bot has the ability to authenticate a user, post a message on behalf of the user.
+
 
 # Define your views here.
 class SocialMediaBotView(View):
     # The bot attribute will store an instance of the SocialMediaBot class.
     bot = None
 
+
+    # Encryption and decryption helper methods
+    def encrypt(plain_text, password):
+        salt = os.urandom(BLOCK_SIZE)
+        key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
+
+        cipher_config = AES.new(key, AES.MODE_CBC)
+        cipher_text = cipher_config.encrypt(pad(plain_text, BLOCK_SIZE))
+
+        return binascii.hexlify(salt + cipher_text)
+
+    def decrypt(cipher_text, password):
+        cipher_text = binascii.unhexlify(cipher_text)
+        salt, cipher_text = cipher_text[:BLOCK_SIZE], cipher_text[BLOCK_SIZE:]
+
+        key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
+
+        cipher_config = AES.new(key, AES.MODE_CBC, iv=salt)
+        return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE)
+
     # The get method allows the bot to authenticate a user.
-    def get(self, request, user_id):
+    def get(self, request, user_id, platform_name):
         try:
+            credentials = Credentials.objects.get(platform=platform_name)
+
+            encrypted_data = EncryptedSensitiveData.objects.get(platform=platform_name)
+
+            decrypted_data = self.decrypt(encrypted_data.encrypted_data, SECRET_KEY)
+
             self.bot = SocialMediaBot()
-            self.bot.authenticate(user_id)
+            self.bot.authenticate(credentials.username, decrypted_data)
             logger.info(f"Authenticated user {user_id}!")
             return HttpResponse(f"Authenticated user {user_id}!")
         except User.DoesNotExist:
