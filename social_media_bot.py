@@ -16,19 +16,27 @@ from Crypto.Util.Padding import pad, unpad
 SECRET_KEY = "This is a secret"
 BLOCK_SIZE = 16
 
-
-# This file defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
-# This bot has the ability to authenticate a user, post a message on behalf of the user.
-
+"""
+This file defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
+This bot has the ability to authenticate a user, post a message on behalf of the user.
+"""
 
 # Define your views here.
 class SocialMediaBotView(View):
-    # The bot attribute will store an instance of the SocialMediaBot class.
+    '''
+    The bot attribute will store an instance of the SocialMediaBot class.
+    '''
+
     bot = None
 
+    """
+    Encryption and decryption helper methods
+    """
 
-    # Encryption and decryption helper methods
     def encrypt(plain_text, password):
+        """
+        This method encrypts the provided plain text using AES
+        """
         salt = os.urandom(BLOCK_SIZE)
         key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
 
@@ -38,6 +46,9 @@ class SocialMediaBotView(View):
         return binascii.hexlify(salt + cipher_text)
 
     def decrypt(cipher_text, password):
+        """
+        This method decrypts the provided cipher text
+        """
         cipher_text = binascii.unhexlify(cipher_text)
         salt, cipher_text = cipher_text[:BLOCK_SIZE], cipher_text[BLOCK_SIZE:]
 
@@ -46,7 +57,9 @@ class SocialMediaBotView(View):
         cipher_config = AES.new(key, AES.MODE_CBC, iv=salt)
         return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE)
 
-    # The get method allows the bot to authenticate a user.
+    """
+    The get method allows the bot to authenticate a user.
+    """
     def get(self, request, user_id, platform_name):
         try:
             credentials = Credentials.objects.get(platform=platform_name)
@@ -63,26 +76,27 @@ class SocialMediaBotView(View):
             logger.warning("User does not exist")
             return HttpResponse("User does not exist", status=404)
         except Exception as e:
-            logger.error(f"Error: {e}")
-            return HttpResponse(f"Error: {e}", status=500)
+            logger.error(f"Error during user authentication: {e}")
+            return HttpResponse(f"Error during user authentication: {e}", status=500)
 
-    # The post method allows the bot to post a message to a specified platform on behalf of the user.
+    """
+    The post method allows the bot to post a message to a specified platform on behalf of the user.
+    """
     def post(self, request, user_id, platform_name, message):
         if not all([user_id, platform_name, message]):
-          # Data validation for the request params.
-          raise SuspiciousOperation("Invalid form data")
+            raise SuspiciousOperation("Invalid form data - all of User ID, Platform Name and Message are required.")
 
         try:
             self.bot.post_message(user_id, platform_name, message)
             logger.info(f"Posted message {message} to {platform_name} for user {user_id}!")
             return HttpResponse(f"Posted message {message} to {platform_name} for user {user_id}!")
         except Platform.DoesNotExist:
-            logger.warning("Platform does not exist")
-            return HttpResponse("Platform does not exist", status=404)
+            logger.warning("Specified platform does not exist")
+            return HttpResponse("Specified platform does not exist", status=404)
         except AccessToken.DoesNotExist:
-            logger.warning("Invalid Access Token")
-            return HttpResponse("Invalid Access Token", status=403)
+            logger.warning("Invalid or expired Access Token")
+            return HttpResponse("Invalid or expired Access Token", status=403)
         except Exception as e:
-            logger.error(f"Error: {e}")
-            return HttpResponse(f"Error: {e}", status=500)
+            logger.error(f"Error during message posting: {e}")
+            return HttpResponse(f"Error during message posting: {e}", status=500)
 ```
