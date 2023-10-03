@@ -19,7 +19,7 @@ def cache_result(key):
         @wraps(function)
         def wrapper(*args, **kwargs):
             # Forming the complete key with function name and input arguments
-            complete_key = f'{key}_{function.__name__}_{str(args)}_{str(kwargs)}'
+            complete_key = f'{key}_{function.__name__}_{args}_{kwargs}'
             # Attempt to get the cached result
             result = cache.get(complete_key)
 
@@ -31,7 +31,9 @@ def cache_result(key):
                 logger.info(f'Result was not in cache, computed and added to cache with key {complete_key}')
             else:
                 logger.info(f'Result fetched from cache with key {complete_key}')
-                
+
             return result
+
         return wrapper
+
     return decorator
