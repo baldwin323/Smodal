@@ -1,6 +1,6 @@
 import os
 import requests
-import logging
+from Smodal import logging  # Importing the centralized logging instance
 
 # Access token for GitHub API
 ACCESS_TOKEN = os.getenv('GITHUB_ACCESS_TOKEN')
@@ -9,8 +9,7 @@ ACCESS_TOKEN = os.getenv('GITHUB_ACCESS_TOKEN')
 API_URL = 'https://api.github.com'
 
 # Configuring logger for error tracking
-logger = logging.getLogger()
-logger.setLevel(logging.WARNING)
+logger = logging.getLogger(__name__)  # Replaced the standalone logger instance with the centralized logger instance
 
 # Function to fetch open pull requests from a repo
 def get_open_pull_requests(repo_owner, repo_name):
@@ -26,13 +25,13 @@ def main():
     repo_name = 'templates'
     try:
         # ... (code omitted for brevity)
-        
+
         if open_pull_requests is None:
             return
     except Exception as e:
-        logger.warning(f'Error occurred while getting open pull requests: {str(e)}')
+        logger.warning(f'Error occurred while getting open pull requests: {str(e)}')  # Utilizing the centralized logger instance here
         return
 
     # If there are open pull requests
     if open_pull_requests:   
-        # ... (code
+        # ... (code omitted for brevity)
