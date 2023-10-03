@@ -14,12 +14,22 @@ def main():
 
 
 def handle_migrations():
-    """Run the necessary Django migrations."""
+    """
+    The handle_migrations method is responsible for running the Django migrations.
+    It employs execute_from_command_line function from Django's management package to run the commands.
+    In an event of an exception occurring while executing the commands, it captures it, logs a detailed message using the centralized logger, and continues to execute other commands.
+
+    Might raise: 
+    - SystemExit: If the command raises it, which might be for a number of reasons such as unapplied migrations.
+    """
     try:
         execute_from_command_line(['./manage.py', 'makemigrations'])
+    except Exception as e:
+        logger.exception(f'Creating migrations failed: {e}')
+    try:
         execute_from_command_line(['./manage.py', 'migrate'])
     except Exception as e:
-        logger.exception(f'Migrations failed: {e}')
+        logger.exception(f'Applying migrations failed: {e}')
 
 
 if __name__ == '__main__':
