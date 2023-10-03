@@ -19,6 +19,25 @@
     {% include 'includes/header.html' %}
 
     {% if user_id %}
+        <section>
+            <h2>Social Media Credentials</h2>
+            <form method="post" action="{% url 'social_login' %}">
+                <label for="social_site">Select Social Media Site:</label>
+                <select id="social_site" name="social_site">
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="instagram">Instagram</option>
+                    <!-- Add more options for social media sites as required -->
+                </select>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+                <label for="api_key">API Key:</label>
+                <input type="text" id="api_key" name="api_key">
+                <input type="submit" value="Submit">
+            </form>
+        </section>
         {% include 'users/dashboard.html' %}
     {% else %}
         {% include 'users/login.html' %}

@@ -1,11 +1,33 @@
 # importing required libraries
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import OIDCConfiguration
+from .models import OIDCConfiguration, Credentials, APICredentials
 import requests
 import json
 
 # Views for handling OIDC, Pactflow and SwaggerHub integration
+
+def social_media_login(request, platform):
+    """
+    View to handle login credentials for the social media site
+    Retrieves the credentials or API keys stored in the database and sends them to the requested platform for login
+    """
+    try:
+        # Check if there are API keys stored for the platform
+        api_keys = APICredentials.objects.filter(platform=platform)
+        if api_keys.exists():
+            # TODO: Send api keys to the platform for authentication
+            pass
+        else:
+            # If no API keys found, check for username and password
+            login_details = Credentials.objects.filter(platform=platform)
+            if login_details.exists():
+                # TODO: Send username and password to the platform for authentication
+                pass
+            else:
+                return HttpResponse("No login credentials found for the requested platform.")
+    except Exception as e:
+        return HttpResponse(f"Error while fetching credentials: {e}")
 
 def oidc_auth(request):
     """ 
