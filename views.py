@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import OIDCConfiguration
 import requests
+import json
 
 # Views for handling OIDC authentication flow
 
@@ -16,7 +17,7 @@ def oidc_auth(request):
         auth_url = "https://api.bitbucket.org/2.0/workspaces/smodal/pipelines-config/identity/oidc"
         client_id = config.client_id
         redirect_uri = config.redirect_uris.split(',')[0].strip()
-
+        
         # Constructing and redirecting to authentication URL.
         return redirect(auth_url+"?client_id="+client_id+"&redirect_uri="+redirect_uri+"&response_type=code")
     else:
@@ -47,6 +48,13 @@ def oidc_callback(request):
         if r.status_code == 200:
             # If request is successful, redirect to home page after storing tokens.
             access_token = r.json().get('access_token')
+            # Save pactflow response details
+            r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io')
+            response_headers = json.dumps(dict(r_pactflow.headers))
+            response_body = json.dumps(r_pactflow.json())
+            config.pactflow_response_headers = response_headers
+            config.pactflow_response_body = response_body
+            config.save()
             # You may store the tokens in database for future use.
             # After storing the tokens, redirect as per your application's flow.
             return redirect('/home/')

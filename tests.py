@@ -5,12 +5,17 @@ from Smodal.social_media_bot import SocialMediaBot
 from Smodal.sale_items import SaleItem, ChatBot
 import uuid
 import os
+from .models import OIDCConfiguration
+import json
 
 class SmodalTest(TestCase):
     def setUp(self):
         self.bot = SocialMediaBot()
         self.sale_item = SaleItem()
         self.chat_bot = ChatBot()
+        self.pactflow_data = OIDCConfiguration.objects.first()
+        self.expected_headers = json.loads(self.pactflow_data.pactflow_response_headers)
+        self.expected_body = json.loads(self.pactflow_data.pactflow_response_body)
 
         # Adjusting for Replit environment
         if 'REPLIT' in os.environ:
@@ -60,4 +65,10 @@ class SmodalTest(TestCase):
     def test_successful_take_over(self):
         self.chat_bot.take_over(True)  # assuming True is a valid command
         self.assertEqual(self.chat_bot.take_over_successful, True)
+        
+    def test_pactflow_response_headers_saved_correctly(self):
+        self.assertEqual(self.pactflow_data.pactflow_response_headers, self.expected_headers)
+
+    def test_pactflow_response_body_saved_correctly(self):
+        self.assertEqual(self.pactflow_data.pactflow_response_body, self.expected_body)
 ```
