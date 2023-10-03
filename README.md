@@ -4,13 +4,15 @@
 
 **Name**: modal.tokai Django Application
 
-**Description**: The modal.tokai application is a state-of-the-art Django-based application delivering robust functionality and convenience to its users. It is architectured based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, separation of concerns, Django's templacing system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity.
+**Description**: The modal.tokai application is a state-of-the-art Django-based application delivering robust functionality and convenience to its users. It is architectured based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, separation of concerns, Django's templacing system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. Now, it also boasts integration with Pactflow and SwaggerHub to further enhance the application's robustness and versatility.
 
-To set up the latest, highly optimised version of the Django app, follow these steps:
+To set up the latest, highly optimized version of the Django app, run the following commands:
+
+(Insert detailed steps to set up the application here)
 
 Here is a glimpse into our application's prime features:
 
-1. **Exception Handling**: We utilise Django's try/except blocks to systematically process exceptions and log them for future debugging.
+1. **Exception Handling**: We utilize Django's try/except blocks to systematically process exceptions and log them for future debugging.
 
 2. **Data Validation**: We enforce stringent validation checks for user-submitted data, thereby ensuring data integrity and reducing error possibilities.
 
@@ -18,11 +20,11 @@ Here is a glimpse into our application's prime features:
 
 4. **Documentation**: Alongside efficient code, we provide comprehensive documentation including thorough docstrings and README files, simplifying the maintenance process.
 
-5. **Separation of Concerns**: Coplying with Django's best practices, we have distinct files for templates, views, forms, and models ensuring code readability and clean organisation.
+5. **Separation of Concerns**: Complying with Django's best practices, we have distinct files for templates, views, forms, and models ensuring code readability and clean organization.
 
 6. **Templating**: We leverage Django's templating system, using template tags, variables, includes, etc., over basic HTML, thereby streamlining the development process.
 
-7. **Security**: To ensure top-notch security, our app employs input sanitization, password hashing, and access restrictions on unauthorised users, safeguarding user information at every cost.
+7. **Security**: To ensure top-notch security, our app employs input sanitization, password hashing, and access restrictions on unauthorized users, safeguarding user information at every cost.
 
 8. **Custom Error Pages**: We extend a positive user experience even in the event of a glitch by showcasing custom 404 and 500 error pages.
 
@@ -32,9 +34,11 @@ Here is a glimpse into our application's prime features:
 
 11. **Modularity**: By segregating functionalities into reusable apps/modules, we abide by the DRY principles, thereby boosting code maintainability for future enhancements.
 
-Getting started with the modal.tokai application is simple and smooth. Our quickstart guides and tutorials are designed to guide you effortlessly through the process:
+12. **Integration with Pactflow and SwaggerHub**: We have integrated Pactflow for managing, sharing, testing and verifying APIs contracts and SwaggerHub for designing, building, documenting and consuming RESTful APIs. This enhances collaboration and coordination between development and operation teams, leading to more efficient application development and maintenance process.
 
-// Include Guides and Tutorials Here
+Getting started with the modal.tokai application is simple and smooth. See our quickstart guides and tutorials that guide you effortlessly through the process:
+
+(Include Guides and Tutorials Here)
 
 ## Need Support?
 

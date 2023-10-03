@@ -5,7 +5,7 @@ from .models import OIDCConfiguration
 import requests
 import json
 
-# Views for handling OIDC authentication flow
+# Views for handling OIDC, Pactflow and SwaggerHub integration
 
 def oidc_auth(request):
     """ 
@@ -48,13 +48,21 @@ def oidc_callback(request):
         if r.status_code == 200:
             # If request is successful, redirect to home page after storing tokens.
             access_token = r.json().get('access_token')
-            # Save pactflow response details
-            r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io')
-            response_headers = json.dumps(dict(r_pactflow.headers))
-            response_body = json.dumps(r_pactflow.json())
-            config.pactflow_response_headers = response_headers
-            config.pactflow_response_body = response_body
-            config.save()
+            
+            # Making a request to Pactflow.
+            pactflow_headers = {'Authorization': 'Bearer ' + access_token}
+            r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io', headers=pactflow_headers)
+            if r_pactflow.status_code == 200:
+                # Save pactflow response details
+                response_headers = json.dumps(dict(r_pactflow.headers))
+                response_body = json.dumps(r_pactflow.json())
+            
+                config.pactflow_response_headers = response_headers
+                config.pactflow_response_body = response_body
+                config.save()
+            else:
+                return HttpResponse("Error while fetching data from Pactflow. Please try again")
+
             # You may store the tokens in database for future use.
             # After storing the tokens, redirect as per your application's flow.
             return redirect('/home/')
