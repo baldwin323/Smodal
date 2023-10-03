@@ -1,4 +1,13 @@
-pandas==2.1.0
-matplotlib==3.7.2
-Flask==2.3.3
-discord==2.3.2
+# List of python packages required for the application
+#
+# The format is: package==version
+# for instance:
+# numpy==1.18.5
+# pandas==1.0.5
+#
+# Add your packages here
+#
+# numpy==1.18.5
+# pandas==1.0.5
+# Django==3.1.7
+# djangorestframework==3.12.4
