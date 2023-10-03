@@ -6,9 +6,41 @@
 
 **Description**: The modal.tokai application is a state-of-the-art Django-based application delivering robust functionality and convenience to its users. It is architectured based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, separation of concerns, Django's templacing system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. Now, it also boasts integration with Pactflow and SwaggerHub to further enhance the application's robustness and versatility.
 
-To set up the latest, highly optimized version of the Django app, run the following commands:
+To set up the latest, highly optimized version of the Django app, you need to set up a Python virtual environment first. Follow these steps:
 
-(Insert detailed steps to set up the application here)
+### Setting up a virtual environment
+
+On Windows:
+```
+python -m venv env
+```
+On Unix/MacOS:
+```
+python3 -m venv env
+```
+Activate the environment:
+
+On Windows:
+```
+.\env\Scripts\activate
+```
+On Unix/MacOS:
+```
+source env/bin/activate
+```
+### Installing Dependencies
+
+Once in the virtual environment, you can use the provided `requirements.txt` file to install all the necessary dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+Now you are ready to start the application:
+
+```
+python manage.py runserver
+```
 
 Here is a glimpse into our application's prime features:
 
