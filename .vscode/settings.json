@@ -4,5 +4,14 @@
     "python.globalModuleInstallation": true,
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.terminal.focusAfterLaunch": true,
-    "python.terminal.executeInFileDir": true
+    "python.terminal.executeInFileDir": true,
+    "MutableAI.includeRelevantFiles": true,
+    "MutableAI.experimentalFeatures": {
+        "log": true,
+        "staging": true,
+        "202309-deprecated": true,
+        "202309-upcoming": true,
+        "202309-suggestIntoBuffer": true
+    },
+    "MutableAI.autocomplete.linebyline": true
 }
