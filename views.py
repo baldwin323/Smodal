@@ -1,59 +1,59 @@
 import logging
-
+from typing import Optional
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from .models import OIDCConfiguration, Credentials, APICredentials
 from .logging import log_pactflow_response
 import requests
 import json
 
-# Initializing logger
+# Initialize the logger
 logger = logging.getLogger(__name__)
 
-def social_media_login(request: HttpRequest, platform: str) -> HttpResponse:
+def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResponse]:
     """
-    This is a view to handle login credentials for the social media site.
-    Retrieves the credentials or API keys stored in the database and sends them 
-    to the requested platform for login.
+    Manage login credentials for social media site.
+
+    Check for stored credentials or API keys within the 
+    database and pass to the requested platform for login.
 
     Args:
-        request: HttpRequest object
-        platform: str, name of the social media platform
+        request: The HttpRequest object
+        platform: str representing the social media site name
 
     Returns:
-        HttpResponse object
+        Optional HttpResponse object indicating success or failure of operation
     """
     try:
-        # Check if there are API keys stored for the platform
+        # Check if there are API keys for the platform
         api_keys = APICredentials.objects.filter(platform=platform)
         if not api_keys.exists():
-            # If no API keys found, check for username and password
+            # Check for username and password if no API keys found
             login_details = Credentials.objects.filter(platform=platform)
             if not login_details.exists():
                 return HttpResponse("No login credentials found for the requested platform.")
     except Exception as e:
-        logger.error(f"Error while fetching credentials: {e}")
-        return HttpResponse(f"Error while fetching credentials: {e}")
+        logger.error(f"Error fetching credentials: {e}")
+        return HttpResponse(f"Error fetching credentials: {e}")
 
-
-def oidc_auth(request: HttpRequest) -> HttpResponse:
+def oidc_auth(request: HttpRequest) -> Optional[HttpResponse]:
     """ 
-    This is a view to handle initial OIDC authentication request.  
+    Handle an initial OIDC authentication request.
 
     Args:
-        request: HttpRequest object 
+        request: The HttpRequest object 
 
     Returns:
-        HttpResponse object
+        Optional HttpResponse object indicating success or failure of operation
     """
     try:
         if not (config := OIDCConfiguration.objects.first()):
-            return HttpResponse("OIDC Configuration not found in database.")
+            return HttpResponse("OIDC Configuration not in database.")
         client_id = config.client_id
         redirect_uri = config.redirect_uris.split(',')[0].strip()
 
         auth_url = "https://api.bitbucket.org/2.0/workspaces/smodal/pipelines-config/identity/oidc"
-            # Constructing and redirecting to authentication URL.
+            # Construct and redirect to authentication URL.
         return redirect(
             f"{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
         )
@@ -61,16 +61,15 @@ def oidc_auth(request: HttpRequest) -> HttpResponse:
         logger.error(f"Error during OIDC Auth: {e}")
         return HttpResponse(f"Error during OIDC Auth: {e}")
 
-
-def oidc_callback(request: HttpRequest) -> HttpResponse:
+def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
     """
-    This is a view to handle auth server's callback.
+    Manage auth server callback.
 
     Args:
         request: HttpRequest object
 
     Returns:
-        HttpResponse object
+        Optional HttpResponse object indicating success or failure of operation
     """
     try:
         if not (config := OIDCConfiguration.objects.first()):
@@ -80,21 +79,21 @@ def oidc_callback(request: HttpRequest) -> HttpResponse:
         redirect_uri = config.redirect_uris.split(',')[0].strip()
         client_secret = config.client_secret
 
-        # Getting the authorization code from request parameters
+        # Get the authorization code from request parameters
         code = request.GET.get('code')
 
-        # Constructing headers and body for token request.
+        # Construct headers and body for token request.
         headers = {'content-type': 'application/x-www-form-urlencoded'}
         body = {'grant_type': 'authorization_code', 'code': code, 'client_id': client_id, 'client_secret': client_secret, 'redirect_uri': redirect_uri }
 
-        # Making POST request to get tokens.
+        # Make POST request to get tokens.
         r = requests.post(token_url, headers=headers, data=body)
 
         if r.status_code == 200:
-            # If request is successful, redirect to home page after storing tokens.
+            # Successful request, redirect to home page storing tokens.
             access_token = r.json().get('access_token')
 
-                # Making a request to Pactflow.
+                # Request to Pactflow.
             pactflow_headers = {'Authorization': f'Bearer {access_token}'}
             r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io', headers=pactflow_headers)
             if r_pactflow.status_code == 200:
@@ -109,7 +108,7 @@ def oidc_callback(request: HttpRequest) -> HttpResponse:
                 # Log pactflow response
                 log_pactflow_response(response_headers, response_body)
             else:
-                return HttpResponse("Error while fetching data from Pactflow. Please try again")
+                return HttpResponse("Error fetching data from Pactflow. Try again.")
 
             # After storing the tokens, redirect as per your application's flow.
             return redirect('/home/')
