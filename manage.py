@@ -6,7 +6,7 @@ This script is the entry point for running the Django application and handling e
 import os
 import sys
 from django.core.management import execute_from_command_line
-from typing import NoReturn
+from typing import NoReturn, Dict
 
 from Smodal.logging import logger  # Import the centralized logger
 
@@ -20,8 +20,15 @@ def main() -> NoReturn:
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Smodal.settings')
     handle_migrations()
+    print_env_variables()  # Print the environment variables
     execute_from_command_line(sys.argv)
 
+def print_env_variables() -> Dict[str, str]:
+    """Print all available environment variables and their corresponding keys"""
+    env_vars = dict(os.environ.items())
+    for key, value in env_vars.items():
+        print(f"{key}: {value}")
+    return env_vars
 
 def handle_migrations() -> NoReturn:
     """
