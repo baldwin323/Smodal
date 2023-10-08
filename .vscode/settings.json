@@ -9,7 +9,6 @@
     "MutableAI.experimentalFeatures": {
         "log": true,
         "staging": true,
-        "useNewModelForAutocomplete": true,
         "202309-deprecated": true,
         "202309-upcoming": true,
         "202309-suggestIntoBuffer": true
