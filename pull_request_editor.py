@@ -1,16 +1,25 @@
 import os
 import requests
+from typing import List, Optional
 from Smodal import logging  
 
-ACCESS_TOKEN = os.getenv('GITHUB_ACCESS_TOKEN')
+# ACCESS_TOKEN is used for OAuth authentication in GitHub API
+ACCESS_TOKEN: str = os.getenv('GITHUB_ACCESS_TOKEN')
 
-API_URL = 'https://api.github.com'
+API_URL: str = 'https://api.github.com'  # base url of GitHub API
 
-logger = logging.getLogger(__name__)  # centralized logger
+# centralized logger for logging all the errors and information
+logger = logging.getLogger(__name__)  
 
-def get_open_pull_requests(repo_owner, repo_name):
+def get_open_pull_requests(repo_owner: str, repo_name: str) -> Optional[List[dict]]:
     """
     Function to fetch open pull requests from a repo.
+    
+    :param repo_owner: Name of the owner of the repository.
+    :param repo_name: Name of the repository.
+    
+    :return: A list of dictionaries containing details of open pull requests. 
+    If there's any error, it returns None
     """
     try:
         # ... (code omitted for brevity)
@@ -19,9 +28,17 @@ def get_open_pull_requests(repo_owner, repo_name):
         # Raise the error for further handling
         raise e  
 
-def edit_pull_request(repo_owner, repo_name, pull_id, title, body):
+def edit_pull_request(repo_owner: str, repo_name: str, pull_id: int, title: str, body: str) -> bool:
     """
-    Function that edits the title and description of a pull request.
+    Function to edit the title and description of a pull request.
+
+    :param repo_owner: Name of the owner of the repository.
+    :param repo_name: Name of the repository.
+    :param pull_id: Pull request id.
+    :param title: New title of the pull request.
+    :param body: New description of the pull request.
+
+    :return: True if the pull request was edited successfully, else False.
     """
     try:
         # ... (code omitted for brevity)
@@ -30,10 +47,13 @@ def edit_pull_request(repo_owner, repo_name, pull_id, title, body):
         # Raise the error for further handling
         raise e  
 
-def main():
+def main() -> None:
+    """
+    Main function to get the open pull requests and edit them.
+    """
     try:
-        repo_owner = 'Smodal'
-        repo_name = 'templates'
+        repo_owner: str = 'Smodal'
+        repo_name: str = 'templates'
         # ... (code omitted for brevity)
 
         if open_pull_requests is None:

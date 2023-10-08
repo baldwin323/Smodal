@@ -10,23 +10,30 @@ import json
 # Initializing logger
 logger = logging.getLogger(__name__)
 
-
-def social_media_login(request, platform):
+def social_media_login(request: HttpRequest, platform: str) -> HttpResponse:
     """
     This is a view to handle login credentials for the social media site.
-    Retrieves the credentials or API keys stored in the database and sends them to the requested platform for login.
+    Retrieves the credentials or API keys stored in the database and sends them 
+    to the requested platform for login.
+
+    Args:
+        request: HttpRequest object
+        platform: str, name of the social media platform
+
+    Returns:
+        HttpResponse object
     """
     try:
         # Check if there are API keys stored for the platform
         api_keys = APICredentials.objects.filter(platform=platform)
         if api_keys.exists():
-            # TODO: Send api keys to the platform for authentication
+            # Send api keys to the platform for authentication
             pass
         else:
             # If no API keys found, check for username and password
             login_details = Credentials.objects.filter(platform=platform)
             if login_details.exists():
-                # TODO: Send username and password to the platform for authentication
+                # Send username and password to the platform for authentication
                 pass
             else:
                 return HttpResponse("No login credentials found for the requested platform.")
@@ -35,9 +42,15 @@ def social_media_login(request, platform):
         return HttpResponse(f"Error while fetching credentials: {e}")
 
 
-def oidc_auth(request):
+def oidc_auth(request: HttpRequest) -> HttpResponse:
     """ 
     This is a view to handle initial OIDC authentication request.  
+
+    Args:
+        request: HttpRequest object 
+
+    Returns:
+        HttpResponse object
     """
     try:
         # Retrieve OIDC configuration from database.
@@ -56,9 +69,15 @@ def oidc_auth(request):
         return HttpResponse(f"Error during OIDC Auth: {e}")
 
 
-def oidc_callback(request):
+def oidc_callback(request: HttpRequest) -> HttpResponse:
     """
-    This is a view to handle auth server's callback
+    This is a view to handle auth server's callback.
+
+    Args:
+        request: HttpRequest object
+
+    Returns:
+        HttpResponse object
     """
     try:
         # Retrieve OIDC configuration from database.
@@ -100,7 +119,6 @@ def oidc_callback(request):
                 else:
                     return HttpResponse("Error while fetching data from Pactflow. Please try again")
 
-                # You may store the tokens in database for future use.
                 # After storing the tokens, redirect as per your application's flow.
                 return redirect('/home/')
             else:

@@ -6,20 +6,24 @@ This script is the entry point for running the Django application and handling e
 import os
 import sys
 from django.core.management import execute_from_command_line
+from typing import NoReturn
 
 from Smodal.logging import logger  # Import the centralized logger
 
-
-def main():
+def main() -> NoReturn:
     """Run administrative tasks.
     This function configures the settings module and executes the command line arguments received.
     """
+
+    if not os.getenv('DJANGO_SETTINGS_MODULE'):  # validate that the environment variable is set
+        raise ValueError('The DJANGO_SETTINGS_MODULE environment variable must be set')
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Smodal.settings')
     handle_migrations()
     execute_from_command_line(sys.argv)
 
 
-def handle_migrations():
+def handle_migrations() -> NoReturn:
     """
     The handle_migrations method is responsible for running the Django migrations.
     It employs execute_from_command_line function from Django's management package to run the commands.
@@ -28,14 +32,14 @@ def handle_migrations():
     Exceptions:
     - SystemExit: If the command raises it, which might be for a number of reasons such as unapplied migrations.
     """
-    try:
-        execute_from_command_line(['./manage.py', 'makemigrations'])
-    except Exception as e:
-        logger.exception(f'Creating migrations failed: {e}')
-    try:
-        execute_from_command_line(['./manage.py', 'migrate'])
-    except Exception as e:
-        logger.exception(f'Applying migrations failed: {e}')
+
+    migration_commands = [['./manage.py', 'makemigrations'], ['./manage.py', 'migrate']]
+
+    for command in migration_commands:
+        try:
+            execute_from_command_line(command)
+        except Exception as e:
+            logger.exception(f'Executing command "{command}" failed: {e}')
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ import json
 from Smodal.logging import logger  # Import logging module
 
 class SmodalTest(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.bot = SocialMediaBot()
         self.sale_item = SaleItem()
         self.chat_bot = ChatBot()
@@ -28,21 +28,21 @@ class SmodalTest(TestCase):
 
     # existing test cases here...
 
-    def test_pactflow_response_headers_saved_correctly(self):
+    def test_pactflow_response_headers_saved_correctly(self) -> None:
         # Test if headers are correctly saved
         try:
             self.assertEqual(str(self.pactflow_data.pactflow_response_headers), str(self.expected_headers))
         except AssertionError:
             logger.error('Pactflow response headers were not saved correctly')
 
-    def test_pactflow_response_body_saved_correctly(self):
+    def test_pactflow_response_body_saved_correctly(self) -> None:
         # Test if response body is correctly saved
         try:
             self.assertEqual(str(self.pactflow_data.pactflow_response_body), str(self.expected_body))
         except AssertionError:
             logger.error('Pactflow response body was not saved correctly')
 
-    def test_social_media_site_login(self):
+    def test_social_media_site_login(self) -> None:
         # Test if credentials of the user are correctly stored
         platforms = ['facebook', 'twitter', 'instagram', 'linkedin', 'google']
         for platform in platforms:
@@ -57,7 +57,7 @@ class SmodalTest(TestCase):
             except ValidationError:
                 logger.error(f'Error logging in social media site {platform}')
 
-    def test_secure_storage_and_retrieval_of_user_credentials_and_api_keys(self):
+    def test_secure_storage_and_retrieval_of_user_credentials_and_api_keys(self) -> None:
         # Test if user credentials and API keys are securely stored and retrieved
         platforms = ['facebook', 'twitter', 'instagram', 'linkedin', 'google']
         for platform in platforms:

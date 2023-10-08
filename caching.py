@@ -2,9 +2,10 @@
 # Importing the centralized logger instance from logging.py
 from django.core.cache import cache
 from functools import wraps
+from typing import Any, Callable
 from Smodal.logging import logger
 
-def cache_result(key):
+def cache_result(key: str) -> Callable:
     """
     This decorator uses Django's caching mechanism to cache 
     the result of any function it decorates. Ideal for resource-intensive, time-consuming functions 
@@ -15,9 +16,9 @@ def cache_result(key):
     with the same parameters will lookup in the cache using this key, and if the result is stored, 
     it retrieves from there instead of re-running the entire function.
     """
-    def decorator(function):
+    def decorator(function: Callable) -> Callable:
         @wraps(function)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             try:
                 # Forming the complete key with function name and input arguments
                 complete_key = f'{key}_{function.__name__}_{args}_{kwargs}'
