@@ -23,13 +23,13 @@ try:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 except Exception as e:  # type: Exception
-    logger.error('An error occurred while setting up the handler: {}'.format(e))
+    logger.error(f'An error occurred while setting up the handler: {e}')
 
 try:
     # Applying LOGGING_CONFIG
     logging.config.dictConfig(LOGGING_CONFIG)
 except Exception as e:  # type: Exception
-    logger.error('An error occurred while applying logger configuration: {}'.format(e))
+    logger.error(f'An error occurred while applying logger configuration: {e}')
 
 def log_pactflow_response(headers: dict, body: str) -> None:
     """
@@ -43,6 +43,6 @@ def log_pactflow_response(headers: dict, body: str) -> None:
         # Log the pactflow response headers
         logger.info('Pactflow Response Headers: %s', str(headers))
         # Log the pactflow response body
-        logger.info('Pactflow Response Body: %s', str(body))
+        logger.info('Pactflow Response Body: %s', body)
     except Exception as e:  # type: Exception
-        logger.error('An error occurred during logging of pactflow response: {}'.format(e))
+        logger.error(f'An error occurred during logging of pactflow response: {e}')

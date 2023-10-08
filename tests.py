@@ -18,7 +18,7 @@ class SmodalTest(TestCase):
             self.expected_headers = json.loads(self.pactflow_data.pactflow_response_headers)
             self.expected_body = json.loads(self.pactflow_data.pactflow_response_body)
         except Exception as e:
-            logger.error('An error occurred during data fetching: {}'.format(e))
+            logger.error(f'An error occurred during data fetching: {e}')
 
         # Adjusting for Replit environment
         if 'REPLIT' in os.environ:
@@ -70,4 +70,6 @@ class SmodalTest(TestCase):
                 decrypted_data = self.bot.decrypt(encrypted_data.encrypted_data, "This is a secret")
                 self.assertEqual(decrypted_data.decode(), "password")
             except ValidationError as e:
-                logger.error('An error occurred during secure storage and retrieval of user credentials and API keys: {}'.format(e))
+                logger.error(
+                    f'An error occurred during secure storage and retrieval of user credentials and API keys: {e}'
+                )
