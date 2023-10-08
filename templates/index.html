@@ -6,14 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'styles/style.css' %}">
     <link rel="stylesheet" href="{% static 'styles/responsive.css' %}">
-    <script>
-        function delayRedirection() {
-            setTimeout(function() {
-                window.location.href = "/login";
-            }, 7000);
-        }
-        window.onload = delayRedirection;
-    </script>
+    <link rel="stylesheet" href="{% static 'styles/index.css' %}">
+    <script src="{% static 'js/delayRedirection.js' %}"></script>
 </head>
 <body>
     {% include 'includes/header.html' %}

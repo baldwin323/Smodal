@@ -6,12 +6,14 @@ from Smodal import logging
 # ACCESS_TOKEN is used for OAuth authentication in GitHub API
 ACCESS_TOKEN: str = os.getenv('GITHUB_ACCESS_TOKEN')
 
-API_URL: str = 'https://api.github.com'  # base url of GitHub API
+API_URL: str = 'https://api.github.com'  # Base URL of GitHub API
 
-# centralized logger for logging all the errors and information
+# Centralized logger for logging all the errors and information
 logger = logging.getLogger(__name__)  
 
-def get_open_pull_requests(repo_owner: str, repo_name: str) -> Optional[List[dict]]:
+def get_open_pull_requests(repo_owner: str, 
+                           repo_name: str
+                           ) -> Optional[List[dict]]:
     """
     Function to fetch open pull requests from a repo.
     
@@ -19,16 +21,22 @@ def get_open_pull_requests(repo_owner: str, repo_name: str) -> Optional[List[dic
     :param repo_name: Name of the repository.
     
     :return: A list of dictionaries containing details of open pull requests. 
-    If there's any error, it returns None
+             If there's any error, it returns None
     """
     try:
         # ... (code omitted for brevity)
+        
     except Exception as e:
-        logger.error(f'Error occurred while getting open pull requests: {str(e)}')
+        logger.error('Error occurred while getting open pull requests: {str(e)}')
         # Raise the error for further handling
         raise e  
 
-def edit_pull_request(repo_owner: str, repo_name: str, pull_id: int, title: str, body: str) -> bool:
+def edit_pull_request(repo_owner: str, 
+                      repo_name: str, 
+                      pull_id: int, 
+                      title: str, 
+                      body: str
+                      ) -> bool:
     """
     Function to edit the title and description of a pull request.
 
@@ -42,8 +50,9 @@ def edit_pull_request(repo_owner: str, repo_name: str, pull_id: int, title: str,
     """
     try:
         # ... (code omitted for brevity)
+        
     except Exception as e:
-        logger.error(f'Error occurred while editing pull request: {str(e)}')
+        logger.error('Error occurred while editing pull request: {str(e)}')
         # Raise the error for further handling
         raise e  
 
@@ -59,7 +68,7 @@ def main() -> None:
         if open_pull_requests is None:
             return
     except Exception as e:
-        logger.error(f'Error occurred while getting open pull requests: {str(e)}')
+        logger.error('Error occurred while getting open pull requests: {str(e)}')
         # Raise the error for further handling
         raise e  
 

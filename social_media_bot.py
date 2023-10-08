@@ -12,53 +12,69 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad, unpad
 
+# Secret key for encryption/decryption
 SECRET_KEY = "This is a secret"
+
+# Standard block size
 BLOCK_SIZE = 16
 
 """
-This file defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
+This module defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
 This bot has the ability to authenticate a user, post a message on behalf of the user.
 """
 
+
 class SocialMediaBotView(View):
     """
-    The bot attribute will store an instance of the SocialMediaBot class.
+    The bot attribute represents an instance of the SocialMediaBot class.
     """
-    bot = None
+    bot: SocialMediaBot = None
 
     def encrypt(self, plain_text: str, password: str) -> bytes:
-        """
-        This method encrypts the provided plain text using AES
-        """
+        """Encrypts the provided plain text using AES"""
+        
+        # Generate a random salt
         salt = os.urandom(BLOCK_SIZE)
+        
+        # Hash the password along with the salt
         key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
 
+        # Initialize AES cipher configuration
         cipher_config = AES.new(key, AES.MODE_CBC)
+        
+        # Encrypt and pad plain_text
         cipher_text = cipher_config.encrypt(pad(plain_text, BLOCK_SIZE))
 
         return binascii.hexlify(salt + cipher_text)
 
     def decrypt(self, cipher_text: bytes, password: str) -> bytes:
-        """
-        This method decrypts the provided cipher text
-        """
+        """Decrypts the provided cipher text"""
+        
+        # Unhexlify the cipher_text
         cipher_text = binascii.unhexlify(cipher_text)
+        
+        # Retrieve the salt and cipher_text
         salt, cipher_text = cipher_text[:BLOCK_SIZE], cipher_text[BLOCK_SIZE:]
 
+        # Hash the password along with the salt
         key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
 
+        # Initialize AES cipher configuration with the salt as iv
         cipher_config = AES.new(key, AES.MODE_CBC, iv=salt)
+        
         return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE)
 
     def get(self, request, user_id: str, platform_name: str) -> HttpResponse:
-        """
-        The GET method allows the bot to authenticate a user.
-        """
+        """Authenticates a user via the bot"""
         try:
+            # Get platform specific credentials and sensitive data
             credentials = Credentials.objects.get(platform=platform_name)
             encrypted_data = EncryptedSensitiveData.objects.get(platform=platform_name)
+            
+            # Decrypt the sensitive data using the secret key
             decrypted_data = self.decrypt(encrypted_data.encrypted_data, SECRET_KEY)
 
+            # Authenticate the bot with the credentials and decrypted data
             self.bot = SocialMediaBot()
             self.bot.authenticate(credentials.username, decrypted_data)
 
@@ -72,14 +88,15 @@ class SocialMediaBotView(View):
             return HttpResponse(f"Error during user authentication: {e}", status=500)
 
     def post(self, request, user_id: str, platform_name: str, message: str) -> HttpResponse:
-        """
-        The POST method allows the bot to post a message to a specified platform on behalf of the user.
-        """
+        """Allows the bot to post a message to a specified platform on behalf of the user"""
+        # Validate the form inputs
         if not all([user_id, platform_name, message]):
             raise SuspiciousOperation("Invalid form data - all of User ID, Platform Name and Message are required.")
 
         try:
+            # Allow the bot to post a message
             self.bot.post_message(user_id, platform_name, message)
+            
             logger.info(f"Posted message {message} to {platform_name} for user {user_id}!")
             return HttpResponse(f"Posted message {message} to {platform_name} for user {user_id}!")
         except Platform.DoesNotExist:
