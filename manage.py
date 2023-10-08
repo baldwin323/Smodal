@@ -7,8 +7,12 @@ import os
 import sys
 from django.core.management import execute_from_command_line
 from typing import NoReturn, Dict
+from dotenv import load_dotenv
 
 from Smodal.logging import logger  # Import the centralized logger
+
+# Load environment variables
+load_dotenv()
 
 def main() -> NoReturn:
     """Run administrative tasks.
