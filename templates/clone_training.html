@@ -9,12 +9,18 @@
     {% endblock %}
 </head>
 <body>
+    {% include "nav.html" %}
     <h1>{% block header %}Clone Training{% endblock %}</h1>
     <p>{% block content %}Here you can learn about the process of clone training.{% endblock %}</p>
-    {% include "button.html" %}
+    <div id="training-content">
+        <!-- Dynamic content goes here -->
+    </div>
+    <button id="startTraining" onclick="startTraining()">Start Training</button>
 
     {% block extra_body %}
     <script src="{% static 'js/startTraining.js' %}"></script>
     {% endblock %}
+
+    {% include "footer.html" %}
 </body>
 </html>

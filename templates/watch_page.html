@@ -12,18 +12,21 @@
 
 <body>
     {% include "nav.html" %}
-    {% for interaction in interactions %}
-        <div class="container" id="live-chat">
-            <p>User: {{ interaction.user_input }}</p>
-            <p>Bot: {{ interaction.bot_response }}</p>
+    <main role="main" id="main-content">
+        {% for interaction in interactions %}
+            <div class="container" id="live-chat">
+                <p>User: {{ interaction.user_input }}</p>
+                <p>Bot: {{ interaction.bot_response }}</p>
+            </div>
+        {% endfor %}
+        
+        <div class="interact">
+            <button id="takeover">Take Over Chat</button>
         </div>
-    {% endfor %}
-    
-    <div class="interact">
-        <button id="takeover">Take Over Chat</button>
-    </div>
+    </main>
 
     {% include "footer.html" %}
+    
     <script src="{% static 'js/takeover.js' %}"></script>
 </body>
 
