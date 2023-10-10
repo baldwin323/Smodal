@@ -24,17 +24,21 @@
                     <!-- Add more options for social media sites as required -->
                 </select>
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username">
+                <input type="text" id="username" name="username" required="required">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password">
+                <input type="password" id="password" name="password" required="required">
                 <label for="api_key">API Key:</label>
-                <input type="text" id="api_key" name="api_key">
+                <input type="text" id="api_key" name="api_key" required="required">
                 <input type="submit" value="Submit">
             </form>
         </section>
         {% include 'users/dashboard.html' %}
     {% else %}
-        {% include 'users/login.html' %}
+        <section>
+            <h2>Welcome to Python Flask ReplAuth</h2>
+            <p>This application allows you to authenticate with your social media accounts and manage your data. Click on the Login button to get started!</p>
+            {% include 'users/login.html' %}
+        </section>
     {% endif %}
 
     {% include 'includes/footer.html' %}

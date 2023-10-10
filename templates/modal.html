@@ -2,6 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="styles.css">
+<script src="modal.js"></script>
 </head>
 <body>
 <!-- The beginning of the Modal -->
@@ -30,5 +31,17 @@
   </div>
 </div>
 <!-- The end of the Modal-->
+<script>
+  // Ensure that the modal is correctly set up and functions as expected
+  const modal = document.getElementById('{{ modal_id }}');
+  const closebutton = modal.getElementsByClassName('close')[0];
+  const closeButton = () => modal.style.display = "none";
+  closebutton.onclick = closeButton;
+  window.onclick = (event) => {
+    if (event.target == modal) {
+      closeButton()
+    }
+  }
+</script>
 </body>
 </html>
