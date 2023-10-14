@@ -27,10 +27,9 @@ if SECRET_KEY is None:
   exit(1)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-X_FRAME_OPTIONS = '*'
+ALLOWED_HOSTS = ['ip_or_hostname'] # replace with your server's IP or hostname
 
 # Application definition
 
@@ -79,8 +78,12 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbname',  # replace with your database name
+        'USER': 'dbuser',  # replace with your database user
+        'PASSWORD': 'dbpass',  # replace with your database password
+        'HOST': 'dbhost',  # replace with your database host
+        'PORT': 'dbport',  # replace with your database port
     }
 }
 
@@ -123,7 +126,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+"""
