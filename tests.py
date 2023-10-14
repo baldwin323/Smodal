@@ -86,3 +86,22 @@ class SmodalTest(TestCase):
             self.assertEqual(response, "Test response")
         except Exception as e:
             logger.error(f'Error occurred while testing chat bot response: {e}')
+
+    # Testing the integration with DigitalOcean API
+    def test_do_api_integration(self) -> None:
+        try:
+            droplets = self.bot.get_droplets()
+            self.assertIsNotNone(droplets)
+            self.assertEqual(isinstance(droplets, list), True)
+        except Exception as e:
+            logger.error(f'Error occurred while testing DigitalOcean API integration: {e}')
+
+    # Testing the deployment-related settings
+    def test_deploy_settings(self) -> None:
+        try:
+            settings = self.bot.deploy()
+            self.assertIsNotNone(settings)
+            self.assertEqual(settings.DATABASES['default']['ENGINE'], 'django.db.backends.postgresql')
+            self.assertEqual(settings.DEBUG, False)
+        except Exception as e:
+            logger.error(f'Error occurred while testing deployment-related settings: {e}')

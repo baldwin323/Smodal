@@ -64,13 +64,47 @@ Set up the Django application:
 python manage.py migrate
 ```
 
+Set the environment variables necessary for the application to run. For example:
+
+```
+export DJANGO_SETTINGS_MODULE=Your-Settings
+```
+
 Now you are ready to start the application:
 
 ```
 python manage.py runserver 0:8000
 ```
 
+Collect the static files:
+
+```
+python manage.py collectstatic
+```
+
+Make sure that the `DEBUG` setting is set to `False` in the `settings.py` file for production deployment. Configure the `ALLOWED_HOSTS`, `DATABASES`, and `STATIC_ROOT` settings accordingly.
+
+## Deployment on DigitalOcean
+
+After adjustments in the settings.py file, you're ready to deploy the Django application on a DigitalOcean droplet. Execute the following command:
+
+```
+gunicorn django_project.wsgi:application --bind 0.0.0.0:8000
+```
+
+This will start Gunicorn, which serves as the application server and binds the application to your IP address on port 8000. Access your application by visiting `http://Your-Droplet-IP-Address:8000` in the web browser.
+
 Now, your Django app should be up and running on your DigitalOcean droplet at Your-Droplet-IP-Address:8000.
+
+## Testing
+
+To ensure the robustness and reliability of the application, testing is performed at various levels:
+
+```
+pytest tests.py
+```
+
+This provides comprehensive test coverage, including testing of the DigitalOcean API integration and the deployment-related settings.
 
 ## Need Support?
 
