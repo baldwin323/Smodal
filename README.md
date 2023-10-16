@@ -96,6 +96,31 @@ This will start Gunicorn, which serves as the application server and binds the a
 
 Now, your Django app should be up and running on your DigitalOcean droplet at Your-Droplet-IP-Address:8000.
 
+### Deploying with Helm and Kubernetes
+
+Firstly, ensure that Helm and Kubernetes are properly installed in your system. Follow these steps to deploy your application using Helm and Kubernetes:
+
+1. Build your Docker image and push it to your Docker repository.
+
+   ```
+   docker build -t sobereyed/modal.tokai:tagname .
+   docker push sobereyed/modal.tokai:tagname
+   ```
+
+2. Navigate to the Helm directory of our project.
+
+   ```
+   cd /Smodal/helm
+   ```
+
+3. Deploy the Helm chart.
+
+   ```
+   helm install modal-tokai ./ -f values.yaml
+   ```
+
+This will deploy the Django application on the Kubernetes cluster.
+
 ## Testing
 
 To ensure the robustness and reliability of the application, testing is performed at various levels:
@@ -105,6 +130,7 @@ pytest tests.py
 ```
 
 This provides comprehensive test coverage, including testing of the DigitalOcean API integration and the deployment-related settings.
+
 
 ## Need Support?
 
