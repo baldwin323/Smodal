@@ -32,13 +32,13 @@ ssh root@Your-Droplet-IP-Address
 On your new droplet:
 
 ```
-python3 -m venv env
+python3 -m venv /path/to/project/venv
 ```
 
 Activate the environment:
 
 ```
-source env/bin/activate
+source /path/to/project/venv/bin/activate
 ```
 
 ### Installing Dependencies
@@ -46,6 +46,7 @@ source env/bin/activate
 Once in the virtual environment, install the necessary dependencies:
 
 ```
+pip install django
 pip install -r requirements.txt
 ```
 
@@ -58,9 +59,10 @@ cd Your-Repository-Directory
 
 ### Set Up Django App
 
-Set up the Django application:
+Prepare the Django application:
 
 ```
+python manage.py makemigrations
 python manage.py migrate
 ```
 
@@ -70,16 +72,17 @@ Set the environment variables necessary for the application to run. For example:
 export DJANGO_SETTINGS_MODULE=Your-Settings
 ```
 
-Now you are ready to start the application:
-
-```
-python manage.py runserver 0:8000
-```
-
 Collect the static files:
 
 ```
 python manage.py collectstatic
+```
+
+Now you are ready to start the application:
+
+```
+python manage.py runserver 0.0.0.0:8000
+exit
 ```
 
 Make sure that the `DEBUG` setting is set to `False` in the `settings.py` file for production deployment. Configure the `ALLOWED_HOSTS`, `DATABASES`, and `STATIC_ROOT` settings accordingly.
@@ -89,10 +92,12 @@ Make sure that the `DEBUG` setting is set to `False` in the `settings.py` file f
 After adjustments in the settings.py file, you're ready to deploy the Django application on a DigitalOcean droplet. Execute the following command:
 
 ```
-gunicorn django_project.wsgi:application --bind 0.0.0.0:8000
+source /path/to/project/venv/bin/activate
+gunicorn --bind 0.0.0.0:8000 project.wsgi
+exit
 ```
 
-This will start Gunicorn, which serves as the application server and binds the application to your IP address on port 8000. Access your application by visiting `http://Your-Droplet-IP-Address:8000` in the web browser.
+This will start Gunicorn, which serves as the application server, and binds the application to your IP address on port 8000. Access your application by visiting `http://Your-Droplet-IP-Address:8000` in the web browser.
 
 Now, your Django app should be up and running on your DigitalOcean droplet at Your-Droplet-IP-Address:8000.
 
@@ -126,11 +131,12 @@ This will deploy the Django application on the Kubernetes cluster.
 To ensure the robustness and reliability of the application, testing is performed at various levels:
 
 ```
-pytest tests.py
+source /path/to/project/venv/bin/activate
+python manage.py test
+exit
 ```
 
 This provides comprehensive test coverage, including testing of the DigitalOcean API integration and the deployment-related settings.
-
 
 ## Need Support?
 

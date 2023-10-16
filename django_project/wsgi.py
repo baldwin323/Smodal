@@ -15,7 +15,7 @@ from django.core.wsgi import get_wsgi_application
 from Smodal.logging import logger
 
 # Set the DJANGO_SETTINGS_MODULE environment variable for deployment on DigitalOcean
-os.environ['DJANGO_SETTINGS_MODULE'] = 'django_project.settings.production'
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_project.settings.production')
 
 # Ensuring logger configuration is correctly set up
 try:
