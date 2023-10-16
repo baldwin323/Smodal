@@ -16,17 +16,26 @@ def error_handler(request, exception=None, error_code=500):
         '404': 'Page Not Found',
         '500': 'Internal Server Error',
     }
-    
-    # Log the exception if it exists
-    if exception:
-        logger.error(f'HTTP {error_code}: {str(exception)}')
 
+    if exception:
+        if exception.__class__.__name__ == 'ModuleNotFoundError':
+            error_message = "Error in module import. Please check the dependencies."
+            error_code = 500
+        else:
+            error_message = error_messages.get(str(error_code), 'Unknown Error')
+
+        # Log the exception if it exists
+        logger.error(f'HTTP {error_code}: {str(exception)}, Error: {error_message}')
+    else:
+        error_message = error_messages.get(str(error_code), 'Unknown Error')
+    
     content = {
         'error_code': error_code, 
-        'error_message': error_messages[str(error_code)],
+        'error_message': error_message,
     }
 
     return render(request, f'error/{error_code}.html', content, status=error_code)
+
 
 def handler400(request, exception=None):
     '''
@@ -36,6 +45,7 @@ def handler400(request, exception=None):
     '''
     return error_handler(request, exception, 400)
 
+
 def handler404(request, exception=None):
     '''
     Function to handle 404 error, 
@@ -43,6 +53,7 @@ def handler404(request, exception=None):
     and handles the logging
     '''
     return error_handler(request, exception, 404)
+
 
 def handler500(request, exception=None):
     ''' 

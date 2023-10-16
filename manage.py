@@ -8,6 +8,7 @@ import sys
 from django.core.management import execute_from_command_line
 from typing import NoReturn, Dict
 from dotenv import load_dotenv
+import logging
 
 from Smodal.logging import logger  # Import the centralized logger
 
@@ -20,13 +21,17 @@ def main() -> NoReturn:
     """
 
     if not os.getenv('DJANGO_SETTINGS_MODULE'):  # validate that the environment variable is set
-        raise ValueError('The DJANGO_SETTINGS_MODULE environment variable must be set')
+        logger.error('The DJANGO_SETTINGS_MODULE environment variable must be set')
+        return
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Smodal.settings')
-    handle_migrations()  # Running Django Migrations
-    setup_frontend()  # Setup frontend
-    print_env_variables()  # Print the environment variables
-    execute_from_command_line(sys.argv)
+    try:
+        handle_migrations()  # Running Django Migrations
+        setup_frontend()  # Setup frontend
+        print_env_variables()  # Print the environment variables
+        execute_from_command_line(sys.argv)
+    except Exception as e:
+        logger.error(f'An error occurred in main: {e}')
 
 def setup_frontend() -> NoReturn:
     """Check and set up necessary configurations for the frontend.
@@ -39,10 +44,13 @@ def setup_frontend() -> NoReturn:
 
 def print_env_variables() -> Dict[str, str]:
     """Print all available environment variables and their corresponding keys"""
-    env_vars = dict(os.environ.items())
-    for key, value in env_vars.items():
-        print(f"{key}: {value}")
-    return env_vars
+    try:
+        env_vars = dict(os.environ.items())
+        for key, value in env_vars.items():
+            print(f"{key}: {value}")
+        return env_vars
+    except Exception as e:
+        logger.error(f'An error occurred while printing environment variables: {e}')
 
 def handle_migrations() -> NoReturn:
     """
@@ -61,7 +69,6 @@ def handle_migrations() -> NoReturn:
             execute_from_command_line(command)
         except Exception as e:
             logger.exception(f'Executing command "{command}" failed: {e}')
-
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'startapp':

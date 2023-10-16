@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, Http404
 from .models import OIDCConfiguration, Credentials, APICredentials
 from .logging import log_pactflow_response
 import requests
@@ -31,10 +31,10 @@ def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResp
             # Check for username and password if no API keys found
             login_details = Credentials.objects.filter(platform=platform)
             if not login_details.exists():
-                return HttpResponse("No login credentials found for the requested platform.")
+                raise Http404("No login credentials found for the requested platform.")
     except Exception as e:
-        logger.error(f"Error fetching credentials: {e}")
-        return HttpResponse(f"Error fetching credentials: {e}")
+        logger.error(f"Error fetching credentials: {str(e)}", exc_info=True)
+        return HttpResponse(f"Error fetching credentials: {str(e)}", status=500)
 
 def oidc_auth(request: HttpRequest) -> Optional[HttpResponse]:
     """ 
@@ -48,7 +48,7 @@ def oidc_auth(request: HttpRequest) -> Optional[HttpResponse]:
     """
     try:
         if not (config := OIDCConfiguration.objects.first()):
-            return HttpResponse("OIDC Configuration not in database.")
+            raise Http404("OIDC Configuration not in database.")
         client_id = config.client_id
         redirect_uri = config.redirect_uris.split(',')[0].strip()
 
@@ -58,8 +58,8 @@ def oidc_auth(request: HttpRequest) -> Optional[HttpResponse]:
             f"{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
         )
     except Exception as e:
-        logger.error(f"Error during OIDC Auth: {e}")
-        return HttpResponse(f"Error during OIDC Auth: {e}")
+        logger.error(f"Error during OIDC Auth: {str(e)}", exc_info=True)
+        return HttpResponse(f"Error during OIDC Auth: {str(e)}", status=500)
 
 def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
     """
@@ -73,7 +73,7 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
     """
     try:
         if not (config := OIDCConfiguration.objects.first()):
-            return HttpResponse("OIDC Configuration not found in database.")
+            raise Http404("OIDC Configuration not found in database.")
         token_url = "https://api.bitbucket.org/2.0/workspaces/smodal/pipelines-config/identity/oidc/token"
         client_id = config.client_id
         redirect_uri = config.redirect_uris.split(',')[0].strip()
@@ -89,6 +89,9 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
         # Make POST request to get tokens.
         r = requests.post(token_url, headers=headers, data=body)
 
+        if not r.ok:
+            raise Exception("Error retrieved during fetching tokens: {0}, Response: {1}".format(r.reason, r.text))
+
         if r.status_code == 200:
             # Successful request, redirect to home page storing tokens.
             access_token = r.json().get('access_token')
@@ -96,6 +99,10 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
                 # Request to Pactflow.
             pactflow_headers = {'Authorization': f'Bearer {access_token}'}
             r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io', headers=pactflow_headers)
+
+            if not r_pactflow.ok:
+                raise Exception("Error fetching data from Pactflow: {0}, Response: {1}".format(r_pactflow.reason, r_pactflow.text))
+
             if r_pactflow.status_code == 200:
                 # Save pactflow response details
                 response_headers = json.dumps(dict(r_pactflow.headers))
@@ -108,12 +115,12 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
                 # Log pactflow response
                 log_pactflow_response(response_headers, response_body)
             else:
-                return HttpResponse("Error fetching data from Pactflow. Try again.")
+                return HttpResponse("Error fetching data from Pactflow. Try again.", status=500)
 
             # After storing the tokens, redirect as per your application's flow.
             return redirect('/home/')
         else:
-            return HttpResponse("Error while fetching tokens. Please try again.")
+            raise Exception("Error while fetching tokens")
     except Exception as e:
-        logger.error(f"Error during OIDC Callback: {e}")
-        return HttpResponse(f"Error during OIDC Callback: {e}")
+        logger.error(f"Error during OIDC Callback: {str(e)}", exc_info=True)
+        return HttpResponse(f"Error during OIDC Callback: {str(e)}", status=500)
