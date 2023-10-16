@@ -27,7 +27,7 @@ if SECRET_KEY is None:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ip_or_hostname'] # replace with your server's IP or hostname
+ALLOWED_HOSTS = ['your_server_ip_or_hostname'] # replace with your server's IP or hostname
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Add your apps here
 ]
 
 MIDDLEWARE = [
@@ -71,11 +72,11 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbname',  # replace with your database name
-        'USER': 'dbuser',  # replace with your database user
-        'PASSWORD': 'dbpass',  # replace with your database password
-        'HOST': 'dbhost',  # replace with your database host
-        'PORT': 'dbport',  # replace with your database port
+        'NAME': os.getenv('DB_NAME'),  # replace with your database name
+        'USER': os.getenv('DB_USER'),  # replace with your database user
+        'PASSWORD': os.getenv('DB_PASSWORD'),  # replace with your database password
+        'HOST': os.getenv('DB_HOST'),  # replace with your database host
+        'PORT': os.getenv('DB_PORT'),  # replace with your database port
     }
 }
 

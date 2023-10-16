@@ -34,7 +34,7 @@ def main() -> NoReturn:
         logger.error(f'An error occurred in main: {e}')
 
 def setup_frontend() -> NoReturn:
-    """Check and set up necessary configurations for the frontend.
+    """Check the Static files and media root configurations for the frontend.
     Setup static files and other requirements for frontend of Django application.
     """
 
