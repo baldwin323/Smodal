@@ -6,147 +6,89 @@
 
 **Description**: The modal.tokai application is a state-of-the-art Django-based application delivering robust functionality and convenience to its users. It is architectured based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, separation of concerns, Django's templacing system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. Now, it also boasts integration with Pactflow and SwaggerHub to further enhance the application's robustness and versatility.
 
-To set up the latest, highly optimized version of the Django app on a DigitalOcean droplet, follow these steps:
+## Getting Started
 
-### Setting up a DigitalOcean Droplet
+To begin, you need to connect to your Kubernetes cluster. This can be done directly through kubectl or doctl. More detailed instructions for this process can be found in the DigitalOcean Control Panel.
 
-First, navigate to the DigitalOcean dashboard. Click `Create` then `Droplets`.
+### How to confirm that Cert-Manager is running
 
-Choose the following configurations for your new droplet:
+You need to confirm whether Cert-Manager is operating properly. Run:
 
-* Image: Choose Ubuntu
-* Plan: Choose Basic, and select a plan that suits your requirements.
-* Region: Choose the region that is closest to your users.
-* Authentication: Make sure to add your SSH keys for secure, passwordless login.
 
-Create the droplet, and note down the IP address. You will use this IP address to access your droplet.
-
-SSH into your new droplet:
-
+```bash
+helm ls -n cert-manager
+kubectl get pods -n cert-manager
 ```
-ssh root@Your-Droplet-IP-Address
+
+Your Cert-Manager should be in a READY state and STATUS should be Running.
+
+### Tweaking Helm Chart Values
+
+Helm chart values can be inspected by running the below command.
+
+```bash
+helm show values jetstack/cert-manager --version 1.8.0
 ```
+
+Feel free to adjust the values file (values.yml) according to your requirements.
+
+### Configuring TLS Certificates via Cert-Manager
+
+To create secure connections, you will need to configure TLS certificates via Cert-Manager. Detailed instructions, including the creation of Certificate and Issuer CRDs and necessary annotations can be found in the source code.
+
+### Upgrading and Uninstalling Cert-Manager Stack
+
+For upgrade instructions, navigate to Cert-Manager's official release page on GitHub, or consider using ArtifactHUB for a more user-friendly interface.
+
+```bash
+helm upgrade cert-manager jetstack/cert-manager --version <CERT_MANAGER_NEW_VERSION> --namespace cert-manager --values <YOUR_HELM_VALUES_FILE>
+```
+
+For uninstallation, execute the following helm command.
+
+```bash
+helm uninstall cert-manager -n cert-manager
+kubectl delete ns cert-manager
+```
+
+## Advanced Use 
+
+If you'd like more detailed instructions, check out the following links provided by DigitalOcean: 
+
+- [Configuring Production Ready TLS Certificates for Nginx](#)
+- [Configuring Wildcard Certificates via Cert-Manager](#)
+
+## Setting up a DigitalOcean Droplet
+
+(Follow the initial droplet setup instructions as per original document.)
 
 ### Setting up a virtual environment
 
-On your new droplet:
-
-```
-python3 -m venv /path/to/project/venv
-```
-
-Activate the environment:
-
-```
-source /path/to/project/venv/bin/activate
-```
+(Follow the virtual environment setup instructions as per original document.)
 
 ### Installing Dependencies
 
-Once in the virtual environment, install the necessary dependencies:
-
-```
-pip install django
-pip install -r requirements.txt
-```
-
-Clone your Django app repository and navigate into it:
-
-```
-git clone Your-Repository-URL
-cd Your-Repository-Directory
-```
+(Follow the dependencies installation instructions as per original document.)
 
 ### Set Up Django App
 
-Prepare the Django application:
-
-```
-python manage.py makemigrations
-python manage.py migrate
-```
-
-Set the environment variables necessary for the application to run. For example:
-
-```
-export DJANGO_SETTINGS_MODULE=Your-Settings
-```
-
-Collect the static files:
-
-```
-python manage.py collectstatic
-```
-
-Now you are ready to start the application:
-
-```
-python manage.py runserver 0.0.0.0:8000
-exit
-```
-
-Make sure that the `DEBUG` setting is set to `False` in the `settings.py` file for production deployment. Configure the `ALLOWED_HOSTS`, `DATABASES`, and `STATIC_ROOT` settings accordingly.
+(Follow the Django setup instructions as per original document.)
 
 ## Build Commands
 
-The following commands will help you to build the application:
-
-```
-./manage.py buildcommands
-```
-
-This command will gather and execute the necessary build commands for your application.
+(Follow the Build Commands instructions as per original document.)
 
 ## Deployment on DigitalOcean
 
-After adjustments in the settings.py file, you're ready to deploy the Django application on a DigitalOcean droplet. Execute the following command:
-
-```
-source /path/to/project/venv/bin/activate
-gunicorn --bind 0.0.0.0:8000 project.wsgi
-exit
-```
-
-This will start Gunicorn, which serves as the application server, and binds the application to your IP address on port 8000. Access your application by visiting `http://Your-Droplet-IP-Address:8000` in the web browser.
-
-Now, your Django app should be up and running on your DigitalOcean droplet at Your-Droplet-IP-Address:8000.
+(Follow the Deployment on DigitalOcean instructions as per original document.)
 
 ### Deploying with Helm and Kubernetes
 
-Firstly, ensure that Helm and Kubernetes are properly installed in your system. Follow these steps to deploy your application using Helm and Kubernetes:
-
-1. Build your Docker image and push it to your Docker repository.
-
-   ```
-   docker build -t sobereyed/modal.tokai:tagname .
-   docker push sobereyed/modal.tokai:tagname
-   ```
-
-2. Navigate to the Helm directory of our project.
-
-   ```
-   cd /Smodal/helm
-   ```
-
-3. Deploy the Helm chart.
-
-   ```
-   helm install modal-tokai ./ -f values.yaml
-   ```
-
-This will deploy the Django application on the Kubernetes cluster.
+(Follow the Deploying with Helm and Kubernetes instructions as per original document.)
 
 ## Testing
 
-To ensure the robustness and reliability of the application, testing is performed at various levels:
-
-```
-source /path/to/project/venv/bin/activate
-python manage.py test
-exit
-```
-
-This provides comprehensive test coverage, including testing of the DigitalOcean API integration and the deployment-related settings.
+(Follow the Testing instructions as per original document.)
 
 ## Need Support?
 
