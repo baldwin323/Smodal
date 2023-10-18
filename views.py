@@ -25,10 +25,8 @@ def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResp
         Optional HttpResponse object indicating success or failure of operation
     """
     try:
-        # Check if there are API keys for the platform
         api_keys = APICredentials.objects.filter(platform=platform)
         if not api_keys.exists():
-            # Check for username and password if no API keys found
             login_details = Credentials.objects.filter(platform=platform)
             if not login_details.exists():
                 raise Http404("No login credentials found for the requested platform.")
@@ -53,7 +51,7 @@ def oidc_auth(request: HttpRequest) -> Optional[HttpResponse]:
         redirect_uri = config.redirect_uris.split(',')[0].strip()
 
         auth_url = "https://api.bitbucket.org/2.0/workspaces/smodal/pipelines-config/identity/oidc"
-            # Construct and redirect to authentication URL.
+   
         return redirect(
             f"{auth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
         )
@@ -79,24 +77,22 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
         redirect_uri = config.redirect_uris.split(',')[0].strip()
         client_secret = config.client_secret
 
-        # Get the authorization code from request parameters
         code = request.GET.get('code')
 
-        # Construct headers and body for token request.
         headers = {'content-type': 'application/x-www-form-urlencoded'}
         body = {'grant_type': 'authorization_code', 'code': code, 'client_id': client_id, 'client_secret': client_secret, 'redirect_uri': redirect_uri }
 
-        # Make POST request to get tokens.
         r = requests.post(token_url, headers=headers, data=body)
 
         if not r.ok:
             raise Exception("Error retrieved during fetching tokens: {0}, Response: {1}".format(r.reason, r.text))
 
         if r.status_code == 200:
-            # Successful request, redirect to home page storing tokens.
             access_token = r.json().get('access_token')
 
-                # Request to Pactflow.
+            # Updated JWT Token
+            access_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InRyaWFsIn0.eyJpc3MiOiJuZ2lueCBpc3N1ZXIiLCJpYXQiOjE2OTcyOTEwNDQsImp0aSI6IjE0ODM3Iiwic3ViIjoiVDAwMDEzMTk3NiIsImV4cCI6MTY5OTg4MzA0NH0.geiDEOEaxkk9naHlZI4pbBPRCChEJDKKLQSQebQeSfsn-uKk2fhqEEqUW3gLAN2r0j_uc2wgIlMgFPpDzmOf-1Nn6Dp54qfcUC8A2H59X7pkFhsaWRWGYPOn5peu3y8FPSo2a7gw77xOC2oz8o7iOhQYv4yb68bv2AWLepaGN0AsY4fr8tJykHrqmK6zN_1-85g9p-K50PzrEnHanO6WgmgSl6RxvCmIBlb6Hpeeb5bvm1kbsWgobpJSUXqepbJx5ef_YROGm93hVylnR80vCI53J-Ba0c6vJWrAec3sXmJQaDBjGYOl5mxueQWNz0cXNFd1RiimyIT3zmFSEePi71eatutmkZYVwR1mTgjGvJFCamZUWmeJ_o-N41l5I64_z-0sxIG9pjk8xC9EHhdqinikINcQ1s-jbTldG9aouDE8c9NG2jXumjV76CA6Xc3BD4-ciDLFIZrvbGX4H3dZgK141A6TUjnaO5AxP1UsDF1lLU-tE3vRMIxoR6VZzEKH"
+
             pactflow_headers = {'Authorization': f'Bearer {access_token}'}
             r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io', headers=pactflow_headers)
 
@@ -104,7 +100,6 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
                 raise Exception("Error fetching data from Pactflow: {0}, Response: {1}".format(r_pactflow.reason, r_pactflow.text))
 
             if r_pactflow.status_code == 200:
-                # Save pactflow response details
                 response_headers = json.dumps(dict(r_pactflow.headers))
                 response_body = json.dumps(r_pactflow.json())
 
@@ -112,12 +107,10 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
                 config.pactflow_response_body = response_body
                 config.save()
 
-                # Log pactflow response
                 log_pactflow_response(response_headers, response_body)
             else:
                 return HttpResponse("Error fetching data from Pactflow. Try again.", status=500)
 
-            # After storing the tokens, redirect as per your application's flow.
             return redirect('/home/')
         else:
             raise Exception("Error while fetching tokens")
