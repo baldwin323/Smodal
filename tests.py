@@ -20,11 +20,11 @@ class SmodalTest(TestCase):
         except Exception as e:
             logger.error(f'An error occurred during data fetching: {e}')
 
-        # Adjusting for Replit environment
-        if 'REPLIT' in os.environ:
-            self.bot.base_url = os.getenv('REPLIT_DB_URL')
-            self.sale_item.base_url = os.getenv('REPLIT_DB_URL')
-            self.chat_bot.base_url = os.getenv('REPLIT_DB_URL')
+        # Adjusting for local environment
+        if 'Local' in os.environ:
+            self.bot.base_url = os.getenv('LOCAL_DB_URL')
+            self.sale_item.base_url = os.getenv('LOCAL_DB_URL')
+            self.chat_bot.base_url = os.getenv('LOCAL_DB_URL')
 
     def test_pactflow_response_headers_saved_correctly(self) -> None:
         try:
