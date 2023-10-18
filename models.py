@@ -9,7 +9,7 @@ class Credentials(models.Model):
     username = models.CharField(max_length=255, blank=False, null=False, unique=False)
     # Password of the account on the platform
     password = models.CharField(max_length=255, blank=False, null=False, unique=False)
-    
+
 # Model for storing the API credentials
 class APICredentials(models.Model):
     # Name of the platform
@@ -32,6 +32,8 @@ class OIDCConfiguration(models.Model):
     client_secret = models.CharField(max_length=255, blank=False, null=False, unique=True)
     # Redirection URIs for the OIDC account
     redirect_uris = models.TextField(blank=False, null=False)
+    # JWT Token for the OIDC account
+    jwt_token = models.TextField(blank=True, null=True)
 
 # Model for storing encrypted sensitive data
 class EncryptedSensitiveData(models.Model):
