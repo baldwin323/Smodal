@@ -2,51 +2,41 @@ import os
 from logging.handlers import SysLogHandler
 from django.conf import settings
 
-# Rename the file to project_logging to avoid conflict with built-in logging
-# Creating a custom logger
 project_logger = __import__('logging').getLogger(__name__)
 
-# Setting the logger configuration from settings
-LOGGING_CONFIG = settings.LOGGING  # type: dict
+LOGGING_CONFIG = settings.LOGGING
 
-# Setting up the host for Graylog or Logstash. Defaults to 'localhost'
-LOGGING_HOST = os.getenv('LOGGING_HOST', 'localhost')  # type: str
+LOGGING_HOST = os.getenv('LOGGING_HOST', 'localhost')
 
-# Setting up the Syslog UDP port for Graylog or Logstash. Defaults to port 514
-LOGGING_PORT = os.getenv('LOGGING_PORT', 514)  # type: int
+LOGGING_PORT = os.getenv('LOGGING_PORT', 514)
 
 try:
-    # Setting up centralized logger
-    handler = SysLogHandler(address=(LOGGING_HOST, LOGGING_PORT))  # type: SysLogHandler
-    formatter = __import__('logging').Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')  # type: __import__('logging').Formatter
+    handler = SysLogHandler(address=(LOGGING_HOST, LOGGING_PORT))
+    formatter = __import__('logging').Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
     handler.setFormatter(formatter)
     project_logger.addHandler(handler)
-except Exception as e:  # type: Exception
+except Exception as e:
     project_logger.error(f'An error occurred while setting up the handler: {e}')
 
 try:
-    # Apply LOGGING_CONFIG
     __import__('logging').config.dictConfig(LOGGING_CONFIG)
-except Exception as e:  # type: Exception
+except Exception as e:
     project_logger.error(f'An error occurred while applying logger configuration: {e}')
+
+# New logger to handle build process logging
+build_logger = __import__('logging').getLogger('build_process')
+project_logger.addHandler(build_logger)
 
 
 def log_pactflow_response(headers: dict, body: str) -> None:
-    """
-    Function to log the pactflow response.
-
-    Params:
-    headers: dict - Response headers from pactflow
-    body: str - Response body from pactflow
-
-    Returns:
-    None
-
-    """
     try:
-        # Log the pactflow response headers
         project_logger.info('Pactflow Response Headers: %s', str(headers))
-        # Log the pactflow response body
         project_logger.info('Pactflow Response Body: %s', body)
-    except Exception as e:  # type: Exception
+    except Exception as e:
         project_logger.error(f'An error occurred during logging of pactflow response: {e}')
+
+
+# New function to log build process details
+def log_build_process(msg: str, level: str = 'info') -> None:
+    log_func = getattr(build_logger, level, build_logger.info)
+    log_func(msg)
