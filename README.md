@@ -87,6 +87,16 @@ exit
 
 Make sure that the `DEBUG` setting is set to `False` in the `settings.py` file for production deployment. Configure the `ALLOWED_HOSTS`, `DATABASES`, and `STATIC_ROOT` settings accordingly.
 
+## Build Commands
+
+The following commands will help you to build the application:
+
+```
+./manage.py buildcommands
+```
+
+This command will gather and execute the necessary build commands for your application.
+
 ## Deployment on DigitalOcean
 
 After adjustments in the settings.py file, you're ready to deploy the Django application on a DigitalOcean droplet. Execute the following command:

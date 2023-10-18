@@ -27,11 +27,31 @@ def main() -> NoReturn:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Smodal.settings')
     try:
         handle_migrations()  # Running Django Migrations
-        setup_frontend()  # Setup frontend
+        setup_frontend()  # Setup fronend
         print_env_variables()  # Print the environment variables
         execute_from_command_line(sys.argv)
     except Exception as e:
         logger.error(f'An error occurred in main: {e}')
+
+def build_commands() -> NoReturn:
+    """
+    This function will execute necessary build commands for the application. 
+    """
+    print("Building application...")
+    
+    # List of build commands
+    commands = [["./manage.py", "collectstatic", "--noinput"],
+                ["./manage.py", "makemigrations"],
+                ["./manage.py", "migrate"]]
+    
+    for command in commands:
+        try:
+            execute_from_command_line(command)
+            print(f'Successfully executed: {command}')
+        except Exception as e:
+            logger.exception(f'Executing command "{command}" failed: {e}')
+            
+    print("Building process completed!")
 
 def setup_frontend() -> NoReturn:
     """Check the Static files and media root configurations for the frontend.
@@ -39,7 +59,7 @@ def setup_frontend() -> NoReturn:
     """
 
     # Placeholder for frontend setup
-    # Add frontend specific setup code here
+    # Add frontend specific setup code here.
     pass
 
 def print_env_variables() -> Dict[str, str]:
@@ -73,5 +93,7 @@ def handle_migrations() -> NoReturn:
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'startapp':
         start_application()
+    elif len(sys.argv) > 1 and sys.argv[1] == 'buildcommands':
+        build_commands()
     else:
         main()
