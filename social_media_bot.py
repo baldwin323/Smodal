@@ -20,7 +20,7 @@ BLOCK_SIZE = 16
 
 """
 This module defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
-This bot has the ability to authenticate a user, post a message on behalf of the user.
+This bot has the ability to authenticate a user and post a message on behalf of the user.
 """
 
 
@@ -43,7 +43,7 @@ class SocialMediaBotView(View):
         cipher_config = AES.new(key, AES.MODE_CBC)
         
         # Encrypt and pad plain_text
-        cipher_text = cipher_config.encrypt(pad(plain_text, BLOCK_SIZE))
+        cipher_text = cipher_config.encrypt(pad(plain_text.encode(), BLOCK_SIZE))
 
         return binascii.hexlify(salt + cipher_text)
 
@@ -62,7 +62,7 @@ class SocialMediaBotView(View):
         # Initialize AES cipher configuration with the salt as iv
         cipher_config = AES.new(key, AES.MODE_CBC, iv=salt)
         
-        return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE)
+        return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE).decode()
 
     def get(self, request, user_id: str, platform_name: str) -> HttpResponse:
         """Authenticates a user via the bot"""

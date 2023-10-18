@@ -1,25 +1,27 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    {% block title %}<title>Watch Page</title>{% endblock %}
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/watch_page.css' %}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}
+        <title>Watch Page</title>
+    {% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/watch_page.css' %}">
 </head>
 
 <body>
     {% include "nav.html" %}
     <main role="main" id="main-content">
-        {% for interaction in interactions %}
-            <div class="container" id="live-chat">
-                <p>User: {{ interaction.user_input }}</p>
-                <p>Bot: {{ interaction.bot_response }}</p>
-            </div>
-        {% endfor %}
-        
+        <div class="interaction">
+            {% for interaction in interactions %}
+                <div class="container" id="live-chat">
+                    <p>User: {{ interaction.user_input }}</p>
+                    <p>Bot: {{ interaction.bot_response }}</p>
+                </div>
+            {% endfor %}
+        </div>
         <div class="interact">
             <button id="takeover">Take Over Chat</button>
         </div>

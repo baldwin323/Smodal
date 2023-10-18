@@ -5,17 +5,11 @@ from django.shortcuts import render
 from django.views import View
 from django.urls import path
 from github import Github
-from Smodal.logging import logger  # Use centralized logger
+from Smodal.logging import logger 
 
 gh = Github()
 
 def get_open_pull_requests(repository):
-    """
-    Function to get open pull requests from a specified Github repository
-
-    :param repository: Name of the repository
-    :return: Open pull requests in the repository
-    """
     try:
         repo = gh.get_repo(repository)
         prs = repo.get_pulls(state='open')
@@ -26,14 +20,6 @@ def get_open_pull_requests(repository):
         return None
 
 def edit_pull_request(repository, number, title=None):
-    """
-    Function to edit pull request from a specified Github repository
-
-    :param repository: Name of the repository
-    :param number: Pull request number that's going to be edited
-    :param title: New title value for the pull request
-    :return: The edited pull request
-    """
     try:
         repo = gh.get_repo(repository)
         pr = repo.get_pull(number)
