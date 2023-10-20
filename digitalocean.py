@@ -1,5 +1,8 @@
 import requests
+import logging
 import json
+
+logging.basicConfig(level=logging.INFO)
 
 def get_droplets(api_key):
     """
@@ -12,7 +15,7 @@ def get_droplets(api_key):
         list|None: List of droplets if successful. None if unsuccessful.
     """
     headers = {
-        'Authorization': f'Bearer {dop_v1_19b5e565d434cd27716aebb89e2f4f2d2ae90d9ef5b9f48616cfff819d8ec950}',
+        'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json',
     }
 
@@ -25,8 +28,8 @@ def get_droplets(api_key):
         return droplets
 
     except requests.exceptions.HTTPError as http_err:
-        print(f'HTTP error occurred: {http_err}. Error Code: {response.status_code}')
+        logging.error(f'HTTP error occurred: {http_err}, Error Code: {response.status_code}')
     except Exception as err:
-        print(f'Other error occurred: {err}')
+        logging.error(f'Other error occurred: {err}')
     
     return None
