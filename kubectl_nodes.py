@@ -1,66 +1,41 @@
 ```python
-import subprocess
+from kubernetes import client, config
 
 def get_nodes():
-    cmd = ["kubectl", "--kubeconfig=/<pathtodirectory>/modaltokai-kubeconfig.yaml", "get", "nodes"]
-    
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    out, err = process.communicate()
-    
-    if process.returncode != 0:
-        print("Error executing command:", ' '.join(cmd))
-        print("Output:", out.decode())
-        if err:
-            print("Error:", err.decode())
-        return None
-    
-    return out.decode()
+    config.load_kube_config('/<pathtodirectory>/modaltokai-kubeconfig.yaml')
+    v1 = client.CoreV1Api()
+    print("Listing nodes with their IPs:")
+    ret = v1.list_node(pretty=True)
+    for i in ret.items:
+        print(f'{i.metadata.name} \t{i.status.addresses[0].address}')
+     
 
 def connect_cluster_with_kubectl_and_doctl():
-    cmd_kubectl = ["kubectl", "cluster-info"]
-    cmd_doctl = ["doctl", "kubernetes", "cluster", "kubeconfig", "save", "<cluster-name>"]
+    config.load_kube_config('<cluster-name>')
+    v1 = client.CoreV1Api()
+    print("Connected to cluster:")
 
-    process_kubectl = subprocess.Popen(cmd_kubectl, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    process_doctl = subprocess.Popen(cmd_doctl, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    print("Listing first 5 pods running in all namespaces:")
+    ret = v1.list_pod_for_all_namespaces(watch=False)
+    for i in ret.items[:5]:
+        msg = f'{i.status.pod_ip} \t{i.metadata.namespace} \t{i.metadata.name}'
+        print(msg)
 
-    out_kubectl, err_kubectl = process_kubectl.communicate()
-    out_doctl, err_doctl = process_doctl.communicate()
-
-    if process_kubectl.returncode != 0 or process_doctl.returncode != 0:
-        print("Error executing commands")
-        print("kubectl output:", out_kubectl.decode())
-        print("doctl output:", out_doctl.decode())
-
-        if err_kubectl:
-            print("kubectl error:", err_kubectl.decode())
-        if err_doctl:
-            print("doctl error:", err_doctl.decode())
-
-        return None
-
-    return out_kubectl.decode(), out_doctl.decode()
 
 def check_cert_manager():
-    check_helm_cmd = ["helm", "ls", "-n", "cert-manager"]
-    check_pods_cmd = ["kubectl", "get", "pods", "-n", "cert-manager"]
+    config.load_kube_config()
+    v1 = client.CoreV1Api()
+    print("Listing pods in 'cert-manager' namespace:")
+    ret = v1.list_namespaced_pod(namespace='cert-manager')
+   
+    print("Helm check:")
+    helm_check = client.RbacAuthorizationV1Api().list_role_binding(namespace='cert-manager', field_selector='metadata.name=helm')
 
-    helm_process = subprocess.Popen(check_helm_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    pods_process = subprocess.Popen(check_pods_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    out_check_helm, err_check_helm = helm_process.communicate()
-    out_check_pods, err_check_pods = pods_process.communicate()
-
-    if helm_process.returncode != 0 || pods_process.returncode != 0:
-        print("Error executing commands")
-        print("Helm check output:", out_check_helm.decode())
-        print("Pods check output:", out_check_pods.decode())
-
-        if err_check_helm:
-            print("Helm check error:", err_check_helm.decode())
-        if err_check_pods:
-            print("Pods check error:", err_check_pods.decode())
-
-        return None
-
-    return out_check_helm.decode(), out_check_pods.decode()
+    if helm_check.items:
+        print("Helm is installed in the 'cert-manager' namespace.")
+    else:
+        print("Helm is not installed in the 'cert-manager' namespace.")
+    
+    for i in ret.items:
+        print(f'{i.status.pod_ip} \t{i.metadata.namespace} \t{i.metadata.name}')
 ```

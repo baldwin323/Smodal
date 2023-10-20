@@ -1,12 +1,13 @@
 import os
-import requests
 from typing import List, Optional
 from Smodal import logging  
+from github import Github
 
 # ACCESS_TOKEN is used for OAuth authentication in GitHub API
 ACCESS_TOKEN: str = os.getenv('GITHUB_ACCESS_TOKEN')
 
-API_URL: str = 'https://api.github.com'  # Base URL of GitHub API
+# Github instance using ACCESS_TOKEN
+g = Github(ACCESS_TOKEN)
 
 # Centralized logger for logging all the errors and information
 logger = logging.getLogger(__name__)  
@@ -24,8 +25,10 @@ def get_open_pull_requests(repo_owner: str,
              If there's any error, it returns None
     """
     try:
-        # ... (code omitted for brevity)
-        
+        repo = g.get_repo(f"{repo_owner}/{repo_name}")
+        open_pull_requests = repo.get_pulls(state = 'open')
+        return open_pull_requests
+
     except Exception as e:
         logger.error('Error occurred while getting open pull requests: {str(e)}')
         # Raise the error for further handling
@@ -49,7 +52,10 @@ def edit_pull_request(repo_owner: str,
     :return: True if the pull request was edited successfully, else False.
     """
     try:
-        # ... (code omitted for brevity)
+        repo = g.get_repo(f"{repo_owner}/{repo_name}")
+        pull_request = repo.get_pull(pull_id)
+        pull_request.edit(title, body)
+        return True
         
     except Exception as e:
         logger.error('Error occurred while editing pull request: {str(e)}')
@@ -64,6 +70,8 @@ def main() -> None:
         repo_owner: str = 'Smodal'
         repo_name: str = 'templates'
         # ... (code omitted for brevity)
+
+        open_pull_requests = get_open_pull_requests(repo_owner, repo_name)
 
         if open_pull_requests is None:
             return
