@@ -52,7 +52,7 @@ def build_commands() -> NoReturn:
                 ["./manage.py", "migrate"]]
     
     for command in commands:
-        try {
+        try:
             execute_from_command_line(command)
             print(f'Successfully executed: {command}')
         except Exception as e:
