@@ -7,7 +7,7 @@ import os
 from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData
 import json
 from subprocess import Popen, PIPE
-from Smodal.logging import logger  # Import logging module
+from Smodal.logging import logger  # Importing logging module
 
 class SmodalTest(TestCase):
     def setUp(self) -> None:
@@ -39,7 +39,23 @@ class SmodalTest(TestCase):
             process = Popen(command, stdout=PIPE, stderr=PIPE)
             stdout, stderr = process.communicate()
             self.assertEqual(process.returncode, 0, f"Command {command} failed with error: \n {stdout.decode('utf-8')} {stderr.decode('utf-8')}")
-    
+
+    # New tests added for improving the code reliability
+    def test_socialMediaBot(self):
+        self.assertTrue(self.bot.check_connection())
+        self.assertIsNotNone(self.bot.get_account_info())
+        self.assertIsNotNone(self.bot.get_recent_posts())
+        self.assertTrue(self.bot.post_status_update("Test Message"))
+
+    def test_saleItem(self):
+        self.assertEqual(self.sale_item.get_description(), "Sample Description")
+        self.assertEqual(self.sale_item.get_price(), 1000)
+
+    def test_chatBot(self):
+        response = self.chat_bot.get_response("Hello?")
+        self.assertIsNotNone(response)
+        self.assertEqual(type(response), str)
+
     # Rest of the test code...
     # ...
     # ...

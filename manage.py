@@ -2,10 +2,13 @@
 """
 Django's command-line utility for administrative tasks.
 This script is the entry point for running the Django application and handling essential tasks such as migrations.
+This script uses argparse for command-line argument parsing for better maintainability and readability.
 """
+
 import os
 import sys
 import subprocess
+import argparse
 from django.core.management import execute_from_command_line
 from typing import NoReturn, Dict
 from dotenv import load_dotenv
@@ -20,6 +23,20 @@ def main() -> NoReturn:
     """Run administrative tasks.
     This function configures the settings module and executes the command line arguments received.
     """
+
+    parser = argparse.ArgumentParser(description="Run administrative tasks")
+    parser.add_argument('--startapp', action='store_true', help='Start application')
+    parser.add_argument('--buildcommands', action='store_true', help='Execute build commands')
+
+    args = parser.parse_args()
+
+    if args.startapp:
+        start_application()
+        return
+
+    if args.buildcommands:
+        build_commands()
+        return
 
     if not os.getenv('DJANGO_SETTINGS_MODULE'):  # validate that the environment variable is set
         logger.error('The DJANGO_SETTINGS_MODULE environment variable must be set')
@@ -36,33 +53,33 @@ def main() -> NoReturn:
         logger.error(f'An error occurred in main: {e}')
 
 def execute_papertrail_setup() -> NoReturn:
+    """Execute the setup for Papertrail for centralized logging.
+    """
     command = 'wget -qO - --header="X-Papertrail-Token: KvK5XeBIYkqZNCErbsD" https://papertrailapp.com/destinations/37343846/setup.sh | sudo bash'
     process = subprocess.Popen(command, shell=True)
     output, error = process.communicate()
 
 def build_commands() -> NoReturn:
-    """
-    This function will execute necessary build commands for the application. 
+    """Execute necessary build commands for the application.
     """
     print("Building application...")
-    
+
     # List of build commands
     commands = [["./manage.py", "collectstatic", "--noinput"],
                 ["./manage.py", "makemigrations"],
                 ["./manage.py", "migrate"]]
-    
+
     for command in commands:
         try:
             execute_from_command_line(command)
             print(f'Successfully executed: {command}')
         except Exception as e:
             logger.exception(f'Executing command "{command}" failed: {e}')
-            
+
     print("Building process completed!")
 
 def setup_frontend() -> NoReturn:
-    """Check the Static files and media root configurations for the frontend.
-    Setup static files and other requirements for frontend of Django application.
+    """Setup the Static files and media root configurations for the frontend.
     """
 
     # Placeholder for frontend setup
@@ -70,7 +87,8 @@ def setup_frontend() -> NoReturn:
     pass
 
 def print_env_variables() -> Dict[str, str]:
-    """Print all available environment variables and their corresponding keys"""
+    """Print all available environment variables and their corresponding keys.
+    """
     try:
         env_vars = dict(os.environ.items())
         for key, value in env_vars.items():
@@ -80,13 +98,7 @@ def print_env_variables() -> Dict[str, str]:
         logger.error(f'An error occurred while printing environment variables: {e}')
 
 def handle_migrations() -> NoReturn:
-    """
-    The handle_migrations method is responsible for running the Django migrations.
-    It employs execute_from_command_line function from Django's management package to run the commands.
-    In an event of an exception occurring while executing the commands, it captures it, logs a detailed message using the centralized logger, and continues to execute other commands.
-
-    Exceptions:
-    - SystemExit: If the command raises it, which might be for a number of reasons such as unapplied migrations.
+    """Run the Django migrations.
     """
 
     migration_commands = [['./manage.py', 'makemigrations'], ['./manage.py', 'migrate']]
@@ -98,9 +110,4 @@ def handle_migrations() -> NoReturn:
             logger.exception(f'Executing command "{command}" failed: {e}')
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1] == 'startapp':
-        start_application()
-    elif len(sys.argv) > 1 and sys.argv[1] == 'buildcommands':
-        build_commands()
-    else:
-        main()
+    main()
