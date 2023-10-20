@@ -13,19 +13,33 @@ class TestCacheResult(unittest.TestCase):
     def cache_test_function(self):
         return self.cache_value
 
-    def test_cache_result(self):
-        # Call the function once, this will set the value in cache
-        self.assertEqual(self.cache_test_function(), self.cache_value)
 
-        # Verify the value is present in cache
+    def test_cache_result(self):
+        # Call the function once, this should set the value in cache
+        self.assertEqual(self.cache_test_function(), self.cache_value)
         self.assertIn(self.cache_key, cache)
 
-        # Call again, this time result should come from cache and still be same
+        # Call again, this should fetch result from cache and be same
         self.assertEqual(self.cache_test_function(), self.cache_value)
 
         # Clear cache and check if the function still produces consistent results
         cache.clear()
         self.assertEqual(self.cache_test_function(), self.cache_value)
+
+    def test_cache_decorator(self):
+        # Verifying that function result is cached
+        result = self.cache_test_function()
+        self.assertIn(self.cache_key, cache)
+        self.assertEqual(result, cache.get(self.cache_key))
+
+        # Clear cache and check if the function still produces consistent results
+        cache.clear()
+        self.assertEqual(self.cache_test_function(), self.cache_value)
+
+        # Verify again that result is not from cache, but function
+        result = self.cache_test_function()
+        self.assertNotEqual(result, cache.get(self.cache_key))
+        
 
 if __name__ == "__main__":
     # Load and run the unit tests

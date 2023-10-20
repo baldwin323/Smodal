@@ -29,5 +29,17 @@ class TestErrorPages(unittest.TestCase):
         self.assertEqual(response.context_data['error_code'], '500')
         self.assertEqual(response.context_data['error_message'], 'Internal Server Error')
 
+    def test_handler400(self):
+        exception = Mock()
+        response = error_pages.handler400(self.mock_request, exception)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.template_name, '400.html')
+
+    def test_handler400_content(self):
+        exception = Mock()
+        response = error_pages.handler400(self.mock_request, exception)
+        self.assertEqual(response.context_data['error_code'], '400')
+        self.assertEqual(response.context_data['error_message'], 'Bad Request')
+
 if __name__ == '__main__':
     unittest.main()
