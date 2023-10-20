@@ -1,4 +1,3 @@
-
 from typing import Any, Callable
 from django.core.cache import cache
 from functools import wraps
@@ -11,8 +10,8 @@ def cache_result(key: str) -> Callable:
     time-consuming functions that are called frequently with the same parameters.
     Caching these function results can markedly enhance the performance of the software.
 
-    In case of exceptions during caching or retrieving from cache, the function
-    continues its execution and a corresponding error message logged.
+    Exception handling has been improved to handle scenarios when caching or retrieving from cache fails. Logging mechanism has 
+    been enhanced to provide more detailed information about the errors.
 
     Parameters: 
     key (str): The key used for caching function result. Subsequent function calls 
@@ -35,8 +34,12 @@ def cache_result(key: str) -> Callable:
                     logger.info(f'Result fetched from cache with key {complete_key}')
             except Exception as e:
                 logger.error(f'An error occurred while fetching from cache or setting result into cache for key {complete_key} : {e}')
-                if result is None:
+                try:
+                    logger.debug("Attempting to compute the result due to exception in cache access.")
                     result = function(*args, **kwargs)
+                except Exception as e_sub:
+                    logger.error(f'An error occurred while computing the result: {e_sub}')
+                    raise e_sub   # an exception occurred while generating the result, it should rise upstream
             return result
 
         return wrapper

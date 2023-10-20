@@ -1,5 +1,6 @@
 # Importing necessary libraries from Django
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.hashers import make_password
 
@@ -15,6 +16,13 @@ class Credentials(models.Model):
     def save(self, *args, **kwargs):
         self.password = make_password(self.password)
         super().save(*args, **kwargs)
+    
+    def clean(self):
+        if not self.username or not self.password:
+            raise ValidationError("Username and Password are required. Please provide them.")
+    
+    class Meta:
+        verbose_name_plural = "Credentials"
 
 # Model for storing the API credentials
 class APICredentials(models.Model):
@@ -28,6 +36,13 @@ class APICredentials(models.Model):
     def save(self, *args, **kwargs):
         self.api_secret = make_password(self.api_secret)
         super().save(*args, **kwargs)
+    
+    def clean(self):
+        if not self.api_key or not self.api_secret:
+            raise ValidationError("API Key and API Secret are required. Please provide them.")
+    
+    class Meta:
+        verbose_name_plural = "API Credentials"
 
 # Model for storing OpenAI API integration details
 class OpenAIIntegration(models.Model):
@@ -37,6 +52,13 @@ class OpenAIIntegration(models.Model):
     def save(self, *args, **kwargs):
         self.api_key = make_password(self.api_key)
         super().save(*args, **kwargs)
+    
+    def clean(self):
+        if not self.api_key:
+            raise ValidationError("API Key is required. Please provide it.")
+    
+    class Meta:
+        verbose_name_plural = "OpenAI Integrations"
 
 # Model for storing OIDC configuration
 class OIDCConfiguration(models.Model):
@@ -52,6 +74,13 @@ class OIDCConfiguration(models.Model):
     def save(self, *args, **kwargs):
         self.client_secret = make_password(self.client_secret)
         super().save(*args, **kwargs)
+    
+    def clean(self):
+        if not self.client_id or not self.client_secret or not self.redirect_uris:
+            raise ValidationError("Client ID, Client Secret, and Redirect URIs are required. Please provide them.")
+    
+    class Meta:
+        verbose_name_plural = "OIDC Configurations"
 
 # Model for storing encrypted sensitive data
 class EncryptedSensitiveData(models.Model):
@@ -59,3 +88,10 @@ class EncryptedSensitiveData(models.Model):
     platform = models.CharField(max_length=255, blank=False, null=False, unique=True)
     # Encrypted data related to the platform
     encrypted_data = models.TextField(blank=False, null=False)
+    
+    def clean(self):
+        if not self.platform or not self.encrypted_data:
+            raise ValidationError("Platform and Encrypted data are required. Please provide them.")
+    
+    class Meta:
+        verbose_name_plural = "Encrypted Sensitive Data"

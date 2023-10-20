@@ -2,6 +2,7 @@ import os
 from typing import List, Optional
 from Smodal import logging  
 from github import Github
+from github.GithubException import RateLimitExceededException, BadCredentialsException
 
 # ACCESS_TOKEN is used for OAuth authentication in GitHub API
 ACCESS_TOKEN: str = os.getenv('GITHUB_ACCESS_TOKEN')
@@ -28,10 +29,14 @@ def get_open_pull_requests(repo_owner: str,
         repo = g.get_repo(f"{repo_owner}/{repo_name}")
         open_pull_requests = repo.get_pulls(state = 'open')
         return open_pull_requests
-
+    except RateLimitExceededException as e:
+        logger.error(f'Rate limit exceeded while getting open pull requests: {str(e)}')
+        raise e  
+    except BadCredentialsException as e:
+        logger.error(f'Bad credentials while getting open pull requests: {str(e)}')
+        raise e 
     except Exception as e:
-        logger.error('Error occurred while getting open pull requests: {str(e)}')
-        # Raise the error for further handling
+        logger.error(f'Unexpected error occurred while getting open pull requests: {str(e)}')
         raise e  
 
 def edit_pull_request(repo_owner: str, 
@@ -40,6 +45,7 @@ def edit_pull_request(repo_owner: str,
                       title: str, 
                       body: str
                       ) -> bool:
+    
     """
     Function to edit the title and description of a pull request.
 
@@ -56,30 +62,37 @@ def edit_pull_request(repo_owner: str,
         pull_request = repo.get_pull(pull_id)
         pull_request.edit(title, body)
         return True
-        
+    except RateLimitExceededException as e:
+        logger.error(f'Rate limit exceeded while editing pull request: {str(e)}')
+        raise e  
+    except BadCredentialsException as e:
+        logger.error(f'Bad credentials while editing pull request: {str(e)}')
+        raise e 
     except Exception as e:
-        logger.error('Error occurred while editing pull request: {str(e)}')
-        # Raise the error for further handling
+        logger.error(f'Unexpected error occurred while editing pull request: {str(e)}')
         raise e  
 
 def main() -> None:
+    
     """
     Main function to get the open pull requests and edit them.
     """
     try:
         repo_owner: str = 'Smodal'
         repo_name: str = 'templates'
-        # ... (code omitted for brevity)
 
         open_pull_requests = get_open_pull_requests(repo_owner, repo_name)
 
         if open_pull_requests is None:
             return
-    except Exception as e:
-        logger.error('Error occurred while getting open pull requests: {str(e)}')
-        # Raise the error for further handling
-        raise e  
 
-    # If there are open pull requests
-    if open_pull_requests:   
-        # ... (code omitted for brevity)
+        if open_pull_requests:   
+            # your editing and other operation code here
+            pass
+
+    except RateLimitExceededException as e:
+        logger.error(f'Rate limit exceeded in main function: {str(e)}')
+    except BadCredentialsException as e:
+        logger.error(f'Bad credentials occurred in main function: {str(e)}')
+    except Exception as e:
+        logger.error(f'Unexpected error occurred in main function: {str(e)}')
