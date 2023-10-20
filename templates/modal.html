@@ -21,6 +21,7 @@
       </div>
       <!-- The body of the modal containing the main modal content-->
       <div class="modal-body">
+        {# The frontend functions and elements you asked for would be included here, hopefully with useful and neat comments explaining them #}
         {{ modal_body|safe }}
       </div>
       <!-- The footer of the modal containing any extra information or actions -->
@@ -36,6 +37,7 @@
   const modal = document.getElementById('{{ modal_id }}');
   const closebutton = modal.getElementsByClassName('close')[0];
   const closeButton = () => modal.style.display = "none";
+  // Here is where you would typically extend the modal's frontend as necessary - both by manipulating its current elements using DOM functions, and by adding your own elements and functions as necessary.
   closebutton.onclick = closeButton;
   window.onclick = (event) => {
     if (event.target == modal) {

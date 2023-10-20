@@ -9,4 +9,8 @@ urlpatterns = [
     path('social_login/instagram/', views.social_media_login, name='instagram_login', kwargs={'platform': 'instagram'}),
     path('social_login/linkedin/', views.social_media_login, name='linkedin_login', kwargs={'platform': 'linkedin'}),
     path('social_login/google/', views.social_media_login, name='google_login', kwargs={'platform': 'google'}),
+    path('index/', views.index, name='index'),
+    path('form_submit/', views.form_submit, name='form_submit'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
 ]

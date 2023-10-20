@@ -9,6 +9,27 @@ import json
 
 logger = logging.getLogger(__name__)
 
+def index(request):
+    return render(request, 'index.html')
+
+def form_submit(request):
+    if request.method == 'POST':
+        # process form
+    return render(request, 'result.html')
+
+def login(request):
+    if 'username' in request.session:
+        # user already logged in
+        return redirect('/')
+    if request.method == 'POST':
+        # process login form
+    return render(request, 'login.html')
+
+def logout(request):
+    if 'username' in request.session:
+        del request.session['username']
+    return redirect('/')
+
 def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResponse]:
     try:
         api_keys = APICredentials.objects.filter(platform=platform)
