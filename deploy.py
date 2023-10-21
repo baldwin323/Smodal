@@ -8,7 +8,7 @@ AWS_REGION = os.environ.get('AWS_REGION')
 
 # Function for creating executable and bundling dependencies
 def prepare_executable():
-    pyinstaller_run(['views.py', '--onefile'])
+    pyinstaller_run(['lambda_functions.py', '--onefile'])
 
 # Function for creating lambda function
 def create_lambda(func_name):
@@ -20,8 +20,8 @@ def create_lambda(func_name):
         Runtime='python3.8',
         Role='lambda-basic-execution',
         Handler='lambda_handler.lambda_handler',
-        Code={'ZipFile': open('dist/views', 'rb').read()},
-        Description='Lambda function for serving pages',
+        Code={'ZipFile': open('dist/lambda_functions', 'rb').read()},
+        Description='Lambda function for managing DigitalOcean droplets',
         Timeout=15,
         MemorySize=128
     )
@@ -32,8 +32,8 @@ def create_gateway_trigger():
     gateway_client = boto3.client('apigateway', region_name=AWS_REGION)
     # Create REST API
     api = gateway_client.create_rest_api(
-        name='ServerlessModalAPI',
-        description='API for serverless modal application'
+        name='ServerlessDropletAPI',
+        description='API for serverless DigitalOcean droplets management'
     )
     # Create resources
     root_resource = gateway_client.get_resources(
@@ -91,8 +91,8 @@ def create_s3_trigger(bucket_name, func_name):
 
 # Main function for deployment
 def deploy():
-    func_name = 'serverless-modal-exec'
-    bucket_name = 'serverless-modal-bucket'
+    func_name = 'serverless-droplet-manager'
+    bucket_name = 'serverless-droplet-manager-bucket'
     prepare_executable()
     create_lambda(func_name)
     create_gateway_trigger()
