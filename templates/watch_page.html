@@ -13,40 +13,45 @@
 </head>
 
 <body>
+    {% include "nav.html" %}
+    <main role="main" id="main-content">
+        <div class="interaction">
+            {% for interaction in interactions %}
+                <div class="container" id="live-chat">
+                    <p>User: {{ interaction.user_input }}</p>
+                    <p>Bot: {{ interaction.bot_response }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="interact">
+            <!-- New frontend elements go here -->
+            <button id="new-front-end-element1">Element1</button>
+            <button id="new-front-end-element2">Element2</button>
+            <button id="new-front-end-element3">Element3</button>
+            <button id="takeover">Take Over Chat</button>
+            <button id="bot">Give Bot Control</button>
+        </div>
+    </main>
+
     {% if request.user.is_staff %}
-        {% include "nav.html" %}
-        <main role="main" id="main-content">
-            <div class="interaction">
-                {% for interaction in interactions %}
-                    <div class="container" id="live-chat">
-                        <p>User: {{ interaction.user_input }}</p>
-                        <p>Bot: {{ interaction.bot_response }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="interact">
-                <!-- New frontend elements go here -->
-                <button id="new-front-end-element1">Element1</button>
-                <button id="new-front-end-element2">Element2</button>
-                <button id="new-front-end-element3">Element3</button>
-                <button id="takeover">Take Over Chat</button>
-            </div>
-        </main>
-
-        {% include "footer.html" %}
+        <main role="main" id="admin-content">
+            <!-- Admins can see this part of the page -->
+            {% include "footer.html" %}
         
-        <!-- New frontend functions go here -->
-        <script src="{% static 'js/newFunction1.js' %}"></script>
-        <script src="{% static 'js/newFunction2.js' %}"></script>
-        <script src="{% static 'js/newFunction3.js' %}"></script>
+            <!-- New frontend functions go here -->
+            <script src="{% static 'js/newFunction1.js' %}"></script>
+            <script src="{% static 'js/newFunction2.js' %}"></script>
+            <script src="{% static 'js/newFunction3.js' %}"></script>
 
-        <script src="{% static 'js/takeover.js' %}"></script>
-        <script>
-            var socket = io.connect('http://localhost:5000');
-            socket.on('bot_interaction', function(msg) {
-                $('#live-chat').append('<p>Bot: ' + msg.bot_response + '</p>');
-            });
-        </script>
+            <script src="{% static 'js/takeover.js' %}"></script>
+            <script src="{% static 'js/giveBotControl.js' %}"></script>
+            <script>
+                var socket = io.connect('http://localhost:5000');
+                socket.on('bot_interaction', function(msg) {
+                    $('#live-chat').append('<p>Bot: ' + msg.bot_response + '</p>');
+                });
+            </script>
+        </main>
     {% else %}
         <h1>Access denied. You must be an admin to access this page.</h1>
     {% endif %}
