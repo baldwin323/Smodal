@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, Http404, JsonResponse
-from . models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, ManagedModels
+from .models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, ManagedModels
 import requests
 import json
 
@@ -24,6 +24,14 @@ PAGES = {
     },
     'affiliate_manager': {
         'method': lambda req: load_template('affiliate_manager.html'),
+        'login_required': True
+    },
+    'new_feature': {
+        'method': lambda req: load_template('new_feature.html'),
+        'login_required': True
+    },
+    'another_new_feature': {
+        'method': lambda req: load_template('another_new_feature.html'),
         'login_required': True
     }
 }
@@ -110,3 +118,12 @@ def give_credit(request, model_id):
         model.referral.credits += 1
         model.referral.save()
     return JsonResponse({'success': True}, status=200)
+
+@require_login
+def new_feature(request):
+    return render(request, 'new_feature.html')
+
+@require_login
+def another_new_feature(request):
+    return render(request, 'another_new_feature.html')
+

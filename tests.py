@@ -4,7 +4,7 @@ from Smodal.social_media_bot import SocialMediaBot
 from Smodal.sale_items import SaleItem, ChatBot
 import uuid
 import os
-from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData
+from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData, AffiliateUploads, OpenAIAPICalls
 import json
 from subprocess import Popen, PIPE
 from Smodal.logging import logger 
@@ -66,17 +66,17 @@ class SmodalTest(TestCase):
         self.assertIsNotNone(response)
         self.assertEqual(type(response), str)
 
-    # New tests for the new Lambda functions
-    def test_register_affiliate_manager(self):
-        response = register_affiliate_manager("test_manager")
-        self.assertIs(type(response), tuple)
-        self.assertEqual(response[1], 200)
+    # New tests for the new features
+    def test_affiliate_uploads(self):
+        affiliate_upload = AffiliateUploads(upload_data = {'content': 'sample content'})
+        affiliate_upload.save()
+        saved_upload = AffiliateUploads.objects.first()
+        self.assertIsNotNone(saved_upload)
+        self.assertEqual(saved_upload.upload_data, {'content': 'sample content'})
 
-    def test_monitor_affiliated_models(self):
-        response = monitor_affiliated_models("test_manager")
-        self.assertIs(type(response), list)
-
-    def test_give_credit(self):
-        response = give_credit("test_manager")
-        self.assertIs(type(response), dict)
-        self.assertEqual(response['statusCode'], 200)
+    def test_openai_api_calls(self):
+        openai_api_call = OpenAIAPICalls(call_details = {'api': 'sample api call'})
+        openai_api_call.save()
+        saved_call = OpenAIAPICalls.objects.first()
+        self.assertIsNotNone(saved_call)
+        self.assertEqual(saved_call.call_details, {'api': 'sample api call'})

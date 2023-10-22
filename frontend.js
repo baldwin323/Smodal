@@ -13,3 +13,11 @@ document.getElementById('new-front-end-element2').addEventListener('click', func
 document.getElementById('new-front-end-element3').addEventListener('click', function(){
     // Logic to call the corresponding backend API endpoints when Element3 is clicked
 });
+
+document.getElementById('new_feature').addEventListener('click', function(){
+    // Logic to call the corresponding backend API endpoints when new_feature is clicked
+});
+
+document.getElementById('another_new_feature').addEventListener('click', function(){
+    // Logic to call the corresponding backend API endpoints when another_new_feature is clicked
+});
