@@ -2,66 +2,66 @@ import json
 import requests
 import boto3
 import os
+import logging
 from . import views
-from .digitalocean import get_droplets, create_droplet, start_droplet, stop_droplet, delete_droplet
+from .digitalocean import (
+    get_droplets, 
+    create_droplet, 
+    start_droplet, 
+    stop_droplet, 
+    delete_droplet
+)
 
 # instantiate the Lambda client using boto3
 lambda_client = boto3.client('lambda')
 
 API_KEY = os.environ['API_KEY']
 
+# setup logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 def lambda_handler(event, context):
     try:
         # Extract the operation from the event
         operation = event['operation']
-        if operation == 'load_template':
-            template_name = event['template_name']
-            return views.load_template(template_name)
-        elif operation == 'serve_page':
-            request = event['request']
-            page = event['page']
-            return views.serve_page(request, page)
-        elif operation == 'get_interactions':
-            return views.get_interactions()
-        elif operation == 'render_elements':
-            request = event['request']
-            page = event['page']
-            return views.render_elements(request, page)
-        elif operation == 'handle_function':
-            function_name = event['function_name']
-            args = event.get('args', [])
-            kwargs = event.get('kwargs', {})
-            return views.handle_function(function_name, *args, **kwargs)
-        
-        elif operation == 'get_droplets':
-            return get_droplets(API_KEY)
-        
-        elif operation == 'create_droplet':
-            size = event['size']
-            image = event['image']
-            region = event['region']
-            return create_droplet(API_KEY, size, image, region)
-        
-        elif operation == 'start_droplet':
-            droplet_id = event['droplet_id']
-            return start_droplet(API_KEY, droplet_id)
-        
-        elif operation == 'stop_droplet':
-            droplet_id = event['droplet_id']
-            return stop_droplet(API_KEY, droplet_id)
-        
-        elif operation == 'delete_droplet':
-            droplet_id = event['droplet_id']
-            return delete_droplet(API_KEY, droplet_id)
 
-        else:
-            return {
-                'statusCode': 400,
-                'body': json.dumps(f'Invalid operation: {operation}')
-            }
+        # Define operations mapping
+        operations = {
+            'load_template': views.load_template,
+            'serve_page': views.serve_page,
+            'get_interactions': views.get_interactions,
+            'render_elements': views.render_elements,
+            'handle_function': views.handle_function,
+            'get_droplets': get_droplets,
+            'create_droplet': create_droplet,
+            'start_droplet': start_droplet,
+            'stop_droplet': stop_droplet,
+            'delete_droplet': delete_droplet,
+        }
+
+        # Validate operation is allowed
+        if operation not in operations:
+            raise ValueError(f'Invalid operation: {operation}')
+
+        # Get the function to call
+        func = operations[operation]
+
+        # Get arguments for the function
+        args = event.get('args', [])
+        kwargs = event.get('kwargs', {})
+
+        # Call the function with arguments
+        result = func(*args, **kwargs)
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps(result)
+        }
+
     except Exception as e:
-        print(e)
+        logger.error('An error occurred: %s', str(e))
         return {
             'statusCode': 500,
-            'body': json.dumps(f'An error occurred: {str(e)}')
+            'body': json.dumps({'error': str(e)})
         }
