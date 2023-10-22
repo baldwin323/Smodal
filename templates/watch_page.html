@@ -9,36 +9,47 @@
     {% endblock %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/watch_page.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 </head>
 
 <body>
-    {% include "nav.html" %}
-    <main role="main" id="main-content">
-        <div class="interaction">
-            {% for interaction in interactions %}
-                <div class="container" id="live-chat">
-                    <p>User: {{ interaction.user_input }}</p>
-                    <p>Bot: {{ interaction.bot_response }}</p>
-                </div>
-            {% endfor %}
-        </div>
-        <div class="interact">
-            <!-- New frontend elements go here -->
-            <button id="new-front-end-element1">Element1</button>
-            <button id="new-front-end-element2">Element2</button>
-            <button id="new-front-end-element3">Element3</button>
-            <button id="takeover">Take Over Chat</button>
-        </div>
-    </main>
+    {% if request.user.is_staff %}
+        {% include "nav.html" %}
+        <main role="main" id="main-content">
+            <div class="interaction">
+                {% for interaction in interactions %}
+                    <div class="container" id="live-chat">
+                        <p>User: {{ interaction.user_input }}</p>
+                        <p>Bot: {{ interaction.bot_response }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="interact">
+                <!-- New frontend elements go here -->
+                <button id="new-front-end-element1">Element1</button>
+                <button id="new-front-end-element2">Element2</button>
+                <button id="new-front-end-element3">Element3</button>
+                <button id="takeover">Take Over Chat</button>
+            </div>
+        </main>
 
-    {% include "footer.html" %}
-    
-    <!-- New frontend functions go here -->
-    <script src="{% static 'js/newFunction1.js' %}"></script>
-    <script src="{% static 'js/newFunction2.js' %}"></script>
-    <script src="{% static 'js/newFunction3.js' %}"></script>
+        {% include "footer.html" %}
+        
+        <!-- New frontend functions go here -->
+        <script src="{% static 'js/newFunction1.js' %}"></script>
+        <script src="{% static 'js/newFunction2.js' %}"></script>
+        <script src="{% static 'js/newFunction3.js' %}"></script>
 
-    <script src="{% static 'js/takeover.js' %}"></script>
+        <script src="{% static 'js/takeover.js' %}"></script>
+        <script>
+            var socket = io.connect('http://localhost:5000');
+            socket.on('bot_interaction', function(msg) {
+                $('#live-chat').append('<p>Bot: ' + msg.bot_response + '</p>');
+            });
+        </script>
+    {% else %}
+        <h1>Access denied. You must be an admin to access this page.</h1>
+    {% endif %}
 </body>
 
 </html>
