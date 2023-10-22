@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Navigation</title> <!-- Title of the page -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"> <!-- External CSS for this page -->
+    <!-- External CSS for this page. Colors updated to dark gray and chrome -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav_darkgray_chrome.css' %}">
     <!-- End of head section -->
 </head>
 
 <body>
     <!-- Start of body section -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light"> <!-- Navbar for the application -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <!-- Navbar colours updated for the application -->
         <a class="navbar-brand" href="{% url 'home' %}">Home</a> <!-- Home page link -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -35,6 +36,13 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'newPage3' %}">New Page 3</a> <!-- New Page 3 link -->
+                </li>
+                <!-- Added new features link -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'affiliate_manager' %}">Affiliate Manager</a> <!-- Affiliate Manager page link -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'openAI_APIcalls' %}">AI Services</a> <!-- AI Services page link -->
                 </li>
             </ul>
         </div>

@@ -46,17 +46,21 @@ class APICredentials(models.Model):
     class Meta:
         verbose_name_plural = "API Credentials"
 
-# Model for storing OpenAI API integration details
-class OpenAIIntegration(models.Model):
-    # API key of the OpenAI account
-    api_key = models.CharField(max_length=255, blank=False, null=False, unique=True, validators=[validate_fields])
-    
-    def save(self, *args, **kwargs):
-        self.api_key = encrypt_data(self.api_key)
-        super().save(*args, **kwargs)
-    
+# Model for storing affiliate uploads
+class AffiliateUploads(models.Model):
+    # Affiliate upload data
+    upload_data = models.JSONField(null=False, blank=False)
+
     class Meta:
-        verbose_name_plural = "OpenAI Integrations"
+        verbose_name_plural = "AffiliateUploads"
+
+# Model for storing OpenAI API integration details
+class OpenAIAPICalls(models.Model):
+    # API call details
+    call_details = models.JSONField(null=False, blank=False)
+
+    class Meta:
+        verbose_name_plural = "OpenAIAPICalls"
 
 # Model for storing OIDC configuration
 class OIDCConfiguration(models.Model):

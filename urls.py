@@ -13,8 +13,6 @@ urlpatterns = [
     path('form_submit/', views.form_submit, name='form_submit'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
-
-    # Add new paths for new frontend features
     path('new_feature/', views.new_feature, name='new_feature'),
     path('another_new_feature/', views.another_new_feature, name='another_new_feature'),
 ]
