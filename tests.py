@@ -65,3 +65,18 @@ class SmodalTest(TestCase):
         response = self.chat_bot.get_response("Hello?")
         self.assertIsNotNone(response)
         self.assertEqual(type(response), str)
+
+    # New tests for the new Lambda functions
+    def test_register_affiliate_manager(self):
+        response = register_affiliate_manager("test_manager")
+        self.assertIs(type(response), tuple)
+        self.assertEqual(response[1], 200)
+
+    def test_monitor_affiliated_models(self):
+        response = monitor_affiliated_models("test_manager")
+        self.assertIs(type(response), list)
+
+    def test_give_credit(self):
+        response = give_credit("test_manager")
+        self.assertIs(type(response), dict)
+        self.assertEqual(response['statusCode'], 200)

@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, Http404, JsonResponse
-from . models import OIDCConfiguration, Credentials, APICredentials
+from . models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, ManagedModels
 import requests
 import json
 
@@ -22,6 +22,10 @@ PAGES = {
         'method': lambda req: logout(req),
         'login_required': True
     },
+    'affiliate_manager': {
+        'method': lambda req: load_template('affiliate_manager.html'),
+        'login_required': True
+    }
 }
 
 def is_authenticated(request):
@@ -84,3 +88,25 @@ def render(request, page):
 
 def serve(request, page):
     return render(request, page)
+
+# New methods to handle affiliate manager functionality    
+@require_login
+def register_affiliate_manager(request):
+    if request.method == 'POST':
+        # Code to register a new affiliate manager goes here
+        pass
+    return render(request, 'register_affiliate_manager.html')
+
+@require_login
+def list_affiliated_models(request, manager_id):
+    models = ManagedModels.objects.filter(manager__id=manager_id)
+    return render(request, 'affiliated_models.html', {'models': models})
+
+@require_login
+def give_credit(request, model_id):
+    model = ManagedModels.objects.get(id=model_id)
+    if model.referral:
+        # Give a referral credit to the affiliate manager
+        model.referral.credits += 1
+        model.referral.save()
+    return JsonResponse({'success': True}, status=200)

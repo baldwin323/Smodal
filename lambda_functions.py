@@ -21,6 +21,22 @@ API_KEY = os.environ['API_KEY']
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+# These are the new functions for handling affiliate manager operations
+def register_affiliate_manager(event, context):
+    # Logic for registering affiliate manager goes here
+    pass
+
+
+def monitor_affiliated_models(event, context):
+    # Logic for monitoring affiliated models goes here
+    pass
+
+
+def give_credit(event, context):
+    # Logic for giving credit when a new model signs up goes here
+    pass
+
+
 def lambda_handler(event, context):
     try:
         # Extract the operation from the event
@@ -38,6 +54,9 @@ def lambda_handler(event, context):
             'start_droplet': start_droplet,
             'stop_droplet': stop_droplet,
             'delete_droplet': delete_droplet,
+            'register_affiliate_manager': register_affiliate_manager,
+            'monitor_affiliated_models': monitor_affiliated_models,
+            'give_credit': give_credit,
         }
 
         # Validate operation is allowed
