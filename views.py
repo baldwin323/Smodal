@@ -41,7 +41,7 @@ PAGES = {
 def is_authenticated(request):
     return 'username' in request.session
 
-def load_template(template:str):
+def load_template(template:str, request):
     return render(request, template)
 
 def require_login(func):
@@ -49,7 +49,7 @@ def require_login(func):
         if is_authenticated(request):
             return func(request)
         else:
-            return load_template('login.html')
+            return load_template('login.html', request)
     return func_wrapper
 
 def index(request):
@@ -64,14 +64,14 @@ def logout(request):
 def form_submit(request):
     # Check for circular imports related issues 
     # process form
-    return load_template('result.html')
+    return load_template('result.html', request)
 
 def login(request):
     if is_authenticated(request):
         return PAGES['index']['method'](request)
     if request.method == 'POST':
         # Update login form processing methodology
-        return load_template('login.html')
+        return load_template('login.html', request)
 
 @login_required
 def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResponse]:
@@ -111,13 +111,13 @@ def serve(request, page):
 @login_required
 def new_feature(request):
     if 'admin' not in request.session['user'].groups: 
-        return load_template('not_authorised.html')
+        return load_template('not_authorised.html', request)
 
     return PAGES['new_feature']['method'](request)
 
 @login_required
 def another_new_feature(request):
     if 'admin' not in request.session['user'].groups: 
-        return load_template('not_authorised.html')
+        return load_template('not_authorised.html', request)
     
     return PAGES['another_new_feature']['method'](request)

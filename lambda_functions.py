@@ -27,7 +27,7 @@ def register_affiliate_manager(*args, **kwargs):
         The response from the affiliate registration.
     """
     try:
-        # Logic for registering affiliate manager goes here
+        # Updated Logic for registering affiliate manager goes here 
         pass
     except Exception as e:
         logger.error('An error occurred in register_affiliate_manager: %s', str(e))
@@ -46,7 +46,7 @@ def monitor_affiliated_models(*args, **kwargs):
         The response from the monitoring operation.
     """
     try:
-        # Logic for monitoring affiliated models goes here
+        # Updated Logic for monitoring affiliated models goes here
         pass
     except Exception as e:
         logger.error('An error occurred in monitor_affiliated_models: %s', str(e))
@@ -65,7 +65,7 @@ def give_credit(*args, **kwargs):
         The response from the credit granting operation.
     """
     try:
-        # Logic for giving credit when a new model signs up goes here
+        # Updated Logic for giving credit when a new model signs up goes here
         pass
     except Exception as e:
         logger.error('An error occurred in give_credit: %s', str(e))
