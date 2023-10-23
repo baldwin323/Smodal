@@ -10,9 +10,14 @@ def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Smodal.settings')
     try:
+        # activate the virtual environment
+        activate_venv_path = "/correct/path/to/venv/bin/activate_this.py"
+        with open(activate_venv_path) as f:
+            exec(f.read(), dict(__file__=activate_venv_path))
+
         execute_from_command_line(sys.argv)
     except Exception as e:
-        print(f'An error occurred in main: {e}')
+        print(f'An error occurred while trying to run command: {e}')
         
 if __name__ == '__main__':
     main()

@@ -34,9 +34,6 @@ try:
 except Exception as e:
     project_logger.error('An error occurred while applying logger configuration.', exc_info=True)
 
-# Add the new build logger to the project logger
-project_logger.addHandler(build_logger)
-
 def log_pactflow_response(headers: dict, body: str) -> None:
     """
     Logs the Pactflow response headers and body.

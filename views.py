@@ -52,19 +52,20 @@ def index(request):
 @require_login
 def logout(request):
     del request.session['username']
-    return index(request)
-   
+    return redirect('index')
+
 @require_login
 def form_submit(request):
+    # Check for circular imports related issues 
     # process form
     return load_template('result.html')
 
 def login(request):
     if is_authenticated(request):
-        return index(request)
+        return redirect('index')
     if request.method == 'POST':
-        # process login form
-    return load_template('login.html')
+        # Update login form processing methodology
+        return load_template('login.html')
 
 def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResponse]:
     try:
@@ -89,7 +90,7 @@ def render(request, page):
     if page in PAGES:
         page_cfg = PAGES[page]
         if page_cfg.get('login_required', False) and not is_authenticated(request):
-            return load_template('login.html')
+            return redirect('login')
         return page_cfg['method'](request)
     else:
         return Http404
@@ -97,7 +98,6 @@ def render(request, page):
 def serve(request, page):
     return render(request, page)
 
-# New methods to handle affiliate manager functionality    
 @require_login
 def register_affiliate_manager(request):
     if request.method == 'POST':
@@ -126,4 +126,3 @@ def new_feature(request):
 @require_login
 def another_new_feature(request):
     return render(request, 'another_new_feature.html')
-
