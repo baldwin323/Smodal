@@ -5,6 +5,8 @@ from django.http import HttpRequest, HttpResponse, Http404, JsonResponse
 from .models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, ManagedModels
 import requests
 import json
+# Add missing handler import to solve error 2
+from django.views.debug import ExceptionReporter, get_exception_reporter_filter
 
 logger = logging.getLogger(__name__)
 
