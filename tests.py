@@ -34,15 +34,14 @@ class SmodalTest(TestCase):
                             ["manage.py", "makemigrations"],
                             ["manage.py", "migration"]]
 
-    # Refactored testing for functions
     def test_load_template(self):
-        self.assertIsNotNone(load_template('index.html'))
+        self.assertIsNotNone(self.bot.load_template('index.html'))
 
     def test_serve_page(self):
-        self.assertIsNotNone(serve_page('login'))
+        self.assertIsNotNone(self.bot.serve_page('login'))
         
     def test_handle_function(self):
-        self.assertEqual(handle_function('index', 'request'), 'expected response')
+        self.assertEqual(self.bot.handle_function('index', 'request'), 'expected response')
 
     def test_building_commands(self):
         for command in self.build_commands:
@@ -50,7 +49,6 @@ class SmodalTest(TestCase):
             stdout, stderr = process.communicate()
             self.assertEqual(process.returncode, 0, f"Command {command} failed with error: \n {stdout.decode('utf-8')} {stderr.decode('utf-8')}")
 
-    # Original test code retained
     def test_socialMediaBot(self):
         self.assertTrue(self.bot.check_connection())
         self.assertIsNotNone(self.bot.get_account_info())
@@ -66,7 +64,6 @@ class SmodalTest(TestCase):
         self.assertIsNotNone(response)
         self.assertEqual(type(response), str)
 
-    # New tests for the new features
     def test_affiliate_uploads(self):
         affiliate_upload = AffiliateUploads(upload_data = {'content': 'sample content'})
         affiliate_upload.save()
