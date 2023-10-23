@@ -9,10 +9,10 @@ from django.core.management import execute_from_command_line
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Smodal.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.environ.get('SETTINGS_FILE', 'Smodal.settings'))
     try:
         # activate the virtual environment
-        activate_venv_path = "/correct/path/to/venv/bin/activate_this.py"
+        activate_venv_path = "/path/to/project/venv/bin/activate_this.py"
         with open(activate_venv_path) as f:
             exec(f.read(), dict(__file__=activate_venv_path))
 
