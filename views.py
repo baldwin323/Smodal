@@ -1,11 +1,9 @@
 import logging
-from typing import Optional
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, Http404, JsonResponse
 from .models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, ManagedModels
-import requests
 import json
-# Add missing handler import to solve error 2
+from django.contrib.auth.decorators import login_required
 from django.views.debug import ExceptionReporter, get_exception_reporter_filter
 
 logger = logging.getLogger(__name__)
@@ -30,33 +28,39 @@ PAGES = {
     },
     'new_feature': {
         'method': lambda req: load_template('new_feature.html'),
-        'login_required': True
+        'login_required': True,
+        'admin_required': True
     },
     'another_new_feature': {
         'method': lambda req: load_template('another_new_feature.html'),
-        'login_required': True
+        'login_required': True,
+        'admin_required': True
     }
 }
 
 def is_authenticated(request):
     return 'username' in request.session
 
+def load_template(template:str):
+    return render(request, template)
+
 def require_login(func):
     def func_wrapper(request):
         if is_authenticated(request):
             return func(request)
-        return load_template('login.html')
+        else:
+            return load_template('login.html')
     return func_wrapper
 
 def index(request):
-    return load_template('index.html')
+    return PAGES['index']['method'](request)
 
 @require_login
 def logout(request):
     del request.session['username']
-    return redirect('index')
+    return PAGES['logout']['method'](request)
 
-@require_login
+@login_required
 def form_submit(request):
     # Check for circular imports related issues 
     # process form
@@ -64,11 +68,12 @@ def form_submit(request):
 
 def login(request):
     if is_authenticated(request):
-        return redirect('index')
+        return PAGES['index']['method'](request)
     if request.method == 'POST':
         # Update login form processing methodology
         return load_template('login.html')
 
+@login_required
 def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResponse]:
     try:
         api_keys = APICredentials.objects.filter(platform=platform)
@@ -82,13 +87,15 @@ def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResp
         logger.error(f"Error fetching credentials for {platform}: {str(e)}", exc_info=True)
         return JsonResponse({"error": f"Could not fetch credentials for {platform} due to {str(e)}."}, status=500)
 
+@login_required
 def oidc_auth(request: HttpRequest) -> Optional[HttpResponse]:
     # OIDC logic
 
+@login_required
 def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
     # OIDC callback logic
 
-def render(request, page):
+def render_page(request, page):
     if page in PAGES:
         page_cfg = PAGES[page]
         if page_cfg.get('login_required', False) and not is_authenticated(request):
@@ -97,34 +104,20 @@ def render(request, page):
     else:
         return Http404
 
+@login_required
 def serve(request, page):
-    return render(request, page)
+    return render_page(request, page)
 
-@require_login
-def register_affiliate_manager(request):
-    if request.method == 'POST':
-        # Code to register a new affiliate manager goes here
-        pass
-    return render(request, 'register_affiliate_manager.html')
-
-@require_login
-def list_affiliated_models(request, manager_id):
-    models = ManagedModels.objects.filter(manager__id=manager_id)
-    return render(request, 'affiliated_models.html', {'models': models})
-
-@require_login
-def give_credit(request, model_id):
-    model = ManagedModels.objects.get(id=model_id)
-    if model.referral:
-        # Give a referral credit to the affiliate manager
-        model.referral.credits += 1
-        model.referral.save()
-    return JsonResponse({'success': True}, status=200)
-
-@require_login
+@login_required
 def new_feature(request):
-    return render(request, 'new_feature.html')
+    if 'admin' not in request.session['user'].groups: 
+        return load_template('not_authorised.html')
 
-@require_login
+    return PAGES['new_feature']['method'](request)
+
+@login_required
 def another_new_feature(request):
-    return render(request, 'another_new_feature.html')
+    if 'admin' not in request.session['user'].groups: 
+        return load_template('not_authorised.html')
+    
+    return PAGES['another_new_feature']['method'](request)

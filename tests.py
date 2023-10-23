@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from Smodal.social_media_bot import SocialMediaBot
 from Smodal.sale_items import SaleItem, ChatBot
+from Smodal.lambda_functions import register_affiliate_manager, monitor_affiliated_models, give_credit
 import uuid
 import os
 from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData, AffiliateUploads, OpenAIAPICalls
@@ -9,13 +10,30 @@ import json
 from subprocess import Popen, PIPE
 from Smodal.logging import logger 
 
+class LambdaFunctionsTest(TestCase):
+    def setUp(self) -> None:
+        self.args = []
+        self.kwargs = {}
+
+    def test_register_affiliate_manager(self):
+        response = register_affiliate_manager(*self.args, **self.kwargs)
+        self.assertEqual(response, 'expected response')
+
+    def test_monitor_affiliated_models(self):
+        response = monitor_affiliated_models(*self.args, **self.kwargs)
+        self.assertEqual(response, 'expected response')
+
+    def test_give_credit(self):
+        response = give_credit(*self.args, **self.kwargs)
+        self.assertEqual(response, 'expected response')
+
 class SmodalTest(TestCase):
     def setUp(self) -> None:
         self.bot = SocialMediaBot()
         self.sale_item = SaleItem()
         self.chat_bot = ChatBot()
         self.jwt_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InRyaWFsIn0.eyJpc3MiOiJuZ2lueCBpc3N1ZXIiLCJpYXQiOjE2OTcyOTEwNDQsImp0aSI6IjE0ODM3Iiwic3ViIjoiVDAwMDEzMTk3NiIsImV4cCI6MTY5OTg4MzA0NH0.geiDEOEaxkk9naHlZI4pbBPRCChEJDKKLQSQebQeSfsn-uKk2fhqEEqUW3gLAN2r0j_uc2wgIlMgFPpDzmOf-1Nn6Dp54qfcUC8A2H59X7pkFhsaWRWGYPOn5peu3y8FPSo2a7gw77xOC2oz8o7iOhQYv4yb68bv2AWLepaGN0AsY4fr8tJykHrqmK6zN_1-85g9p-K50PzrEnHanO6WgmgSl6RxvCmIBlb6Hpeeb5bvm1kbsWgobpJSUXqepbJx5ef_YROGm93hVylnR80vCI53J-Ba0c6vJWrAec3sXmJQaDBjGYOl5mxueQWNz0cXNFd1RiimyIT3zmFSEePi71eatutmkZYVwR1mTgjGvJFCamZUWmeJ_o-N41l5I64_z-0sxIG9pjk8xC9EHhdqinikINcQ1s-jbTldG9aouDE8c9NG2jXumjV76CA6Xc3BD4-ciDLFIZrvbGX4H3dZgK141A6TUjnaO5AxP1UsDF1lLU-tE3vRMIxoR6VZzEKH"
-
+ 
         try:  
             self.pactflow_data = OIDCConfiguration.objects.first()
             self.pactflow_data.jwt_token = self.jwt_token
