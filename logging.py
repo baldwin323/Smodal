@@ -59,3 +59,22 @@ def log_build_process(msg: str, level: str = 'info') -> None:
         log_func(msg)
     except Exception as e:
         project_logger.error('An error occurred during logging of build process.', exc_info=True)
+
+def log_execution_details(func):
+    """
+    Decorator to log detailed information about the execution of the decorated function.
+
+    :param func: The function to log execution details of
+    """
+    def wrapper(*args, **kwargs):
+        project_logger.info('Function %s called with args: %s, and kwargs: %s', func.__name__, args, kwargs)
+        project_logger.info('Running function %s...', func.__name__)
+        
+        try:
+            result = func(*args, **kwargs)
+            project_logger.info('Function %s executed successfully.', func.__name__)
+            return result
+        except Exception as e:
+            project_logger.error('An error occurred while running function %s.', func.__name__, exc_info=True)
+            raise e
+    return wrapper

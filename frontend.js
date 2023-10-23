@@ -23,8 +23,13 @@ function errorHandler(response) {
 const backendApiCallbacks = pageIds.map(id => () => {
     document.body.classList.add('loading');
     fetch(`/api/${id}`)
-        .catch(errorHandler)
-        .then(() => document.body.classList.remove('loading')); 
+        .then(errorHandler)
+        .then(response => response.json())
+        .then(data => {
+            // updated to handle new data structure
+            document.getElementById(id).innerText = `The returned data is: ${JSON.stringify(data)}`;
+        })  
+        .finally(() => document.body.classList.remove('loading'))
 });
 
 // Event listener for the 'previous' navigation button
@@ -35,7 +40,7 @@ document.getElementById('nav-prev').addEventListener('click', function() {
         let newPageId = pageIds[currentPageIndex];
         
         document.getElementById(oldPageId).style.display = 'none';
-        document.getElementById(newPageId).style.display = 'block';
+        document.getElementById(newPageId).style.display = '';
     }
 });
 
@@ -47,7 +52,7 @@ document.getElementById('nav-next').addEventListener('click', function() {
         let newPageId = pageIds[currentPageIndex];
 
         document.getElementById(oldPageId).style.display = 'none';
-        document.getElementById(newPageId).style.display = 'block';
+        document.getElementById(newPageId).style.display = '';
     }
 });
 

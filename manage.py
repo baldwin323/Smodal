@@ -19,6 +19,8 @@ def main():
         execute_from_command_line(sys.argv)
     except Exception as e:
         print(f'An error occurred while trying to run command: {e}')
+        # Update the main function to handle any exceptions occurred during the execution of the new plan
+        print("Execution of the plan was unsuccessful. Please review and rectify the errors.")
         
 if __name__ == '__main__':
     main()

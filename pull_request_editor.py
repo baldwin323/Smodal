@@ -17,7 +17,7 @@ def get_open_pull_requests(repo_owner: str,
                            repo_name: str
                            ) -> Optional[List[dict]]:
     """
-    Function to fetch open pull requests from a repo.
+    Function to fetch open pull requests from a repo updated based on the new plan.
     
     :param repo_owner: Name of the owner of the repository.
     :param repo_name: Name of the repository.
@@ -47,7 +47,7 @@ def edit_pull_request(repo_owner: str,
                       ) -> bool:
     
     """
-    Function to edit the title and description of a pull request.
+    Function to edit the title and description of a pull request based on the new plan.
 
     :param repo_owner: Name of the owner of the repository.
     :param repo_name: Name of the repository.
@@ -75,7 +75,7 @@ def edit_pull_request(repo_owner: str,
 def main() -> None:
     
     """
-    Main function to get the open pull requests and edit them.
+    Main function to get the open pull requests and edit them based on the new plan.
     """
     try:
         repo_owner: str = 'Smodal'
@@ -87,7 +87,7 @@ def main() -> None:
             return
 
         if open_pull_requests:   
-            # your editing and other operation code here
+            # your editing and other operation code here based on the new plan
             pass
 
     except RateLimitExceededException as e:
