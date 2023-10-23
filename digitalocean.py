@@ -1,9 +1,12 @@
 import requests
 import json
+import os
 
-def get_droplets(api_key):
+def get_droplets():
+    api_key = os.getenv('DO_API_KEY')
+
     headers = {
-        'Authorization': f'Bearer {dop_v1_19b5e565d434cd27716aebb89e2f4f2d2ae90d9ef5b9f48616cfff819d8ec950}',
+        'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json',
     }
 
