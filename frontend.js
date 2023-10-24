@@ -7,7 +7,7 @@
 let currentPageIndex = 0;
 
 // The ids of the frontend pages
-const pageIds = ['new-front-end-element1', 'new-front-end-element2', 'new-front-end-element3', 'new_feature', 'another_new_feature'];
+const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
 
 /**
  * Function that sets a click event listener and calls a corresponding API endpoint
