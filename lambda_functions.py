@@ -1,77 +1,47 @@
 import json
-import requests
 import boto3
 import os
 import logging
+from datadog import initialize, api, statsd
+from datadog.lambda_metric import lambda_stats
 
-# setup logging
+# Datadog integration - Initializing
+options = {
+    'api_key': os.environ['DATADOG_API_KEY'],
+    'app_key': os.environ['DATADOG_APP_KEY']
+}
+
+initialize(**options)
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-# instantiate the Lambda client using boto3
 lambda_client = boto3.client('lambda')
 
-API_KEY = os.environ['API_KEY']
-
-# Affiliate Manager Operation functions
 def register_affiliate_manager(*args, **kwargs):
-    """
-    Registers a new affiliate manager.
-
-    Parameters:
-    *args, **kwargs : varies
-        The affiliate manager details to be registered.
-
-    Returns:
-    dict
-        The response from the affiliate registration.
-    """
     try:
         # Updated Logic for registering affiliate manager goes here 
         pass
     except Exception as e:
+        lambda_stats.increment('register_affiliate_manager.error')
         logger.error('An error occurred in register_affiliate_manager: %s', str(e))
-        raise
 
 def monitor_affiliated_models(*args, **kwargs):
-    """
-    Monitors affiliated models.
-
-    Parameters:
-    *args, **kwargs : varies
-        The details required for monitoring affiliated models.
-
-    Returns:
-    dict
-        The response from the monitoring operation.
-    """
     try:
         # Updated Logic for monitoring affiliated models goes here
         pass
     except Exception as e:
+        lambda_stats.increment('monitor_affiliated_models.error')
         logger.error('An error occurred in monitor_affiliated_models: %s', str(e))
-        raise
 
 def give_credit(*args, **kwargs):
-    """
-    Grants credit to a model when a new model signs up.
-
-    Parameters:
-    *args, **kwargs : varies
-        The details of the new model.
-
-    Returns:
-    dict
-        The response from the credit granting operation.
-    """
     try:
         # Updated Logic for giving credit when a new model signs up goes here
         pass
     except Exception as e:
+        lambda_stats.increment('give_credit.error')
         logger.error('An error occurred in give_credit: %s', str(e))
-        raise
 
-# Define operations mapping
 operations = {
     'register_affiliate_manager': register_affiliate_manager,
     'monitor_affiliated_models': monitor_affiliated_models,
@@ -79,32 +49,15 @@ operations = {
 }
 
 def lambda_handler(event, context):
-    """
-    Main lambda function handler.
-
-    Parameters:
-    event (dict):
-         The lambda event input.
-
-    context (LambdaContext):
-        Contains runtime information about your Lambda function.
-
-    Returns:
-    dict
-        The API Gateway output.
-    """
     try:
-        # Extract the operation from the event
         operation = event['operation']
 
         if operation not in operations:
             raise ValueError(f'Invalid operation: {operation}')
 
-        # Get arguments for the function
         args = event.get('args', [])
         kwargs = event.get('kwargs', {})
 
-        # Call the function with arguments
         result = operations[operation](*args, **kwargs)
 
         return {
@@ -113,6 +66,7 @@ def lambda_handler(event, context):
         }
 
     except Exception as e:
+        lambda_stats.increment('Smodal.lambda_functions.error')
         logger.error('An error occurred in lambda_handler: %s', str(e))
         return {
             'statusCode': 500,
