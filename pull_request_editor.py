@@ -17,13 +17,12 @@ def get_open_pull_requests(repo_owner: str,
                            repo_name: str
                            ) -> Optional[List[dict]]:
     """
-    Function to fetch open pull requests from a repo updated based on the new plan.
-    
+    Fetches open pull requests from a particular repository.
+
     :param repo_owner: Name of the owner of the repository.
     :param repo_name: Name of the repository.
     
-    :return: A list of dictionaries containing details of open pull requests. 
-             If there's any error, it returns None
+    :return: A list of dictionaries containing details of open pull requests. If there's any error, it returns None
     """
     try:
         repo = g.get_repo(f"{repo_owner}/{repo_name}")
@@ -45,9 +44,8 @@ def edit_pull_request(repo_owner: str,
                       title: str, 
                       body: str
                       ) -> bool:
-    
     """
-    Function to edit the title and description of a pull request based on the new plan.
+    Edits the title and description of a pull request.
 
     :param repo_owner: Name of the owner of the repository.
     :param repo_name: Name of the repository.
@@ -73,9 +71,8 @@ def edit_pull_request(repo_owner: str,
         raise e  
 
 def main() -> None:
-    
     """
-    Main function to get the open pull requests and edit them based on the new plan.
+    Main function to get the open pull requests and edit them.
     """
     try:
         repo_owner: str = 'Smodal'
