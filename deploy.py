@@ -97,7 +97,15 @@ def deploy():
     create_lambda(func_name)
     create_gateway_trigger()
     create_s3_trigger(bucket_name, func_name)
-
+    
+# Function for providing deployment instructions
+def deployment_instructions():
+    print("Deployment Instructions:")
+    print("1. Ensure AWS credentials are configured correctly.")
+    print("2. Run this script to create the lambda functions, API Gateway event trigger, and S3 event trigger.")
+    print("3. After running the script, navigate over to AWS management console to verify that the actions have completed correctly.")
+    print("4. Upon a successful run of the script, the react application is now ready to be deployed to the configured AWS services.")
 
 if __name__ == '__main__':
     deploy()
+    deployment_instructions()

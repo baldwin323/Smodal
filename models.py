@@ -14,6 +14,60 @@ def encrypt_data(data):
     return make_password(data)
 
 
+# Model for storing the user profile and account settings
+class UserProfile(models.Model):
+    # User ID of the authenticated user
+    user_id = models.CharField(max_length=255, blank=False, null=False, unique=True, validators=[validate_fields])
+    # User first name
+    first_name = models.CharField(max_length=255, blank=False, null=False, unique=False, validators=[validate_fields])
+    # User last name
+    last_name = models.CharField(max_length=255, blank=False, null=False, unique=False, validators=[validate_fields])
+    # User email
+    email = models.CharField(max_length=255, blank=False, null=False, unique=False, validators=[validate_fields])
+    # User bio
+    bio = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "UserProfiles"
+
+# Model for storing user file uploads
+class FileUpload(models.Model):
+    # ID of the user performing the upload
+    user_id = models.CharField(max_length=255, blank=False, null=False, unique=True, validators=[validate_fields])
+    # File name
+    file_name = models.CharField(max_length=255, blank=False, null=False, unique=False, validators=[validate_fields])
+    # File size
+    file_size = models.IntegerField(blank=False, null=False)
+    # File extension
+    file_extension = models.CharField(max_length=50, blank=False, null=False, unique=False, validators=[validate_fields])
+    # File content
+    content = models.BinaryField(blank=False, null=False)
+
+    class Meta:
+        verbose_name_plural = "FileUploads"
+
+# Model for storing recent user activity
+class UserActivity(models.Model):
+    # User ID of the user whose activity is being tracked
+    user_id = models.CharField(max_length=255, blank=False, null=False, unique=True, validators=[validate_fields])
+    # Description of the activity
+    activity_description = models.TextField(blank=False, null=False, validators=[validate_fields])
+    # Timestamp of the activity
+    timestamp = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "UserActivities"
+
+# Model for storing banking transactions and related activities
+class Banking(models.Model):
+    # User ID of the involved user
+    user_id = models.CharField(max_length=255, blank=False, null=False, unique=True, validators=[validate_fields])
+    # Transaction details
+    transaction_details = models.JSONField(null=False, blank=False)
+
+    class Meta:
+        verbose_name_plural = "Banking"
+
 # Model for storing the credentials
 class Credentials(models.Model):
     # Name of the platform
