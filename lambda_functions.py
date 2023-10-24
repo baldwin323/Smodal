@@ -18,6 +18,7 @@ logger.setLevel(logging.INFO)
 
 lambda_client = boto3.client('lambda')
 
+# Function to register affiliate manager with proper error handling
 def register_affiliate_manager(*args, **kwargs):
     try:
         # Updated Logic for registering affiliate manager goes here 
@@ -26,6 +27,7 @@ def register_affiliate_manager(*args, **kwargs):
         lambda_stats.increment('register_affiliate_manager.error')
         logger.error('An error occurred in register_affiliate_manager: %s', str(e))
 
+# Function to monitor affiliated models with proper error handling
 def monitor_affiliated_models(*args, **kwargs):
     try:
         # Updated Logic for monitoring affiliated models goes here
@@ -34,6 +36,7 @@ def monitor_affiliated_models(*args, **kwargs):
         lambda_stats.increment('monitor_affiliated_models.error')
         logger.error('An error occurred in monitor_affiliated_models: %s', str(e))
 
+# Function to give credit when a new model signs up with proper error handling
 def give_credit(*args, **kwargs):
     try:
         # Updated Logic for giving credit when a new model signs up goes here
@@ -43,11 +46,12 @@ def give_credit(*args, **kwargs):
         logger.error('An error occurred in give_credit: %s', str(e))
 
 operations = {
-    'register_affiliate_manager': register_affiliate_manager,
-    'monitor_affiliated_models': monitor_affiliated_models,
-    'give_credit': give_credit,
+    'register_affiliate_manager': register_affiliate_manager, # Registers affiliate manager
+    'monitor_affiliated_models': monitor_affiliated_models, # Monitors affiliated models
+    'give_credit': give_credit, # Give credit when a new model signs up
 }
 
+# Lambda handler function 
 def lambda_handler(event, context):
     try:
         operation = event['operation']
