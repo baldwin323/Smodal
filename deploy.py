@@ -104,7 +104,11 @@ def deployment_instructions():
     print("1. Ensure AWS credentials are configured correctly.")
     print("2. Run this script to create the lambda functions, API Gateway event trigger, and S3 event trigger.")
     print("3. After running the script, navigate over to AWS management console to verify that the actions have completed correctly.")
-    print("4. Upon a successful run of the script, the react application is now ready to be deployed to the configured AWS services.")
+    print("4. Make sure the S3 bucket created is correctly configured for static website hosting.")
+    print("5. Upload the built application files to the newly created S3 bucket.")
+    print("6. Use the files in the S3 bucket to serve the React application.")
+    print("7. If necessary, configure a CDN or attach an existing one to the S3 bucket.")
+    print("8. Now your React Frontend application is live on AWS.")
 
 if __name__ == '__main__':
     deploy()

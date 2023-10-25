@@ -5,7 +5,8 @@ from Smodal.sale_items import SaleItem, ChatBot
 from Smodal.lambda_functions import register_affiliate_manager, monitor_affiliated_models, give_credit
 import uuid
 import os
-from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData, AffiliateUploads, OpenAIAPICalls
+from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData, AffiliateUploads, OpenAIAPICalls, UserProfile, FileUpload, Banking
+from .views import load_dashboard, login_user, logout_user, form_submit, file_upload, user_activity, banking, serve
 import json
 from subprocess import Popen, PIPE
 from Smodal.logging import logger 
@@ -52,6 +53,10 @@ class SmodalTest(TestCase):
                             ["manage.py", "makemigrations"],
                             ["manage.py", "migration"]]
 
+        self.user1 = User.objects.create_user(username='testuser1', password='12345') 
+        login = self.client.login(username='testuser1', password='12345')   
+        self.assertEqual(login, True) 
+
     def test_load_template(self):
         self.assertIsNotNone(self.bot.load_template('index.html'))
 
@@ -95,3 +100,62 @@ class SmodalTest(TestCase):
         saved_call = OpenAIAPICalls.objects.first()
         self.assertIsNotNone(saved_call)
         self.assertEqual(saved_call.call_details, {'api': 'sample api call'})
+
+    def test_dashboard(self):
+        response = self.client.get('/dashboard')
+        self.assertEqual(response.status_code, 200)
+
+    def test_login(self):
+        response = self.client.post('/login', {'username':'testuser1', 'password':'12345'} )
+        self.assertEqual(response.status_code, 200)
+
+    def test_logout(self):
+        response = self.client.get('/logout')
+        self.assertEqual(response.status_code, 200)
+
+    def test_form_submit(self):
+        form_data = {"username": "testuser1", "password": "12345"}
+        response = form_submit(HttpRequest().POST.update(form_data))
+        self.assertEqual(response.status_code, 302)
+        
+    def test_file_upload(self):
+        with open('test.txt', 'w') as file:
+            test_file = FileUpload.objects.create(file=file.name)
+            response = file_upload(test_file.id)
+            self.assertEqual(response.status_code, 200)
+
+
+    def test_user_activity(self):
+        user_activity = UserActivity.objects.create(user_id=self.user1.id, activity="Test Activity", created_at="2022-02-28T20:00:00Z")
+        response = user_activity(user_activity.id)
+        self.assertEqual(response.status_code, 200)
+
+    def test_banking(self):
+        banking = Banking.objects.create(user_id=self.user1.id, transactions={"transaction1": "deposit $10"}, created_at="2022-02-28T20:00:00Z")
+        response = banking(banking.id)
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_auth(self):
+        user_prof = UserProfile.objects.create(user_id=self.user1.id, birth_date="1985-05-12", image=None)
+        self.assertIsNotNone(user_prof)
+        self.assertEqual(user_prof.user_id, self.user1.id)
+        self.assertEqual(user_prof.birth_date, "1985-05-12")
+        self.assertEqual(user_prof.image, None)
+
+    def test_handle_errors(self):
+        with self.assertRaises(Exception):
+            load_dashboard('fake_request')
+        with self.assertRaises(Exception):
+            login_user('fake_request')
+        with self.assertRaises(Exception):
+            logout_user('fake_request')
+        with self.assertRaises(Exception):
+            form_submit('fake_request')
+        with self.assertRaises(Exception):
+            file_upload('fake_request')
+        with self.assertRaises(Exception):
+            user_activity('fake_request')
+        with self.assertRaises(Exception):
+            banking('fake_request')
+        with self.assertRaises(Exception):
+            serve('fake_request', 'fake_page')
