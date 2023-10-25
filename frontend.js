@@ -1,34 +1,26 @@
-// Importing necessary modules ie. react, react-dom, react-router-dom and axios for making API calls
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
+import './styles.css'; // Assuming that CSS file exists in the same directory
 
-// Defining constants for the ids of the frontend pages
 const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
 
-// Function to handle HTTP response errors
 const errorHandler = (error) => {
   if (!error.response) {
-    // network error
     return `Error: Network Error`;
   } else {
     return error.response.data;
   }
 };
 
-// Functional component to manage all pages
 const MainPage = () => {
-  // State management
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  
-  // Using useEffect to update UI based on state changes
+
   useEffect(() => {
-    let newPageId = pageIds[currentPageIndex];
-    handleAPIFetch(newPageId);
+    handleAPIFetch(pageIds[currentPageIndex]);
   }, [currentPageIndex]);
 
-  // Function to fetch data from backend API
   const handleAPIFetch = (id) => {
     axios.get(`/api/${id}`)
       .then(response => {
@@ -40,30 +32,31 @@ const MainPage = () => {
       });
   }
 
-  // Defining function to handle previous navigation
   const handlePrevClick = () => {
     if (currentPageIndex > 0) {
       setCurrentPageIndex(prevState => prevState - 1);
     }
   }
 
-  // Defining function to handle next navigation
   const handleNextClick = () => {
     if (currentPageIndex < pageIds.length - 1) {
       setCurrentPageIndex(prevState => prevState + 1);
     }
   }
 
-  // Render logic for the component
   return (
-    <div>
-      <button onClick={handlePrevClick}>Prev</button>
-      <button onClick={handleNextClick}>Next</button>
+    <div className="app-container">
+      <div className="nav-bar">
+        <button onClick={handlePrevClick} className="nav-button">Prev</button>
+        <button onClick={handleNextClick} className="nav-button">Next</button>
+      </div>
+      <div id={pageIds[currentPageIndex]} className='page-container'>
+        {/* Content goes here */}
+      </div>
     </div>
   );
 }
 
-// Creating routing within the application using react-router-dom
 ReactDOM.render(
   <Router>
     <Switch>
