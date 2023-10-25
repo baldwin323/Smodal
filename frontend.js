@@ -4,8 +4,10 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 import './styles.css'; // Assuming that CSS file exists in the same directory
 
+// Array of page ids for navigation purpose
 const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
 
+// Function to handle errors from the server
 const errorHandler = (error) => {
   if (!error.response) {
     return `Error: Network Error`;
@@ -14,13 +16,16 @@ const errorHandler = (error) => {
   }
 };
 
+// Main Component for the application
 const MainPage = () => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
+  // Fetching required data when the page is loaded
   useEffect(() => {
     handleAPIFetch(pageIds[currentPageIndex]);
   }, [currentPageIndex]);
 
+  // Function to fetch data from the server
   const handleAPIFetch = (id) => {
     axios.get(`/api/${id}`)
       .then(response => {
@@ -57,6 +62,7 @@ const MainPage = () => {
   );
 }
 
+// Render the main component into the div with id 'root'
 ReactDOM.render(
   <Router>
     <Switch>

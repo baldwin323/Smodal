@@ -10,41 +10,40 @@
 
 To begin, you need to connect to your Kubernetes cluster. This can be done directly through kubectl or doctl. More detailed instructions for this process can be found in the DigitalOcean Control Panel.
 
-### How to confirm that Cert-Manager is running
+### Cert-Manager Status Confirmation
 
-You need to confirm whether Cert-Manager is operating properly. Run:
-
+To confirm the operational status of Cert-Manager, execute the following commands:
 
 ```bash
 helm ls -n cert-manager
 kubectl get pods -n cert-manager
 ```
 
-Your Cert-Manager should be in a READY state and STATUS should be Running.
+The Cert-Manager should be in a READY state, and STATUS should be Running.
 
-### Tweaking Helm Chart Values
+### Values Configuration For Helm Chart
 
-Helm chart values can be inspected by running the below command.
+Inspect the Helm chart values by running the following command.
 
 ```bash
 helm show values jetstack/cert-manager --version 1.8.0
 ```
 
-Feel free to adjust the values file (values.yml) according to your requirements.
+You can adjust the values in the values.yml file based on your requirements.
 
-### Configuring TLS Certificates via Cert-Manager
+### Configuring Secure TLS Certificates via Cert-Manager
 
-To create secure connections, you will need to configure TLS certificates via Cert-Manager. Detailed instructions, including the creation of Certificate and Issuer CRDs and necessary annotations can be found in the source code.
+The application establishes secure connections via TLS certificates configured through Cert-Manager. Please follow the detailed instructions in the source code for creating Certificate and Issuer CRDs, and adding necessary annotations.
 
-### Upgrading and Uninstalling Cert-Manager Stack
+### Upgrading and Uninstalling The Cert-Manager Stack
 
-For upgrade instructions, navigate to Cert-Manager's official release page on GitHub, or consider using ArtifactHUB for a more user-friendly interface.
+You can upgrade the Cert-Manager stack by following instructions on Cert-Manager's official release page on GitHub. Alternatively, ArtifactHUB can provide a more user-friendly interface. Use the following command for upgrading:
 
 ```bash
 helm upgrade cert-manager jetstack/cert-manager --version <CERT_MANAGER_NEW_VERSION> --namespace cert-manager --values <YOUR_HELM_VALUES_FILE>
 ```
 
-For uninstallation, execute the following helm command.
+To uninstall the Cert-Manager stack, utilize the following commands:
 
 ```bash
 helm uninstall cert-manager -n cert-manager
@@ -53,50 +52,49 @@ kubectl delete ns cert-manager
 
 ## Advanced Use 
 
-If you'd like more detailed instructions, check out the following links provided by DigitalOcean: 
+In case of need for more detailed instructions, please refer to the following official DigitalOcean guides: 
 
 - [Configuring Production Ready TLS Certificates for Nginx](#)
 - [Configuring Wildcard Certificates via Cert-Manager](#)
 
-## Setting up a DigitalOcean Droplet
+## Procedure To Set Up a DigitalOcean Droplet
 
-(Follow the initial droplet setup instructions as per original document.)
+Proceed with setting up a DigitalOcean Droplet as per instructions in the original document.
 
-### Setting up a virtual environment
+### Setting Up a Virtual Environment
 
-(Follow the virtual environment setup instructions as per original document.)
+Follow the original document's instructions for setting up a virtual environment.
 
-### Installing Dependencies
+### Dependency Installation
 
-(Follow the dependencies installation instructions as per original document.)
+Follow the original document's instructions for installing dependencies.
 
-### Set Up Django App
+### Django App Set Up
 
-(Follow the Django setup instructions as per original document.)
+Follow the original document's instructions for setting up the Django app.
 
-## Build Commands
+## Executing Build Commands
 
-(Follow the Build Commands instructions as per original document.)
+The build commands can be executed as per instructions in the original document.
 
-## Deployment on DigitalOcean
+## Deployment Strategy for DigitalOcean
 
-(Follow the Deployment on DigitalOcean instructions as per original document.)
+Follow the instructions in the original document for deploying the application on DigitalOcean.
 
-### Deploying with Helm and Kubernetes
+### Deployment using Helm and Kubernetes
 
-(Follow the Deploying with Helm and Kubernetes instructions as per original document.)
+Deployment instructions using Helm and Kubernetes are provided in the original document.
 
-## Testing
+## Executing Test Cases
 
-(Follow the Testing instructions as per original document.)
+Test case execution instructions can be found in the original document.
 
-## Need Support?
+## User Support
 
-In case of queries or for support, kindly explore our various support resources:
-
+In case of any queries or requirements for support, please explore our various support resources:
 - [Application Documentation](https://docs.modal.tokai.com)
 - [Interactive Support Forum](https://ask.modal.tokai.com)
-- **Auto-complete**: To enrich user experience and make scripting quick, we have implemented an autocomplete feature throughout our project.
-- **Walkthrough**: Our guides and tutorials give detailed, step-by-step instructions, helping users understand, use, and contribute to the application.
-- **Regular Updates and Enhancements**: We make consistent updates and modifications to keep our application up-to-date. For detailed version history, see our changelog.
-- **Community-Driven Approach**: We value feedback and suggestions from our community of users. We maintain an open dialogue with our users via our interactive forums encouraging all users to participate in the application's development journey.
+- **Auto-completion Feature**: This feature is implemented throughout our project to enrich user experience and quicken scripting.
+- **Step by Step Guides and Tutorials**: Our guides and tutorials provide detailed instructions which aid users in understanding, using and contributing to our application.
+- **Regular Updates & Enhancements**: We consistently update and modify our application to keep it up-to-date. Detailed version history can be found in our changelog.
+- **Community-Driven Approach**: We value feedback and suggestions from our community of users and maintain an open dialogue via our interactive forums, encouraging participation in the application's development journey.
