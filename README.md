@@ -50,6 +50,27 @@ helm uninstall cert-manager -n cert-manager
 kubectl delete ns cert-manager
 ```
 
+## Building the React Application
+
+The application comes with a React frontend. To build the application, run the following commands:
+
+```bash
+cd /Smoda
+npm install
+npm run build
+```
+
+The build artifacts will be stored in the `dist/` directory.
+
+## Running React Frontend Locally
+
+To run the React frontend application locally, you can use the following commands:
+
+```bash
+npm start
+```
+This starts the development server and the app should be available at `localhost:3000`.
+
 ## Advanced Use 
 
 In case of need for more detailed instructions, please refer to the following official DigitalOcean guides: 
