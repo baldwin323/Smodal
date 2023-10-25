@@ -1,72 +1,77 @@
-/**  
- * @file This file manages all user interaction events on the new frontend elements.
- * Each function has error handling and each API call endpoint has a detailed description in the form of comments.
- */
+// Importing necessary modules ie. react, react-dom, react-router-dom and axios for making API calls
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import axios from 'axios';
 
-// The index of the current page
-let currentPageIndex = 0;
-
-// The ids of the frontend pages
+// Defining constants for the ids of the frontend pages
 const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
 
-/**
- * Function that sets a click event listener and calls a corresponding API endpoint
- * @param id - HTML element id
- * @param callback - Callback function to be executed on click event
- */
-function setClickEventListener(id, callback) {
-    document.getElementById(id).addEventListener('click', callback);
-}
+// Function to handle HTTP response errors
+const errorHandler = (error) => {
+  if (!error.response) {
+    // network error
+    return `Error: Network Error`;
+  } else {
+    return error.response.data;
+  }
+};
 
-/**
- * Function to handle HTTP response errors
- * @param response - HTTP response object
- * @throws Will throw an error if the response status is not OK
- */
-function errorHandler(response) {
-    if (!response.ok) throw Error(response.statusText);
-    return response;
-}
+// Functional component to manage all pages
+const MainPage = () => {
+  // State management
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  
+  // Using useEffect to update UI based on state changes
+  useEffect(() => {
+    let newPageId = pageIds[currentPageIndex];
+    handleAPIFetch(newPageId);
+  }, [currentPageIndex]);
 
-// Callback functions calling the relevant backend API and handling loading states and HTTP errors
-// Each callback hits a different API endpoint depending on the pageId, handles any response error, processes the json response and handles loading states.
-const backendApiCallbacks = pageIds.map(id => () => {
-    document.body.classList.add('loading');
-    fetch(`/api/${id}`)
-        .then(errorHandler)
-        .then(response => response.json())
-        .then(data => {
-            // updated to handle new data structure
-            document.getElementById(id).innerText = `The returned data is: ${JSON.stringify(data)}`;
-        })  
-        .finally(() => document.body.classList.remove('loading'))
-});
+  // Function to fetch data from backend API
+  const handleAPIFetch = (id) => {
+    axios.get(`/api/${id}`)
+      .then(response => {
+        const data = response.data;
+        console.log(`The returned data is: ${JSON.stringify(data)}`);
+      }) 
+      .catch(error => {
+        console.log(errorHandler(error));
+      });
+  }
 
-// Event listener for the 'previous' navigation button
-// Handles page navigation in backward direction
-document.getElementById('nav-prev').addEventListener('click', function() {
+  // Defining function to handle previous navigation
+  const handlePrevClick = () => {
     if (currentPageIndex > 0) {
-        let oldPageId = pageIds[currentPageIndex];
-        currentPageIndex -= 1;
-        let newPageId = pageIds[currentPageIndex];
-        
-        document.getElementById(oldPageId).style.display = 'none';
-        document.getElementById(newPageId).style.display = '';
+      setCurrentPageIndex(prevState => prevState - 1);
     }
-});
+  }
 
-// Event listener for the 'next' navigation button
-// Handles page navigation in forward direction
-document.getElementById('nav-next').addEventListener('click', function() {
+  // Defining function to handle next navigation
+  const handleNextClick = () => {
     if (currentPageIndex < pageIds.length - 1) {
-        let oldPageId = pageIds[currentPageIndex];
-        currentPageIndex += 1;
-        let newPageId = pageIds[currentPageIndex];
-
-        document.getElementById(oldPageId).style.display = 'none';
-        document.getElementById(newPageId).style.display = '';
+      setCurrentPageIndex(prevState => prevState + 1);
     }
-});
+  }
 
-// Set click event listeners for all frontend page ids, using corresponding backend API callbacks
-pageIds.forEach((id, index) => setClickEventListener(id, backendApiCallbacks[index]));
+  // Render logic for the component
+  return (
+    <div>
+      <button onClick={handlePrevClick}>Prev</button>
+      <button onClick={handleNextClick}>Next</button>
+    </div>
+  );
+}
+
+// Creating routing within the application using react-router-dom
+ReactDOM.render(
+  <Router>
+    <Switch>
+      <Route exact path="/"><MainPage /></Route>
+      {pageIds.map((pageId, i) => (
+        <Route exact path={`/${pageId}`}><MainPage /></Route>
+      ))}
+    </Switch>
+  </Router>,
+  document.getElementById('root')
+);
