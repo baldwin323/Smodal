@@ -8,10 +8,12 @@ AWS_REGION = os.environ.get('AWS_REGION')
 
 # Function for creating executable and bundling dependencies
 def prepare_executable():
+    """Creates an executable from lambda_functions.py with all its dependencies bundled."""
     pyinstaller_run(['lambda_functions.py', '--onefile'])
 
 # Function for creating lambda function
 def create_lambda(func_name):
+    """Creates a new lambda function with the given function name."""
     # Create lambda client
     lambda_client = boto3.client('lambda', region_name=AWS_REGION)
     # Create lambda function
@@ -28,6 +30,7 @@ def create_lambda(func_name):
 
 # Function for creating API Gateway event trigger
 def create_gateway_trigger():
+    """Creates a new API Gateway event trigger."""
     # Create API Gateway client
     gateway_client = boto3.client('apigateway', region_name=AWS_REGION)
     # Create REST API
@@ -68,6 +71,7 @@ def create_gateway_trigger():
 
 # Function for creating S3 event trigger
 def create_s3_trigger(bucket_name, func_name):
+    """Creates an event trigger for the specified S3 bucket and lambda function."""
     # Create S3 client
     s3_client = boto3.client('s3', region_name=AWS_REGION)
     try:
@@ -91,6 +95,7 @@ def create_s3_trigger(bucket_name, func_name):
 
 # Main function for deployment
 def deploy():
+    """Main deployment function which calls the other necessary deployment functions."""
     func_name = 'serverless-droplet-manager'
     bucket_name = 'serverless-droplet-manager-bucket'
     prepare_executable()
@@ -100,6 +105,7 @@ def deploy():
     
 # Function for providing deployment instructions
 def deployment_instructions():
+    """Prints out a set of instructions to guide the user during deployment."""
     print("Deployment Instructions:")
     print("1. Ensure AWS credentials are configured correctly.")
     print("2. Run this script to create the lambda functions, API Gateway event trigger, and S3 event trigger.")
@@ -113,3 +119,4 @@ def deployment_instructions():
 if __name__ == '__main__':
     deploy()
     deployment_instructions()
+

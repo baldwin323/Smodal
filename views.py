@@ -27,14 +27,23 @@ PAGES = {
 }
 
 def is_authenticated(request):
+    """
+    Checks if a user is authenticated
+    """
     return request.user.is_authenticated
 
 @login_required
 def load_dashboard(request):
+    """
+    Load Dashboard for the authenticated user
+    """
     user_profile = UserProfile.objects.get(user_id=request.user.id)
     return render(request, 'dashboard.html', {'user_profile': user_profile})
 
 def login_user(req):
+    """
+    Handle User Login
+    """
     if req.method == 'POST':
         email = req.POST.get('email', None)
         password = req.POST.get('password', None)
@@ -52,31 +61,48 @@ def login_user(req):
 
 @login_required
 def logout_user(req):
+    """
+    Handle User Logout
+    """
     logout(req)
     return render(req, 'login.html')
 
 @login_required
 def form_submit(request):
-    pass  # Implement form functionality
+    """
+    Functionality for form submission
+    """
+    pass
 
 @login_required
 def file_upload(request):
-    pass  # Implement file upload functionality
+    """
+    Functionality for file upload
+    """
+    pass
 
 @login_required
 def user_activity(request):
+    """
+    Displays the user activity
+    """
     user_activity = UserActivity.objects.filter(user_id=request.user.id)
     return render(request, 'activity.html', {'user_activity': user_activity})
 
 @login_required
 def banking(request):
+    """
+    Displays user's banking related data
+    """
     user_banking = Banking.objects.filter(user_id=request.user.id)
     return render(request, 'banking.html', {'user_banking': user_banking})
 
 @login_required
 def serve(request, page):
+    """
+    Functionality to serve a page
+    """
     if page in PAGES:
         return render(request, 'index.html')
     else:
         raise Http404
-
