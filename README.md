@@ -18,7 +18,10 @@ For an AWS Lambda Deployment, the following steps must be executed:
 4. **Upload the Deployment Package to AWS Lambda**: The deployment package needs to be uploaded to AWS Lambda. This can be done in the AWS Console by uploading the .zip file, using the AWS CLI/SDK, or as a part of a CI/CD pipeline.
 5. **Configure Any Triggers for the Lambda Function**: Possible triggers include an S3 bucket for file uploads, API Gateway for API endpoints, Event Bridge for events, or Scheduled events.
 6. **Test the Lambda Function**: Testing can be done by invoking the function from the AWS Console, using the Lambda Test Event feature, or sending requests to any of the configured triggers.
-7. **Monitor and Configure Logging/Metrics for the Lambda Function**: This is crucial for troubleshooting and performance optimization.
+7. **Monitor and Configure Logging/Metrics for the Lambda Function**: This is crucial for troubleshooting and performance optimization. Use AWS CloudWatch for monitoring and logging to identify issues or improvements.
+
+### Optimization tip: Lambda Cold Start
+To mitigate Lambda Cold Start, keep your functions warm by invoking them at least once every 5 to 25 minutes.
 
 ### Cert-Manager Status Confirmation
 
@@ -46,7 +49,7 @@ For an AWS Lambda Deployment, the following steps must be executed:
 
 ## Executing Build Commands
 
-<!--- Existing content here --->
+The build process can be optimized through parallel execution and caching. Utilize the make utility for tasks that can be run concurrently, and use caching to avoid re-downloading or re-compiling assets.
 
 ## Deployment Strategy for DigitalOcean
 
@@ -62,4 +65,4 @@ For an AWS Lambda Deployment, the following steps must be executed:
 
 ## User Support
 
-<!--- Existing content here --->
+<!--- In the event of any issues, refer to the following useful troubleshooting guides included in the repository --->
