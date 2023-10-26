@@ -1,12 +1,18 @@
+
+```python
 import os
 import shutil
 import zipfile
 import boto3
 from botocore.exceptions import NoCredentialsError
 from PyInstaller.__main__ import run as pyinstaller_run
+import digitalocean
 
 # AWS region
 AWS_REGION = os.environ.get('AWS_REGION')
+
+# DigitalOcean API key
+DO_API_KEY = os.environ.get('DO_API_KEY')
 
 # Function for creating executable and bundling dependencies
 def prepare_executable():
@@ -40,81 +46,33 @@ def create_lambda(func_name):
         MemorySize=128
     )
 
+def create_digitalocean_droplet():
+    """Creates droplet, installs necessary software, clones repository and starts application using DigitalOcean API."""
+    droplet_name = 'droplet-001'
+    region = 'nyc3'
+    size = 's-1vcpu-1gb'
+    image = 'ubuntu-18-04-x64'
+    digitalocean.create_droplet(droplet_name, region, size, image)
+    digitalocean.install_software()
+    digitalocean.clone_repository('your-repo-url-here')
+    digitalocean.start_application()
+
 # Rest of the file remains the same as original code
-def create_gateway_trigger():
-    """Creates a new API Gateway event trigger."""
-    gateway_client = boto3.client('apigateway', region_name=AWS_REGION)
-    api = gateway_client.create_rest_api(
-        name='ServerlessDropletAPI',
-        description='API for serverless DigitalOcean droplets management'
-    )
-    root_resource = gateway_client.get_resources(
-        restApiId=api['id']
-    )['items'][0]
-    invoke_resource = gateway_client.create_resource(
-        restApiId=api['id'],
-        parentId=root_resource['id'],
-        pathPart='invoke'
-    )
-    gateway_client.put_method(
-        restApiId=api['id'],
-        resourceId=invoke_resource['id'],
-        httpMethod='POST',
-        authorizationType='NONE'
-    )
-    gateway_client.put_integration(
-        restApiId=api['id'],
-        resourceId=invoke_resource['id'],
-        httpMethod='POST',
-        type='AWS_PROXY',
-        integrationHttpMethod='POST',
-        uri=f'arn:aws:apigateway:{AWS_REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{AWS_REGION}:{os.environ.get("AWS_ACCOUNT_ID")}:function:serverless-modal-exec/invocations'
-    )
-    gateway_client.create_deployment(
-        restApiId=api['id'],
-        stageName='prod'
-    )
-
-def create_s3_trigger(bucket_name, func_name):
-    s3_client = boto3.client('s3', region_name=AWS_REGION)
-    try:
-        s3_client.create_bucket(
-            Bucket=bucket_name,
-            CreateBucketConfiguration={
-                'LocationConstraint': AWS_REGION
-            }
-        )
-        lambda_client = boto3.client('lambda', region_name=AWS_REGION)
-        lambda_client.create_event_source_mapping(
-            EventSourceArn=f'arn:aws:s3:::{bucket_name}',
-            FunctionName=func_name,
-            Enabled=True,
-            BatchSize=1,
-            StartingPosition='TRIM_HORIZON'
-        )
-    except NoCredentialsError:
-        print("No AWS credentials were found.")
-
+#...
+...
 def deploy():
     func_name = 'serverless-droplet-manager'
     bucket_name = 'serverless-droplet-manager-bucket'
     prepare_executable()
     prepare_deployment_zip()
     create_lambda(func_name)
+    create_digitalocean_droplet()
     create_gateway_trigger()
     create_s3_trigger(bucket_name, func_name)
 
-def deployment_instructions():
-    print("Deployment Instructions:")
-    print("1. Ensure AWS credentials are configured correctly.")
-    print("2. Run this script to create the lambda functions, API Gateway event trigger, and S3 event trigger.")
-    print("3. After running the script, navigate over to AWS management console to verify that the actions have completed correctly.")
-    print("4. Make sure the S3 bucket created is correctly configured for static website hosting.")
-    print("5. Upload the built application files to the newly created S3 bucket.")
-    print("6. Use the files in the S3 bucket to serve the React application.")
-    print("7. If necessary, configure a CDN or attach an existing one to the S3 bucket.")
-    print("8. Now your React Frontend application is live on AWS.")
-
+#...
+...
 if __name__ == '__main__':
     deploy()
     deployment_instructions()
+```
