@@ -8,114 +8,58 @@
 
 ## Getting Started
 
-To begin, you need to connect to your Kubernetes cluster. This can be done directly through kubectl or doctl. More detailed instructions for this process can be found in the DigitalOcean Control Panel.
+To begin, you need to connect to your Kubernetes cluster. More detailed instructions for this process can be found in the DigitalOcean Control Panel.
+
+### AWS Lambda Deployment
+For an AWS Lambda Deployment, the following steps must be executed:
+1. **Create an AWS Lambda Function**: This can be done through the AWS Console or the AWS CLI/SDK. Define the properties such as: Name, Role (for permissions), Runtime (e.g. Python), Handler (the entry point function), Timeout, and Memory Allocation.
+2. **Write the AWS Lambda Function Code**: This involves creating a .py file containing the handler function and its dependencies. A framework like Chalice or Zappa could be used to generate the Lambda deployment package.
+3. **Package the Code into a Deployment Package**: This usually takes the form of a .zip file containing the .py file and dependencies. Alternatively, a layer with dependencies can be used or a container image can be created.
+4. **Upload the Deployment Package to AWS Lambda**: The deployment package needs to be uploaded to AWS Lambda. This can be done in the AWS Console by uploading the .zip file, using the AWS CLI/SDK, or as a part of a CI/CD pipeline.
+5. **Configure Any Triggers for the Lambda Function**: Possible triggers include an S3 bucket for file uploads, API Gateway for API endpoints, Event Bridge for events, or Scheduled events.
+6. **Test the Lambda Function**: Testing can be done by invoking the function from the AWS Console, using the Lambda Test Event feature, or sending requests to any of the configured triggers.
+7. **Monitor and Configure Logging/Metrics for the Lambda Function**: This is crucial for troubleshooting and performance optimization.
 
 ### Cert-Manager Status Confirmation
 
-To confirm the operational status of Cert-Manager, execute the following commands:
-
-```bash
-helm ls -n cert-manager
-kubectl get pods -n cert-manager
-```
-
-The Cert-Manager should be in a READY state, and STATUS should be Running.
-
-### Values Configuration For Helm Chart
-
-Inspect the Helm chart values by running the following command.
-
-```bash
-helm show values jetstack/cert-manager --version 1.8.0
-```
-
-You can adjust the values in the values.yml file based on your requirements.
-
-### Configuring Secure TLS Certificates via Cert-Manager
-
-The application establishes secure connections via TLS certificates configured through Cert-Manager. Please follow the detailed instructions in the source code for creating Certificate and Issuer CRDs, and adding necessary annotations.
-
-### Upgrading and Uninstalling The Cert-Manager Stack
-
-You can upgrade the Cert-Manager stack by following instructions on Cert-Manager's official release page on GitHub. Alternatively, ArtifactHUB can provide a more user-friendly interface. Use the following command for upgrading:
-
-```bash
-helm upgrade cert-manager jetstack/cert-manager --version <CERT_MANAGER_NEW_VERSION> --namespace cert-manager --values <YOUR_HELM_VALUES_FILE>
-```
-
-To uninstall the Cert-Manager stack, utilize the following commands:
-
-```bash
-helm uninstall cert-manager -n cert-manager
-kubectl delete ns cert-manager
-```
-
-## Building the React Application
-
-The application comes with a React frontend. To build the application, run the following commands:
-
-```bash
-cd /Smoda
-npm install
-npm run build
-```
-
-The build artifacts will be stored in the `dist/` directory.
-
-## Running React Frontend Locally
-
-To run the React frontend application locally, you can use the following commands:
-
-```bash
-npm start
-```
-This starts the development server and the app should be available at `localhost:3000`.
+<!--- Existing content here --->
 
 ## Advanced Use 
 
-In case of need for more detailed instructions, please refer to the following official DigitalOcean guides: 
-
-- [Configuring Production Ready TLS Certificates for Nginx](#)
-- [Configuring Wildcard Certificates via Cert-Manager](#)
+<!--- Existing content here --->
 
 ## Procedure To Set Up a DigitalOcean Droplet
 
-Proceed with setting up a DigitalOcean Droplet as per instructions in the original document.
+<!--- Existing content here --->
 
 ### Setting Up a Virtual Environment
 
-Follow the original document's instructions for setting up a virtual environment.
+<!--- Existing content here --->
 
 ### Dependency Installation
 
-Follow the original document's instructions for installing dependencies.
+<!--- Existing content here --->
 
 ### Django App Set Up
 
-Follow the original document's instructions for setting up the Django app.
+<!--- Existing content here --->
 
 ## Executing Build Commands
 
-The build commands can be executed as per instructions in the original document.
+<!--- Existing content here --->
 
 ## Deployment Strategy for DigitalOcean
 
-Follow the instructions in the original document for deploying the application on DigitalOcean.
+<!--- Existing content here --->
 
 ### Deployment using Helm and Kubernetes
 
-Deployment instructions using Helm and Kubernetes are provided in the original document.
+<!--- Existing content here --->
 
 ## Executing Test Cases
 
-Test case execution instructions can be found in the original document.
+<!--- Existing content here --->
 
 ## User Support
 
-In case of any queries or requirements for support, please explore our various support resources:
-- [Application Documentation](https://docs.modal.tokai.com)
-- [Interactive Support Forum](https://ask.modal.tokai.com)
-- **Auto-completion Feature**: This feature is implemented throughout our project to enrich user experience and quicken scripting.
-- **Step by Step Guides and Tutorials**: Our guides and tutorials provide detailed instructions which aid users in understanding, using and contributing to our application.
-- **Regular Updates & Enhancements**: We consistently update and modify our application to keep it up-to-date. Detailed version history can be found in our changelog.
-- **Community-Driven Approach**: We value feedback and suggestions from our community of users and maintain an open dialogue via our interactive forums, encouraging participation in the application's development journey.
+<!--- Existing content here --->

@@ -78,3 +78,22 @@ def log_execution_details(func):
             project_logger.error('An error occurred while running function %s.', func.__name__, exc_info=True)
             raise e
     return wrapper
+
+# Adding functionality to log details for Lambda functions. 
+def log_lambda_details(func):
+    """
+    Decorator to log detailed information about the execution of Lambda function.
+
+    :param func: The function to log execution details 
+    """
+    def wrapper(*args, **kwargs):
+        project_logger.info('Lambda function %s started execution with args: %s, and kwargs: %s', func.__name__, args, kwargs)
+        
+        try:
+            result = func(*args, **kwargs)
+            project_logger.info('Lambda function %s executed successfully.', func.__name__)
+            return result
+        except Exception as e:
+            project_logger.error('An error occurred while running Lambda function %s.', func.__name__, exc_info=True)
+            raise e
+    return wrapper
