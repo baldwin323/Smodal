@@ -21,7 +21,8 @@ lambda_client = boto3.client('lambda')
 # Function to register affiliate manager with proper error handling
 def register_affiliate_manager(*args, **kwargs):
     try:
-        # Updated Logic for registering affiliate manager goes here 
+        # update logic for registering affiliate manager 
+        # example: get the details, process them and return the result
         pass
     except Exception as e:
         lambda_stats.increment('register_affiliate_manager.error')
@@ -30,7 +31,8 @@ def register_affiliate_manager(*args, **kwargs):
 # Function to monitor affiliated models with proper error handling
 def monitor_affiliated_models(*args, **kwargs):
     try:
-        # Updated Logic for monitoring affiliated models goes here
+        # update logic for monitoring affiliated models 
+        # example: get the list of models, process them and return the result
         pass
     except Exception as e:
         lambda_stats.increment('monitor_affiliated_models.error')
@@ -39,7 +41,8 @@ def monitor_affiliated_models(*args, **kwargs):
 # Function to give credit when a new model signs up with proper error handling
 def give_credit(*args, **kwargs):
     try:
-        # Updated Logic for giving credit when a new model signs up goes here
+        # update logic for giving credit when a new model signs up 
+        # example: get the model details, process the details, update the credit and return the result
         pass
     except Exception as e:
         lambda_stats.increment('give_credit.error')
@@ -56,12 +59,14 @@ def lambda_handler(event, context):
     try:
         operation = event['operation']
 
+        # Validate the operation if it's in the defined operations
         if operation not in operations:
             raise ValueError(f'Invalid operation: {operation}')
 
         args = event.get('args', [])
         kwargs = event.get('kwargs', {})
 
+        # Execute the operation with the provided args and kwargs
         result = operations[operation](*args, **kwargs)
 
         return {

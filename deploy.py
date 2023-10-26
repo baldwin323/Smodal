@@ -1,4 +1,6 @@
 import os
+import shutil
+import zipfile
 import boto3
 from botocore.exceptions import NoCredentialsError
 from PyInstaller.__main__ import run as pyinstaller_run
@@ -11,6 +13,15 @@ def prepare_executable():
     """Creates an executable from lambda_functions.py with all its dependencies bundled."""
     pyinstaller_run(['lambda_functions.py', '--onefile'])
 
+# New Function for creating lambda deployment zip
+def prepare_deployment_zip():
+    """Creates a .zip file containing lambda_functions.py and its dependencies."""
+    # Create a ZipFile Object
+    with zipfile.ZipFile('lambda_deployment.zip', 'w') as zipObj:
+        # Add multiple files to the zip
+        zipObj.write('dist/lambda_functions', arcname='lambda_functions')
+        zipObj.write('requirements.txt', arcname='requirements.txt')
+
 # Function for creating lambda function
 def create_lambda(func_name):
     """Creates a new lambda function with the given function name."""
@@ -22,7 +33,7 @@ def create_lambda(func_name):
         Runtime='python3.8',
         Role='lambda-basic-execution',
         Handler='lambda_handler.lambda_handler',
-        Code={'ZipFile': open('dist/lambda_functions', 'rb').read()},
+        Code={'ZipFile': open('lambda_deployment.zip', 'rb').read()},
         Description='Lambda function for managing DigitalOcean droplets',
         Timeout=15,
         MemorySize=128
@@ -99,6 +110,7 @@ def deploy():
     func_name = 'serverless-droplet-manager'
     bucket_name = 'serverless-droplet-manager-bucket'
     prepare_executable()
+    prepare_deployment_zip()  # The new function for preparing deployment zip package
     create_lambda(func_name)
     create_gateway_trigger()
     create_s3_trigger(bucket_name, func_name)
@@ -119,4 +131,3 @@ def deployment_instructions():
 if __name__ == '__main__':
     deploy()
     deployment_instructions()
-
