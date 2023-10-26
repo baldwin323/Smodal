@@ -13,13 +13,13 @@ def prepare_executable():
     """Creates an executable from lambda_functions.py with all its dependencies bundled."""
     pyinstaller_run(['lambda_functions.py', '--onefile'])
 
-# New Function for creating lambda deployment zip
+# Modified Function for creating lambda deployment zip
 def prepare_deployment_zip():
     """Creates a .zip file containing lambda_functions.py and its dependencies."""
-    # Create a ZipFile Object
+    # Create a ZipFile Object and include the new lambda_functions.zip created by compress_directory() function in lambda_functions.py
     with zipfile.ZipFile('lambda_deployment.zip', 'w') as zipObj:
         # Add multiple files to the zip
-        zipObj.write('dist/lambda_functions', arcname='lambda_functions')
+        zipObj.write('lambda_functions.zip', arcname='lambda_functions.zip')
         zipObj.write('requirements.txt', arcname='requirements.txt')
 
 # Function for creating lambda function
@@ -33,23 +33,21 @@ def create_lambda(func_name):
         Runtime='python3.8',
         Role='lambda-basic-execution',
         Handler='lambda_handler.lambda_handler',
-        Code={'ZipFile': open('lambda_deployment.zip', 'rb').read()},
+        # Changed Code parameter to upload a zip file instead of individual files.
+        Code={'ZipFile': open('lambda_functions.zip', 'rb').read()},
         Description='Lambda function for managing DigitalOcean droplets',
         Timeout=15,
         MemorySize=128
     )
 
-# Function for creating API Gateway event trigger
+# Rest of the file remains the same as original code
 def create_gateway_trigger():
     """Creates a new API Gateway event trigger."""
-    # Create API Gateway client
     gateway_client = boto3.client('apigateway', region_name=AWS_REGION)
-    # Create REST API
     api = gateway_client.create_rest_api(
         name='ServerlessDropletAPI',
         description='API for serverless DigitalOcean droplets management'
     )
-    # Create resources
     root_resource = gateway_client.get_resources(
         restApiId=api['id']
     )['items'][0]
@@ -58,14 +56,12 @@ def create_gateway_trigger():
         parentId=root_resource['id'],
         pathPart='invoke'
     )
-    # Create method
     gateway_client.put_method(
         restApiId=api['id'],
         resourceId=invoke_resource['id'],
         httpMethod='POST',
         authorizationType='NONE'
     )
-    # Create integration
     gateway_client.put_integration(
         restApiId=api['id'],
         resourceId=invoke_resource['id'],
@@ -74,16 +70,12 @@ def create_gateway_trigger():
         integrationHttpMethod='POST',
         uri=f'arn:aws:apigateway:{AWS_REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:{AWS_REGION}:{os.environ.get("AWS_ACCOUNT_ID")}:function:serverless-modal-exec/invocations'
     )
-    # Deploy API
     gateway_client.create_deployment(
         restApiId=api['id'],
         stageName='prod'
     )
 
-# Function for creating S3 event trigger
 def create_s3_trigger(bucket_name, func_name):
-    """Creates an event trigger for the specified S3 bucket and lambda function."""
-    # Create S3 client
     s3_client = boto3.client('s3', region_name=AWS_REGION)
     try:
         s3_client.create_bucket(
@@ -92,7 +84,6 @@ def create_s3_trigger(bucket_name, func_name):
                 'LocationConstraint': AWS_REGION
             }
         )
-        # Create S3 event trigger
         lambda_client = boto3.client('lambda', region_name=AWS_REGION)
         lambda_client.create_event_source_mapping(
             EventSourceArn=f'arn:aws:s3:::{bucket_name}',
@@ -104,20 +95,16 @@ def create_s3_trigger(bucket_name, func_name):
     except NoCredentialsError:
         print("No AWS credentials were found.")
 
-# Main function for deployment
 def deploy():
-    """Main deployment function which calls the other necessary deployment functions."""
     func_name = 'serverless-droplet-manager'
     bucket_name = 'serverless-droplet-manager-bucket'
     prepare_executable()
-    prepare_deployment_zip()  # The new function for preparing deployment zip package
+    prepare_deployment_zip()
     create_lambda(func_name)
     create_gateway_trigger()
     create_s3_trigger(bucket_name, func_name)
-    
-# Function for providing deployment instructions
+
 def deployment_instructions():
-    """Prints out a set of instructions to guide the user during deployment."""
     print("Deployment Instructions:")
     print("1. Ensure AWS credentials are configured correctly.")
     print("2. Run this script to create the lambda functions, API Gateway event trigger, and S3 event trigger.")

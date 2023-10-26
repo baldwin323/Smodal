@@ -2,6 +2,7 @@ import json
 import boto3
 import os
 import logging
+import zipfile
 from datadog import initialize, api, statsd
 from datadog.lambda_metric import lambda_stats
 
@@ -81,3 +82,21 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})
         }
+        
+# New function to compress current directory into a zip file
+def compress_directory():
+    # Defining the name of the directory to be archived
+    dir_name = '.'
+    zipobj = zipfile.ZipFile('lambda_functions.zip', 'w', zipfile.ZIP_DEFLATED)
+    
+    # Iterate through all the directories and files in the specified directory
+    for foldername, subfolders, filenames in os.walk(dir_name):
+        for filename in filenames:
+            # Create the complete filepath of the file in directory
+            file = os.path.join(foldername, filename)
+            # Add file to zip
+            zipobj.write(file)
+    zipobj.close()
+
+# Call the function to compress directory into zip file
+compress_directory()
