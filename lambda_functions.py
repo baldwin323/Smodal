@@ -2,6 +2,7 @@ import json
 import boto3
 import os
 import logging
+import requests # for sending API requests
 import zipfile
 from datadog import initialize, api, statsd
 from datadog.lambda_metric import lambda_stats
@@ -19,12 +20,19 @@ logger.setLevel(logging.INFO)
 
 lambda_client = boto3.client('lambda')
 
+# Function to make API call
+def api_call(endpoint, payload=None, method="GET"):
+    base_url = "http://api.example.com" # replace with your API base url
+    headers = {"Content-Type": "application/json"}
+    response = requests.request(method, base_url + endpoint, headers=headers, data=json.dumps(payload) if payload else None)
+    return response.json()
+
 # Function to register affiliate manager with proper error handling
 def register_affiliate_manager(*args, **kwargs):
     try:
-        # update logic for registering affiliate manager 
-        # example: get the details, process them and return the result
-        pass
+        # API integration
+        result = api_call("/register_affiliate_manager", kwargs, "POST") # replace with your API endpoint
+        return result
     except Exception as e:
         lambda_stats.increment('register_affiliate_manager.error')
         logger.error('An error occurred in register_affiliate_manager: %s', str(e))
@@ -32,9 +40,9 @@ def register_affiliate_manager(*args, **kwargs):
 # Function to monitor affiliated models with proper error handling
 def monitor_affiliated_models(*args, **kwargs):
     try:
-        # update logic for monitoring affiliated models 
-        # example: get the list of models, process them and return the result
-        pass
+        # API integration
+        result = api_call("/monitor_affiliated_models", kwargs, "POST") # replace with your API endpoint
+        return result
     except Exception as e:
         lambda_stats.increment('monitor_affiliated_models.error')
         logger.error('An error occurred in monitor_affiliated_models: %s', str(e))
@@ -42,9 +50,9 @@ def monitor_affiliated_models(*args, **kwargs):
 # Function to give credit when a new model signs up with proper error handling
 def give_credit(*args, **kwargs):
     try:
-        # update logic for giving credit when a new model signs up 
-        # example: get the model details, process the details, update the credit and return the result
-        pass
+        # API integration
+        result = api_call("/give_credit", kwargs, "POST") # replace with your API endpoint
+        return result
     except Exception as e:
         lambda_stats.increment('give_credit.error')
         logger.error('An error occurred in give_credit: %s', str(e))
@@ -82,13 +90,13 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})
         }
-        
+
 # New function to compress current directory into a zip file
 def compress_directory():
     # Defining the name of the directory to be archived
     dir_name = '.'
     zipobj = zipfile.ZipFile('lambda_functions.zip', 'w', zipfile.ZIP_DEFLATED)
-    
+
     # Iterate through all the directories and files in the specified directory
     for foldername, subfolders, filenames in os.walk(dir_name):
         for filename in filenames:

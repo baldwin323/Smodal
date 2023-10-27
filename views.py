@@ -1,10 +1,12 @@
 import logging
+import json
+from django.http import Http404, JsonResponse
+from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, Http404, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.debug import ExceptionReporter
 from django.contrib.auth.models import User
+from .lambda_functions import register_affiliate_manager, monitor_affiliated_models, give_credit
 from .models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, UserProfile, FileUpload, UserActivity, Banking
 import json
 
@@ -25,6 +27,33 @@ PAGES = {
         'login_required': True
     },
 }
+
+@login_required
+def affiliate_register(request):
+    """
+    Function to register affiliate manager
+    """
+    # Invoke the corresponding Lambda function
+    response = register_affiliate_manager(**request.POST)
+    return JsonResponse(response)
+
+@login_required
+def affiliate_monitor(request):
+    """
+    Function to monitor affiliated models
+    """
+    # Invoke the corresponding Lambda function
+    response = monitor_affiliated_models(**request.POST)
+    return JsonResponse(response)
+
+@login_required
+def affiliate_credit(request):
+    """
+    Function to give credit when a new model signs up
+    """
+    # Invoke the corresponding Lambda function
+    response = give_credit(**request.POST)
+    return JsonResponse(response)
 
 def is_authenticated(request):
     """
