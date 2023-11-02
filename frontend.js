@@ -16,6 +16,7 @@ const errorHandler = (error) => {
 
 const MainPage = () => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const [aiResponse, setAiResponse] = useState(''); // State variable for storing AI response.
 
   useEffect(() => {
     handleAPIFetch(pageIds[currentPageIndex]);
@@ -43,15 +44,29 @@ const MainPage = () => {
       setCurrentPageIndex(prevState => prevState + 1);
     }
   }
+  
+  // New function to handle requesting AI model predictions/responses.
+  const handleAiCall = (inputData) => {
+    axios.get('/ai_predict', { input: inputData })
+      .then(response => {
+        setAiResponse(response.data.response);
+      })
+      .catch(error => {
+        console.log(errorHandler(error));
+      });
+  }
 
   return (
     <div className="app-container">
       <div className="nav-bar">
         <button onClick={handlePrevClick} className="nav-button">Prev</button>
         <button onClick={handleNextClick} className="nav-button">Next</button>
+        {/* Button to call AI model. */}
+        <button onClick={() => handleAiCall('input data here')} className="nav-button">Call AI</button> 
       </div>
       <div id={pageIds[currentPageIndex]} className='page-container'>
-        {/* Content goes here */}
+        {/* Display AI response. */}
+        <p>{aiResponse}</p>
       </div>
     </div>
   );
