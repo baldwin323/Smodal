@@ -20,14 +20,16 @@ logger.setLevel(logging.INFO)
 
 lambda_client = boto3.client('lambda')
 
-# Function to make API call
+# Function to make API call. This function will call the required API with the specified endpoint and payload.
+# It will return the response of the API call.
 def api_call(endpoint, payload=None, method="GET"):
     base_url = "http://api.example.com" # replace with your API base url
     headers = {"Content-Type": "application/json"}
     response = requests.request(method, base_url + endpoint, headers=headers, data=json.dumps(payload) if payload else None)
     return response.json()
 
-# Function to register affiliate manager with proper error handling
+# Function to register affiliate manager. It makes an API call to register an affiliate manager.
+# In case of any errors, an exception is raised and logged.
 def register_affiliate_manager(*args, **kwargs):
     try:
         # API integration
@@ -37,7 +39,8 @@ def register_affiliate_manager(*args, **kwargs):
         lambda_stats.increment('register_affiliate_manager.error')
         logger.error('An error occurred in register_affiliate_manager: %s', str(e))
 
-# Function to monitor affiliated models with proper error handling
+# Function to monitor affiliated models. It makes an API call to keep track of affiliated models.
+# An exception is raised and logged in case of any errors.
 def monitor_affiliated_models(*args, **kwargs):
     try:
         # API integration
@@ -47,7 +50,8 @@ def monitor_affiliated_models(*args, **kwargs):
         lambda_stats.increment('monitor_affiliated_models.error')
         logger.error('An error occurred in monitor_affiliated_models: %s', str(e))
 
-# Function to give credit when a new model signs up with proper error handling
+# Function to give credit when a new model signs up. The function makes an API call to provide credit.
+# Exception handling is done to log any errors during the process.
 def give_credit(*args, **kwargs):
     try:
         # API integration
@@ -58,12 +62,13 @@ def give_credit(*args, **kwargs):
         logger.error('An error occurred in give_credit: %s', str(e))
 
 operations = {
-    'register_affiliate_manager': register_affiliate_manager, # Registers affiliate manager
-    'monitor_affiliated_models': monitor_affiliated_models, # Monitors affiliated models
-    'give_credit': give_credit, # Give credit when a new model signs up
+    'register_affiliate_manager': register_affiliate_manager, # Function call to register affiliate manager
+    'monitor_affiliated_models': monitor_affiliated_models, # Function call to monitor affiliated models
+    'give_credit': give_credit, # Function call for credit provision when new model signs up
 }
 
-# Lambda handler function 
+# Lambda handler function instantiated for overall operations. It calls the corresponding function based on the
+# operation passed in the event. Exception handling is performed to log any errors during the process.
 def lambda_handler(event, context):
     try:
         operation = event['operation']
@@ -91,7 +96,8 @@ def lambda_handler(event, context):
             'body': json.dumps({'error': str(e)})
         }
 
-# New function to compress current directory into a zip file
+# New function to compress current directory into a zip file. The function walks through every directory and 
+# its subdirectories and compresses all the files into a zip file.
 def compress_directory():
     # Defining the name of the directory to be archived
     dir_name = '.'
