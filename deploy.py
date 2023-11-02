@@ -1,78 +1,64 @@
-
 ```python
 import os
-import shutil
-import zipfile
 import boto3
+import subprocess
 from botocore.exceptions import NoCredentialsError
-from PyInstaller.__main__ import run as pyinstaller_run
-import digitalocean
 
 # AWS region
 AWS_REGION = os.environ.get('AWS_REGION')
 
-# DigitalOcean API key
-DO_API_KEY = os.environ.get('DO_API_KEY')
+# Function for installing Elastic Beanstalk CLI
+def install_ebcli():
+    """Installs the Elastic Beanstalk Command Line Interface on the local machine."""
+    subprocess.run(['pip', 'install', 'awsebcli', '--upgrade', '--user'])
 
-# Function for creating executable and bundling dependencies
-def prepare_executable():
-    """Creates an executable from lambda_functions.py with all its dependencies bundled."""
-    pyinstaller_run(['lambda_functions.py', '--onefile'])
+# Function for initializing an Elastic Beanstalk environment
+def init_eb_environment():
+    """Initializes an Elastic Beanstalk environment in the current directory."""
+    # Note: This needs additional user input that can't be automated, such as region selection
+    subprocess.run(['eb', 'init'])
+
+# Function for creating Dockerrun.aws.json file
+def create_dockerrun():
+    """Creates a Dockerrun.aws.json file for Elastic Beanstalk to understand 
+    how to deploy Docker container."""
+    
+    dockerrun_content = """
+    {
+        "AWSEBDockerrunVersion": "1",
+        "Ports": [
+            {
+                "ContainerPort": "8000"
+            }
+        ],
+        "Volumes": [],
+        "Logging": "/var/log/nginx"
+    }
+    """
+    
+    with open('Dockerrun.aws.json', 'w') as file:
+        file.write(dockerrun_content)
+
+# Function for deploying application to Elastic Beanstalk
+def eb_deploy():
+    """Deploys the application to the Elastic Beanstalk environment."""
+    subprocess.run(['eb', 'create'])
 
 # Modified Function for creating lambda deployment zip
 def prepare_deployment_zip():
-    """Creates a .zip file containing lambda_functions.py and its dependencies."""
-    # Create a ZipFile Object and include the new lambda_functions.zip created by compress_directory() function in lambda_functions.py
-    with zipfile.ZipFile('lambda_deployment.zip', 'w') as zipObj:
-        # Add multiple files to the zip
-        zipObj.write('lambda_functions.zip', arcname='lambda_functions.zip')
-        zipObj.write('requirements.txt', arcname='requirements.txt')
+    """Creates a .zip file containing Dockerrun.aws.json and Dockerfile."""
+    with zipfile.ZipFile('eb_deployment.zip', 'w') as zipObj:
+        zipObj.write('Dockerrun.aws.json') # including Dockerrun.aws.json file created above
+        zipObj.write('Dockerfile') # assuming you have a Dockerfile in the same directory
+    
 
-# Function for creating lambda function
-def create_lambda(func_name):
-    """Creates a new lambda function with the given function name."""
-    # Create lambda client
-    lambda_client = boto3.client('lambda', region_name=AWS_REGION)
-    # Create lambda function
-    lambda_client.create_function(
-        FunctionName=func_name,
-        Runtime='python3.8',
-        Role='lambda-basic-execution',
-        Handler='lambda_handler.lambda_handler',
-        # Changed Code parameter to upload a zip file instead of individual files.
-        Code={'ZipFile': open('lambda_functions.zip', 'rb').read()},
-        Description='Lambda function for managing DigitalOcean droplets',
-        Timeout=15,
-        MemorySize=128
-    )
-
-def create_digitalocean_droplet():
-    """Creates droplet, installs necessary software, clones repository and starts application using DigitalOcean API."""
-    droplet_name = 'droplet-001'
-    region = 'nyc3'
-    size = 's-1vcpu-1gb'
-    image = 'ubuntu-18-04-x64'
-    digitalocean.create_droplet(droplet_name, region, size, image)
-    digitalocean.install_software()
-    digitalocean.clone_repository('your-repo-url-here')
-    digitalocean.start_application()
-
-# Rest of the file remains the same as original code
-#...
-...
 def deploy():
-    func_name = 'serverless-droplet-manager'
-    bucket_name = 'serverless-droplet-manager-bucket'
-    prepare_executable()
-    prepare_deployment_zip()
-    create_lambda(func_name)
-    create_digitalocean_droplet()
-    create_gateway_trigger()
-    create_s3_trigger(bucket_name, func_name)
-
-#...
-...
+    install_ebcli()
+    init_eb_environment()
+    create_dockerrun()
+    eb_deploy()
+    
 if __name__ == '__main__':
     deploy()
-    deployment_instructions()
 ```
+Please note, this code assumes that you are running the script from the directory where your project is located. Also, user input is needed when running `eb init` command. This can't be automated in a Python script.
