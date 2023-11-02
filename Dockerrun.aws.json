@@ -1,0 +1,13 @@
+```json
+{
+   "AWSEBDockerrunVersion": "1",
+   "Ports": [
+     {
+       "ContainerPort": "8000"
+     }
+   ],
+   "Volumes": [],
+   "Logging": "/var/log/nginx"
+}
+```
+<!-- This is a new file called Dockerrun.aws.json. This file is necessary for AWS Elastic Beanstalk to understand how to deploy your Docker container. The "AWSEBDockerrunVersion" should be 1. The "ContainerPort" should be the port your Django application is running on. The "Volumes" is an array where you can specify any data volumes to mount on the container. In this case, it is left empty. The "Logging" points to the directory where log files are stored. In this case, it's "/var/log/nginx". -->
