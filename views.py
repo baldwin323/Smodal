@@ -97,63 +97,67 @@ def logout_user(req):
     logout(req)
     return render(req, 'login.html')
 
-@login_required
-def form_submit(request):
-    """
-    Functionality for form submission
-    """
-    pass
-
-@login_required
-def file_upload(request):
-    """
-    Functionality for file upload
-    """
-    pass
-
-@login_required
-def user_activity(request):
-    """
-    Displays the user activity
-    """
-    user_activity = UserActivity.objects.filter(user_id=request.user.id)
-    return render(request, 'activity.html', {'user_activity': user_activity})
-
-@login_required
-def banking(request):
-    """
-    Displays user's banking related data
-    """
-    user_banking = Banking.objects.filter(user_id=request.user.id)
-    return render(request, 'banking.html', {'user_banking': user_banking})
 
 @login_required
 def serve(request, page):
     """
     Functionality to serve a page
     """
-    if page in PAGES:
-        return render(request, 'index.html')
-    else:
+    # Exclude these pages from requiring login
+    if page not in PAGES:
         raise Http404
+
+    page_spec = PAGES[page]
+    if page_spec['login_required']:
+        if not request.user.is_authenticated:
+            return JsonResponse({"status": "error", "message": "You must be logged in to access this page."}, status=401)
+        
+    try:
+        return page_spec['method'](request, page)
+    except Exception as e:
+        logger.error(f"There was an error serving the page: {page}", exc_info=e)
+        return JsonResponse({"status": "error", "message": "There was an error serving your request."}, status=500)
+
+
+@login_required
+def api_serve(request, page_id):
+    """
+    Functionality to serve a page via API endpoint.
+    """
+    # Check the request method
+    if request.method == 'GET':
+        try:
+            # Here we simply return a JsonResponse object as a stub for each possible page_id.
+            # In practice, implement the required API functionality for each page_id.
+            response_data = {
+                'user-authentication': {"data": "Stub data for user-authentication."},
+                'dashboard': {"data": "Stub data for dashboard."},
+                # Add similar responses for each page_id.
+                'default': {"data": "Stub data for unknown page_id."},
+            }
+            return JsonResponse(response_data.get(page_id, response_data['default']))
+        except Exception as e:
+            logger.error("Error serving API page: {}".format(page_id), exc_info=e)
 
 @login_required
 def ai_predict(request):
     """
     Exposes an API endpoint for the trained AI model.
     """
-    # Extract the input data from the request
-    input_data = request.GET.get('input')
-    
-    # Make a call to the AI model with the input data
-    response = call_model(input_data)
-    
-    # Update the AI's conversation state in the database
-    conversation_state = AIConversation.objects.get(user_id=request.user.profile)
-    conversation_state.previous_responses.append(response)
-    conversation_state.current_context = response  # Here we just set the AI's last response as current context,
-                                                   # but you should update context as per your AI model's requirements
-    conversation_state.save()
-
-    # Send back the response
+    try:  # Handle potential errors
+        # Extract the input data from the request
+        input_data = request.GET.get('input')
+        # Make a call to the AI model with the input data
+        response = call_model(input_data)
+        
+        # Update the AI's conversation state in the database
+        conversation_state = AIConversation.objects.get(user_id=request.user.profile)
+        conversation_state.previous_responses.append(response)
+        # Here we just set the AI's last response as current context,
+        # but you should update context as per your AI model's requirements
+        conversation_state.current_context = response  
+        conversation_state.save()
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': 'Could not process your request'}, status=500)
+      
     return JsonResponse({'response': response})

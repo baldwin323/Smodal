@@ -10,6 +10,7 @@ class ErrorDetails:
     '''
     A class to handle HTTP errors
     Contains properties for HTTP status code and appropriate HTML template
+    Also have a property to handle API related errors
     '''
     def __init__(self, code, message):
         self.code = code
@@ -35,10 +36,14 @@ def error_handler(request, exception, error_code):
     A function to handle HTTP errors
     Returns HTTP status code and renders appropriate HTML template
     Error message also logged with logger
+    If the error occurs within an API call, an API-related error message is returned
     '''
     
     error_code, error_message = handle_exception(exception, error_code)
-    
+    if 'API' in str(exception):
+        error_message = f"API Error: {str(exception)}"
+        logger.error(f'API Error, Error: {error_message}')
+
     context = {
         'error_code': error_code, 
         'error_message': error_message,
