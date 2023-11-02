@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.debug import ExceptionReporter
 from django.contrib.auth.models import User
 from .lambda_functions import register_affiliate_manager, monitor_affiliated_models, give_credit
-from .models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, UserProfile, FileUpload, UserActivity, Banking
+from .models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, UserProfile, FileUpload, UserActivity, Banking, AIConversation
+from .ai_model import call_model  # AI model function that generates predictions/responses
 import json
 
 logger = logging.getLogger(__name__)
@@ -135,3 +136,24 @@ def serve(request, page):
         return render(request, 'index.html')
     else:
         raise Http404
+
+@login_required
+def ai_predict(request):
+    """
+    Exposes an API endpoint for the trained AI model.
+    """
+    # Extract the input data from the request
+    input_data = request.GET.get('input')
+    
+    # Make a call to the AI model with the input data
+    response = call_model(input_data)
+    
+    # Update the AI's conversation state in the database
+    conversation_state = AIConversation.objects.get(user_id=request.user.profile)
+    conversation_state.previous_responses.append(response)
+    conversation_state.current_context = response  # Here we just set the AI's last response as current context,
+                                                   # but you should update context as per your AI model's requirements
+    conversation_state.save()
+
+    # Send back the response
+    return JsonResponse({'response': response})
