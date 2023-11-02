@@ -30,7 +30,12 @@ urlpatterns = [
     path('cloning-page/', views.MainPage, name='CloningPage'),
     path('menu-page/', views.MainPage, name='MenuPage'),
     path('banking-page/', views.MainPage, name='BankingPage'),
-    # Added API paths for each page
+    // Added routes for help documents, FAQS, and feedback form
+    path('help/', views.help, name='help'),  // New route for help page
+    path('faq/', views.faq, name='faq'), // New route for FAQ page
+    path('feedback/', views.feedback, name='feedback'), // New route for feedback form
+    # Added API paths for each page and feedback submission
     path('api/<str:page_id>/', views.api_serve, name='api_serve'),
+    path('api/submit_feedback/', views.submit_feedback, name='submit_feedback'),  // New API path for feedback submission
     path('ai_predict/', views.ai_predict, name='ai_predict'),
 ]
