@@ -5,15 +5,27 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 import './styles.css';
 
+// Import the loading spinner and feedback prompt components
+import LoadingSpinner from './components/LoadingSpinner';
+import FeedbackPrompt from './components/FeedbackPrompt';
+import HelpSupport from './components/HelpSupport';
+
 // Define the Ids of all pages we have
 const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
 
 // Error handler to provide better error messages
 const errorHandler = (error) => {
   if (!error.response) {
-    return `Error: Network Error`;
+    // Give friendly message and suggest action
+    return {
+      errorMsg: `Error: Network Error`,
+      actionSuggestion: 'Please check your internet connection.'
+    };
   } else {
-    return error.response.data;
+    return {
+      errorMsg: error.response.data,
+      actionSuggestion: "Please try again. If the problem persists, contact our support team."  // Suggest possible action
+    };
   }
 };
 
@@ -21,6 +33,7 @@ const errorHandler = (error) => {
 const MainPage = () => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0); // Keep track of current page
   const [aiResponse, setAiResponse] = useState(''); // State variable for storing AI response.
+  const [isLoading, setIsLoading] = useState(false); // State variable for loading spinner
 
   // On page load call the api for the current page
   useEffect(() => {
@@ -29,13 +42,17 @@ const MainPage = () => {
 
   // Function to call APIs and handle error properly
   const handleAPIFetch = (id) => {
+    setIsLoading(true); // Start loading spinner
     axios.get(`/api/${id}`)
       .then(response => {
         const data = response.data;
         console.log(`The returned data is: ${JSON.stringify(data)}`);
+        setIsLoading(false); // Stop loading spinner
       }) 
       .catch(error => {
-        console.log(errorHandler(error)); // Use the error handler when an error occurs
+        const { errorMsg, actionSuggestion } = errorHandler(error); // Use the error handler when an error occurs
+        console.log(`${errorMsg}. ${actionSuggestion}`);
+        setIsLoading(false); // Stop loading spinner
       });
   }
 
@@ -55,12 +72,16 @@ const MainPage = () => {
   
   // New function to handle requesting AI model predictions/responses.
   const handleAiCall = (inputData) => {
+    setIsLoading(true); // Start loading spinner
     axios.get('/ai_predict', { input: inputData })
       .then(response => {
         setAiResponse(response.data.response); // Save the AI response to state
+        setIsLoading(false); // Stop loading spinner
       })
       .catch(error => {
-        console.log(errorHandler(error)); // Use the error handler when an error occurs
+        const { errorMsg, actionSuggestion } = errorHandler(error); // Use the error handler when an error occurs
+        console.log(`${errorMsg}. ${actionSuggestion}`);
+        setIsLoading(false); // Stop loading spinner
       });
   }
 
@@ -87,6 +108,12 @@ const MainPage = () => {
       <div id={pageIds[currentPageIndex]} className='page-container'>
         {/* Display AI response. */}
         <p>{aiResponse}</p>
+        {/* Display a loading spinner if isLoading is true */}
+        {isLoading && <LoadingSpinner />}
+        {/* Display the feedback prompt */}
+        <FeedbackPrompt />
+        {/* Display the help and support section */}
+        <HelpSupport />
       </div>
     </div>
   );
