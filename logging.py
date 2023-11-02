@@ -15,66 +15,72 @@ LOGGING_PORT = conf.get('LOGGING_PORT', 514)
 PAPERTRAIL_HOST = conf.get('PAPERTRAIL_HOST', 'logs.papertrailapp.com')
 PAPERTRAIL_PORT = conf.get('PAPERTRAIL_PORT', 12345) 
 
+# Error handling for logging setup
 try:
-    # Setup handler with server info
+    # Setup handler with server info using SysLogHandler
     handler = handlers.SysLogHandler(address=(PAPERTRAIL_HOST, PAPERTRAIL_PORT))
     
-    # Define and set formatter for clarity and precise information
+    # Using a precise and clear formatter for better understanding
     formatter = __import__('logging').Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
     handler.setFormatter(formatter)
     
-    # Add the handler to the project logger
+    # Adding configured handler to the project logger
     project_logger.addHandler(handler)
 except Exception as e:
     project_logger.error('An error occurred while setting up the logger and formatter.', exc_info=True)
 
+# Error handling for applying logger configuration
 try:
-    # Apply the loaded configuration to the logger
     __import__('logging').config.dictConfig(conf)
 except Exception as e:
-    project_logger.error('An error occurred while applying logger configuration.', exc_info=True)
+    project_logger.error('An error occurred while applying the configuration to the logger. Error: %s', e, exc_info=True)
 
 def log_pactflow_response(headers: dict, body: str) -> None:
     """
-    Logs the Pactflow response headers and body.
+    The purpose of this function is to log the Pactflow response headers and body.
 
-    :param headers: The response headers
-    :param body: The response body
+    :param headers: These are the response headers received
+    :param body: This is the response body received
     """
     try:
         project_logger.info('Pactflow Response Headers: %s', str(headers))
         project_logger.info('Pactflow Response Body: %s', body)
     except Exception as e:
-        project_logger.error('An error occurred during logging of pactflow response.', exc_info=True)
+        # Error Handling for Pactflow responses logging
+        project_logger.error('An error occurred during the logging of pactflow response.', exc_info=True)
 
 def log_build_process(msg: str, level: str = 'info') -> None:
     """
-    Logs the build process at the specified level.
+    Function to log the build process at the specific level.
 
-    :param msg: The message to log
-    :param level: The logging level (defaults to 'info')
+    :param msg: String message to be logged
+    :param level: Logging level (default='info')
     """
     try:
         log_func = getattr(build_logger, level, build_logger.info)
         log_func(msg)
     except Exception as e:
-        project_logger.error('An error occurred during logging of build process.', exc_info=True)
+        # Error Handling for build process logging
+        project_logger.error('An error occurred during the logging of build process.', exc_info=True)
 
 def log_execution_details(func):
     """
-    Decorator to log detailed information about the execution of the decorated function.
+    This is a decorator function to log detailed execution information of the decorated function.
 
-    :param func: The function to log execution details of
+    :param func: The function for which execution details are logged
     """
     def wrapper(*args, **kwargs):
+        # Provides the details of the function, its arguments and keyword arguments
         project_logger.info('Function %s called with args: %s, and kwargs: %s', func.__name__, args, kwargs)
         project_logger.info('Running function %s...', func.__name__)
         
         try:
             result = func(*args, **kwargs)
+            # Success logging for function execution
             project_logger.info('Function %s executed successfully.', func.__name__)
             return result
         except Exception as e:
+            # Error handling for function execution
             project_logger.error('An error occurred while running function %s.', func.__name__, exc_info=True)
             raise e
     return wrapper
@@ -82,18 +88,21 @@ def log_execution_details(func):
 # Adding functionality to log details for Lambda functions. 
 def log_lambda_details(func):
     """
-    Decorator to log detailed information about the execution of Lambda function.
+    This is a decorator function to log detailed execution information of a Lambda function.
 
-    :param func: The function to log execution details 
+    :param func: The Lambda function for which execution details are logged
     """
     def wrapper(*args, **kwargs):
+        # Provides the details of the Lambda function, its arguments and keyword arguments
         project_logger.info('Lambda function %s started execution with args: %s, and kwargs: %s', func.__name__, args, kwargs)
         
         try:
             result = func(*args, **kwargs)
+            # Success logging for Lambda function execution
             project_logger.info('Lambda function %s executed successfully.', func.__name__)
             return result
         except Exception as e:
+            # Error handling for Lambda function execution
             project_logger.error('An error occurred while running Lambda function %s.', func.__name__, exc_info=True)
             raise e
     return wrapper
