@@ -64,6 +64,16 @@ const MainPage = () => {
       });
   }
 
+  // Using currentPageIndex to conditionally render content
+  const renderContent = () => {
+    switch(currentPageIndex) {
+      case 0: return <div>This is page 0</div>;
+      case 1: return <div>This is page 1</div>;
+      // Add more cases as needed for each page
+      default: return <div>;
+    }
+  }
+
   return (
     <div className="app-container">
       <div className="nav-bar">
@@ -72,6 +82,8 @@ const MainPage = () => {
         {/* Button to call AI model. */}
         <button onClick={() => handleAiCall('input data here')} className="nav-button">Call AI</button> 
       </div>
+      {/* Conditionally render page content based on currentPageIndex */}
+      {renderContent()}
       <div id={pageIds[currentPageIndex]} className='page-container'>
         {/* Display AI response. */}
         <p>{aiResponse}</p>

@@ -30,4 +30,7 @@ urlpatterns = [
     path('cloning-page/', views.MainPage, name='CloningPage'),
     path('menu-page/', views.MainPage, name='MenuPage'),
     path('banking-page/', views.MainPage, name='BankingPage'),
+    # Added API paths for each page
+    path('api/<str:page_id>/', views.api_serve, name='api_serve'),
+    path('ai_predict/', views.ai_predict, name='ai_predict'),
 ]

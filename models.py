@@ -37,13 +37,14 @@ class Banking(models.Model):
 
 # Existing model classes...
 
-# New model to maintain state between interactions
+# New model class to maintain state between interactions with the AI model
 class AIConversation(models.Model):
     # Link to the user (or session) is maintained by the ForeignKey relationship with UserProfile.
     user_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)  
     # History of previous responses that were sent by the AI.
     previous_responses = models.JSONField(default=list)  
-    # Current conversation context, as understood by the AI is maintained in a TextField.
+    # Current conversation context, as understood by the AI is maintained in a TextField,
+    # this will be updated every time the AI sends or receives a message.
     current_context = models.TextField()  
 
     def save(self, *args, **kwargs):
@@ -53,6 +54,19 @@ class AIConversation(models.Model):
         except Exception as e:
             print(f"An error occurred while saving AI conversation: {e}")
 
-# This model will help the AI to maintain a memory of its engagement with each user,
-# across different social media sites and the website. The 'context' field should be updated
-# every time the AI sends or receives a message.
+# Model class to handle UI page data
+class UIPageData(models.Model):
+    # Mapping with the available page ids in the frontend code
+    page_id = models.CharField(max_length=200)
+    # Data to be returned when API is called for this page
+    page_data = models.JSONField(default=dict)
+    
+    def save(self, *args, **kwargs):
+        # Error handling for UIPageData.
+        try:
+            super().save(*args, **kwargs)
+        except Exception as e:
+            print(f"An error occurred while saving UI page data: {e}")
+
+# Model structure has been redesigned to meet the needs of state management, interaction history, user data,
+# file management and banking transactions. The UIPageData model was further added to handle data for UI pages.
