@@ -1,0 +1,19 @@
+```yaml
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - "8000:8000"
+  deploy:
+    build:
+      context: .
+      dockerfile: Dockerfile.deploy
+    environment:
+      - AWS_ACCESS_KEY_ID=your-access-key-id
+      - AWS_SECRET_ACCESS_KEY=your-secret-access-key
+      - AWS_REGION=your-region
+```
+Remember to replace `your-access-key-id`, `your-secret-access-key`, and `your-region` with your actual AWS access key ID, secret access key, and region. This `docker-compose.yml` file defines your application (`app` service) build details and the details for your AWS deployment container (`deploy` service). The `app` service is setup to build using `Dockerfile.app` and is configured to expose port `8000`. The `deploy` service is setup to build using `Dockerfile.deploy` and makes use of environment variables for AWS credentials.
