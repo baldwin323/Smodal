@@ -1,13 +1,27 @@
 ```json
 {
    "AWSEBDockerrunVersion": "1",
+   "Image": {
+      "Name": "your Docker Hub account/image-name",
+      "Update": "true"
+   },
    "Ports": [
      {
-       "ContainerPort": "8000"
+       "ContainerPort": "8080",
+       "HostPort": "80"
      }
    ],
    "Volumes": [],
-   "Logging": "/var/log/nginx"
+   "Logging": "/var/log/nginx", 
+   "environment": {
+       "AWS_ACCESS_KEY": "your AWS access key",
+       "AWS_SECRET_KEY": "your AWS secret key"
+   }
 }
 ```
-<!-- This is a new file called Dockerrun.aws.json. This file is necessary for AWS Elastic Beanstalk to understand how to deploy your Docker container. The "AWSEBDockerrunVersion" should be 1. The "ContainerPort" should be the port your Django application is running on. The "Volumes" is an array where you can specify any data volumes to mount on the container. In this case, it is left empty. The "Logging" points to the directory where log files are stored. In this case, it's "/var/log/nginx". -->
+<!-- modified file to correctly configure for the AWS Elastic Beanstalk deployment.
+Changed 'ContainerPort' to match the application running port, and added 'HostPort'. 
+Also added an 'Image' object to specify Docker image name to be deployed.
+'Update' is set to 'true' to ensure that the latest version of the image is always used.
+Included environment variables necessary for AWS in the 'environment' object. 
+Kept the original Logging and Volumes intact as there are no modifications required there. -->

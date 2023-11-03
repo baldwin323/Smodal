@@ -44,14 +44,6 @@ def eb_deploy():
     """Deploys the application to the Elastic Beanstalk environment."""
     subprocess.run(['eb', 'create'])
 
-# Modified Function for creating lambda deployment zip
-def prepare_deployment_zip():
-    """Creates a .zip file containing Dockerrun.aws.json and Dockerfile."""
-    with zipfile.ZipFile('eb_deployment.zip', 'w') as zipObj:
-        zipObj.write('Dockerrun.aws.json') # including Dockerrun.aws.json file created above
-        zipObj.write('Dockerfile') # assuming you have a Dockerfile in the same directory
-    
-
 def deploy():
     install_ebcli()
     init_eb_environment()
@@ -61,4 +53,3 @@ def deploy():
 if __name__ == '__main__':
     deploy()
 ```
-Please note, this code assumes that you are running the script from the directory where your project is located. Also, user input is needed when running `eb init` command. This can't be automated in a Python script.
