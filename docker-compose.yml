@@ -30,11 +30,12 @@ services:
             - AWS_REGION=your-region      
 volumes:    
     database:
-# The application is now separated into backend and frontend services. 
-# Backend service has env vars for database credentials and Django SECRET_KEY. Source code changes will be reflected due to volume mapping. 
+# Updated docker-compose.yml to no longer include DigitalOcean related code or services.
+# The application is now separated into backend and frontend services.  
+# Backend service has env vars for database credentials and Django SECRET_KEY. Source code changes will be reflected due to volume mapping.  
 # Frontend service runs with npm start and is attached to port 3000.
-# A deploy service has been defined for building the deploy container. This service uses AWS credentials from environment variables. 
-# A volume for the database has been defined for persistent data storage. 
+# A deploy service has been defined for building the deploy container. This service uses AWS credentials from environment variables.  
+# A volume for the database has been defined for persistent data storage.  
 # For this docker-compose file, certain commands can be utilized such as docker-compose build for building the images, docker-compose up for starting the app,
 # docker-compose run --rm backend python manage.py migrate for running migrations, docker-compose run --rm backend python manage.py collectstatic for collecting static files,
 # and docker-compose run --rm backend python manage.py test for running tests.

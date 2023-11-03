@@ -4,21 +4,8 @@ import os
 import logging
 import requests # for sending API requests
 import zipfile
-from datadog import initialize, api, statsd
-from datadog.lambda_metric import lambda_stats
-
-# Fetch API Key and App Key from environment variables
-api_key = os.getenv('DATADOG_API_KEY', None)
-app_key = os.getenv('DATADOG_APP_KEY', None)
-
-# Datadog integration - Initializing
-options = {
-    'api_key': api_key,
-    'app_key': app_key
-}
-
-if api_key is not None and app_key is not None:
-    initialize(**options)
+# Removed datadog integration because we are no longer using DigitalOcean
+from boto3.session import Session
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -29,9 +16,9 @@ aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY', None)
 aws_region = os.getenv('AWS_REGION', None)
 
 # Create a Boto3 session using the fetched AWS credentials
-session = boto3.Session(aws_access_key_id=aws_access_key_id, 
-                        aws_secret_access_key=aws_secret_access_key, 
-                        region_name=aws_region)
+session = Session(aws_access_key_id=aws_access_key_id, 
+                  aws_secret_access_key=aws_secret_access_key, 
+                  region_name=aws_region)
 
 lambda_client = session.client('lambda')
 
@@ -47,7 +34,6 @@ def register_affiliate_manager(*args, **kwargs):
         result = api_call("/register_affiliate_manager", kwargs, "POST") # replace with your API endpoint
         return result
     except Exception as e:
-        lambda_stats.increment('register_affiliate_manager.error')
         logger.error('An error occurred in register_affiliate_manager: %s', str(e))
 
 def monitor_affiliated_models(*args, **kwargs):
@@ -56,7 +42,6 @@ def monitor_affiliated_models(*args, **kwargs):
         result = api_call("/monitor_affiliated_models", kwargs, "POST") # replace with your API endpoint
         return result
     except Exception as e:
-        lambda_stats.increment('monitor_affiliated_models.error')
         logger.error('An error occurred in monitor_affiliated_models: %s', str(e))
 
 def give_credit(*args, **kwargs):
@@ -65,7 +50,6 @@ def give_credit(*args, **kwargs):
         result = api_call("/give_credit", kwargs, "POST") # replace with your API endpoint
         return result
     except Exception as e:
-        lambda_stats.increment('give_credit.error')
         logger.error('An error occurred in give_credit: %s', str(e))
 
 operations = {
@@ -92,13 +76,12 @@ def lambda_handler(event, context):
         }
 
     except Exception as e:
-        lambda_stats.increment('Smodal.lambda_functions.error')
         logger.error('An error occurred in lambda_handler: %s', str(e))
         return {
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})
         }
-
+    
 def compress_directory():
     dir_name = '.'
     zipobj = zipfile.ZipFile('lambda_functions.zip', 'w', zipfile.ZIP_DEFLATED)
