@@ -1,4 +1,5 @@
 ```yaml
+# Properly formatted docker-compose.yml
 version: '3'  
 services:     
     backend:     
@@ -25,9 +26,9 @@ services:
             context: .       
             dockerfile: Dockerfile.deploy     
         environment:       
-            - AWS_ACCESS_KEY_ID=your-access-key       
-            - AWS_SECRET_ACCESS_KEY=your-secret-key       
-            - AWS_REGION=your-region      
+            - AWS_ACCESS_KEY_ID=your-access_key       
+            - AWS_SECRET_ACCESS_KEY=your_secret_key       
+            - AWS_REGION=your_region      
 volumes:    
     database:
 # Updated docker-compose.yml to no longer include DigitalOcean related code or services.
