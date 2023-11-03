@@ -1,19 +1,41 @@
 ```yaml
-version: '3'
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile.app
-    ports:
-      - "8000:8000"
-  deploy:
-    build:
-      context: .
-      dockerfile: Dockerfile.deploy
-    environment:
-      - AWS_ACCESS_KEY_ID=your-access-key-id
-      - AWS_SECRET_ACCESS_KEY=your-secret-access-key
-      - AWS_REGION=your-region
+version: '3'  
+services:     
+    backend:     
+        build: ./backend      
+        command: python manage.py runserver 0.0.0.0:8000     
+        volumes:         
+            - ./backend:/app     
+        ports:        
+            - 8000:8000      
+        environment:        
+            - SECRET_KEY=your_secret_key        
+            - DB_NAME=your_db_name        
+            - DB_USER=your_db_user        
+            - DB_PASSWORD=your_db_password        
+    frontend:         
+        build: ./frontend         
+        command: npm start         
+        volumes:           
+            - ./frontend:/app       
+        ports:           
+            - 3000:3000            
+    deploy: 
+        build: 
+            context: .       
+            dockerfile: Dockerfile.deploy     
+        environment:       
+            - AWS_ACCESS_KEY_ID=your-access-key       
+            - AWS_SECRET_ACCESS_KEY=your-secret-key       
+            - AWS_REGION=your-region      
+volumes:    
+    database:
+# The application is now separated into backend and frontend services. 
+# Backend service has env vars for database credentials and Django SECRET_KEY. Source code changes will be reflected due to volume mapping. 
+# Frontend service runs with npm start and is attached to port 3000.
+# A deploy service has been defined for building the deploy container. This service uses AWS credentials from environment variables. 
+# A volume for the database has been defined for persistent data storage. 
+# For this docker-compose file, certain commands can be utilized such as docker-compose build for building the images, docker-compose up for starting the app,
+# docker-compose run --rm backend python manage.py migrate for running migrations, docker-compose run --rm backend python manage.py collectstatic for collecting static files,
+# and docker-compose run --rm backend python manage.py test for running tests.
 ```
-Remember to replace `your-access-key-id`, `your-secret-access-key`, and `your-region` with your actual AWS access key ID, secret access key, and region. This `docker-compose.yml` file defines your application (`app` service) build details and the details for your AWS deployment container (`deploy` service). The `app` service is setup to build using `Dockerfile.app` and is configured to expose port `8000`. The `deploy` service is setup to build using `Dockerfile.deploy` and makes use of environment variables for AWS credentials.
