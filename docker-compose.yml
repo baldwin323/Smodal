@@ -5,19 +5,20 @@ services:
         build: ./backend      
         command: python manage.py runserver 0.0.0.0:8000     
         volumes:         
-            - ./backend:/app     
+            - ./backend:/app  
+        # Exposed port 8000 for the backend service
         ports:        
             - 8000:8000      
         environment:        
             - SECRET_KEY=your_secret_key        
             - DB_NAME=your_db_name        
             - DB_USER=your_db_user        
-            - DB_PASSWORD=your_db_password        
-        # Added 'django' as a dependency
+            - DB_PASSWORD=your_db_password 
+        # Added 'django' as a dependency for the backend service       
         depends_on:
             - django
     django:
-        # Configuration for Django service
+        # Created a new service for Django
         image: django
         command: python manage.py runserver
         volumes:
@@ -28,7 +29,8 @@ services:
         build: ./frontend         
         command: npm start         
         volumes:           
-            - ./frontend:/app       
+            - ./frontend:/app    
+        # Exposed port 3000 for the frontend service    
         ports:           
             - 3000:3000            
     deploy: 
