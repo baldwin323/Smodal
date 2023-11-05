@@ -12,7 +12,7 @@
      }
    ],
    "Volumes": [],
-   "Logging": "/var/log/nginx", 
+   "Logging": "/var/log/nginx",
    "environment": {
        "AWS_ACCESS_KEY": "your AWS access key",
        "AWS_SECRET_KEY": "your AWS secret key"

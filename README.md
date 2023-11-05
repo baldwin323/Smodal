@@ -4,19 +4,34 @@
 
 **Name**: modal.tokai Django Application
 
-**Description**: The modal.tokai application is a state-of-the-art Django-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architectured based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Django's templacing system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. It also includes custom error messages that guide the user on how to resolve the encountered issues. Now, it also boasts integration with Pactflow and SwaggerHub to further enhance the application's robustness and versatility.
+**Description**: The modal.tokai application is a state-of-the-art Django-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architected based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Django's templacing system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. It now also features Dockerization for containerization and easy deployment across all systems.
 
 The UI of the application is intentionally designed with proper theming and responsiveness in mind. It adapts properly to different screen sizes, making it mobile-friendly. It features loading spinners to indicate processing requests. The application also prompts for user feedback periodically to continuously refine its capabilities.
 
 ## Getting Started
 
-To begin, you need to connect to your Kubernetes cluster. More detailed instructions for this process can be found in the DigitalOcean Control Panel.
+To start using this application, you'll first need to set up your Docker environment, then you'll build the Docker image and deploy the Docker container.
 
-### AWS Lambda Deployment
-<!--- Existing content here --->
+### Setting Up Docker Environment
+To install Docker on your local machine, run the following command in your terminal:
+```bash
+curl -fsSL https://get.docker.com | sh
+```
 
-### Cert-Manager Status Confirmation
-<!--- Existing content here --->
+### Building Docker Image
+Once you have Docker installed, navigate to the directory containing the Dockerfile and build the Docker image using the following command:
+```bash
+docker build -t modal.tokai .
+```
+
+### Docker Deployment
+After the Docker image has been built, you can deploy the container using the following command:
+```bash
+docker run -p 8000:80 -d modal.tokai
+```
+
+### AWS Elastic Beanstalk Deployment
+To deploy the Docker container to AWS Elastic Beanstalk, refer to the deploy.py script in the repository.
 
 ## Advanced Use 
 <!--- Existing content here --->
