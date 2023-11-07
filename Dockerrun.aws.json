@@ -7,21 +7,20 @@
    },
    "Ports": [
      {
-       "ContainerPort": "8080",
-       "HostPort": "80"
+       "ContainerPort": "8000", // Changed from 8080 to 8000 to map the exposed container port to the Elastic Beanstalk environment
+       "HostPort": "80" // Added HostPort to enable connections to Elastic Beanstalk environment 
      }
    ],
    "Volumes": [],
    "Logging": "/var/log/nginx",
    "environment": {
        "AWS_ACCESS_KEY": "your AWS access key",
-       "AWS_SECRET_KEY": "your AWS secret key"
+       "AWS_SECRET_KEY": "your AWS secret key",
+       "BACKEND_URL": "your_backend_url" // New ENV variable for setting the correct backend URL
    }
 }
 ```
-<!-- modified file to correctly configure for the AWS Elastic Beanstalk deployment.
-Changed 'ContainerPort' to match the application running port, and added 'HostPort'. 
-Also added an 'Image' object to specify Docker image name to be deployed.
-'Update' is set to 'true' to ensure that the latest version of the image is always used.
-Included environment variables necessary for AWS in the 'environment' object. 
-Kept the original Logging and Volumes intact as there are no modifications required there. -->
+<!-- Further modification details- Correctly configured Dockerrun.aws.json for the AWS Elastic Beanstalk deployment.
+Updated 'ContainerPort' to match the application's running port, and added 'HostPort'. Also included the correct backend URL in environment variables.
+Kept the 'Update' as 'true' to ensure that the latest version of the image is always used.
+Left the 'Logging' and 'Volumes' as are, since they require no modifications. -->

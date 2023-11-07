@@ -1,7 +1,8 @@
+
 ```python
+import boto3
 import os
 import subprocess
-from botocore.exceptions import NoCredentialsError
 
 # AWS region
 AWS_REGION = os.environ.get('AWS_REGION')
@@ -10,17 +11,44 @@ def install_docker():
     """Install Docker on the local machine."""
     subprocess.run(['curl', '-fsSL', 'https://get.docker.com', '|', 'sh'])
 
-# Function for installing Elastic Beanstalk CLI
 def install_ebcli():
     """Installs the Elastic Beanstalk Command Line Interface on the local machine."""
     subprocess.run(['pip', 'install', 'awsebcli', '--upgrade', '--user'])
 
-# Function for initializing an Elastic Beanstalk environment
 def init_eb_environment():
     """Initializes an Elastic Beanstalk environment in the current directory."""
     subprocess.run(['eb', 'init'])
+    
+def build_docker_image():
+    """Builds docker image using the Dockerfile in the current directory"""
+    subprocess.run(['docker', 'build', '-t', 'my-image', '.'])
+    
+def push_to_ecr(repository_name, tag):
+    """Pushes docker image to ECR"""
+    repository_uri = f"{AWS_ACCOUNT_ID}.dkr.ecr.{AWS_REGION}.amazonaws.com/{repository_name}:{tag}"
+    subprocess.run(['docker', 'push', repository_uri])
 
-# Function for creating Dockerrun.aws.json file
+def configure_security_groups(sg_name):
+    """Configures the security groups in AWS to allow inbound connections on the exposed ports"""
+    ec2 = boto3.resource('ec2')
+    security_group = ec2.SecurityGroup(sg_name)
+
+    # Allow inbound connections on port 80
+    security_group.authorize_ingress(
+        IpProtocol="tcp",
+        CidrIp="0.0.0.0/0",
+        FromPort=80,
+        ToPort=80,
+    )
+    
+    # Allow inbound connections on port 443
+    security_group.authorize_ingress(
+        IpProtocol="tcp",
+        CidrIp="0.0.0.0/0",
+        FromPort=443,
+        ToPort=443,
+    )
+
 def create_dockerrun():
     """Creates a Dockerrun.aws.json file for Elastic Beanstalk to understand 
     how to deploy Docker container.
@@ -53,7 +81,6 @@ def create_dockerrun():
     with open('Dockerrun.aws.json', 'w') as file:
         file.write(dockerrun_content)
 
-# Function for deploying application to Elastic Beanstalk
 def eb_deploy():
     """Deploys the application to the Elastic Beanstalk environment."""
     subprocess.run(['eb', 'deploy'])
@@ -62,10 +89,15 @@ def main():
     install_docker()
     install_ebcli()
     init_eb_environment()
+    build_docker_image()
+    push_to_ecr("your-ecr-repo", "latest")
+    configure_security_groups("your-security-group")
     create_dockerrun()
     eb_deploy()
 
 if __name__ == '__main__':
     main()
 ```
-<!-- This is the modified deploy.py script, filling the function of containerizing the app using Docker, installing necessary dependencies like the Elastic Beanstalk CLI, creating Dockerrun.aws.json with the necessary configuration, and deploying the app to AWS Elastic Beanstalk. Docker is installed via a simple curl command, and the Elastic Beanstalk CLI is installed via pip as per AWS's instructions. An environment is initialized via 'eb init', which will prompt the user to configure the environment. A Dockerrun.aws.json file is created, and its content is written directly within the script. Finally, the application is deployed using the 'eb deploy' command. -->
+# This script now builds a Docker image, pushes it to Amazon ECR,
+# configures security groups to allow inbound connections on the exposed ports,
+# and triggers an AWS Elastic Beanstalk deployment.

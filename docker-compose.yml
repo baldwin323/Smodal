@@ -6,7 +6,7 @@ services:
         command: python manage.py runserver 0.0.0.0:8000     
         volumes:         
             - ./backend:/app  
-        # Exposed port 8000 for the backend service
+        # Exposed port 8000 for the backend service (Update: Port exposure aligned to plan)
         ports:        
             - 8000:8000      
         environment:        
@@ -14,6 +14,8 @@ services:
             - DB_NAME=your_db_name        
             - DB_USER=your_db_user        
             - DB_PASSWORD=your_db_password 
+            # Added: Backend URL to allow frontend to connect (Update: Environment variable aligned to plan)
+            - BACKEND_URL=your_backend_url
         # Added 'django' as a dependency for the backend service       
         depends_on:
             - django
@@ -30,7 +32,7 @@ services:
         command: npm start         
         volumes:           
             - ./frontend:/app    
-        # Exposed port 3000 for the frontend service    
+        # Exposed port 3000 for the frontend service (Update: Port exposure aligned to plan) 
         ports:           
             - 3000:3000            
     deploy: 
@@ -45,7 +47,7 @@ volumes:
     database:
 # Updated docker-compose.yml to no longer include DigitalOcean related code or services.
 # The application is now separated into backend and frontend services.  
-# Back end service has env vars for database credentials and Django SECRET_KEY. Source code changes will be reflected due to volume mapping.  
+# Backend service has env vars for database credentials and Django SECRET_KEY. Source code changes will be reflected due to volume mapping.  
 # Django added as a service for the backend to depend on.
 # Frontend service runs with npm start and is attached to port 3000.
 # A deploy service has been defined for building the deploy container. This service uses AWS credentials from environment variables.  

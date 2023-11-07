@@ -1,3 +1,4 @@
+```javascript
 // Import necessary dependencies
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
@@ -43,7 +44,7 @@ const MainPage = () => {
   // Function to call APIs and handle error properly
   const handleAPIFetch = (id) => {
     setIsLoading(true); // Start loading spinner
-    axios.get(`/api/${id}`)
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/${id}`)
       .then(response => {
         const data = response.data;
         console.log(`The returned data is: ${JSON.stringify(data)}`);
@@ -73,7 +74,7 @@ const MainPage = () => {
   // New function to handle requesting AI model predictions/responses.
   const handleAiCall = (inputData) => {
     setIsLoading(true); // Start loading spinner
-    axios.get('/ai_predict', { input: inputData })
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/ai_predict`, { input: inputData })
       .then(response => {
         setAiResponse(response.data.response); // Save the AI response to state
         setIsLoading(false); // Stop loading spinner
@@ -132,3 +133,4 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root')
 );
+```

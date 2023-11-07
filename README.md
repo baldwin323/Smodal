@@ -33,6 +33,22 @@ docker run -p 8000:80 -d modal.tokai
 ### AWS Elastic Beanstalk Deployment
 To deploy the Docker container to AWS Elastic Beanstalk, refer to the deploy.py script in the repository.
 
+## Connecting from Anywhere
+After deploying your application, there are several options to connect to it from anywhere:
+
+### SSH Tunnel
+An SSH Tunnel can be set up to securely forward a local port to your Elastic Beanstalk environment, allowing you to connect using localhost.
+
+### Public IP
+You can expose a public IP for your Elastic Beanstalk environment and connect directly to that IP. This option is less secure but easier to set up.
+
+### Elastic IP
+An Elastic IP can be assigned to your Elastic Beanstalk environment for connectivity. The IP will remain static.
+
+Do keep in mind to ensure the correct ports are exposed in the Docker/docker-compose configuration and that the security groups in AWS have been configured to allow inbound connections on those ports. The ports should also be mapped correctly to the Elastic Beanstalk environment.
+
+Further frontend connections might require setting up environment variables with the correct backend URL, which can either be a public URL or an internal DNS name for Elastic Beanstalk.
+
 ## Advanced Use 
 <!--- Existing content here --->
 
