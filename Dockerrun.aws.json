@@ -11,16 +11,15 @@
        "HostPort": "80" // Added HostPort to enable connections to Elastic Beanstalk environment 
      }
    ],
-   "Volumes": [],
-   "Logging": "/var/log/nginx",
    "environment": {
        "AWS_ACCESS_KEY": "your AWS access key",
        "AWS_SECRET_KEY": "your AWS secret key",
-       "BACKEND_URL": "your_backend_url" // New ENV variable for setting the correct backend URL
-   }
+       "BACKEND_URL": "your_backend_url", // New ENV variable for setting the correct backend URL
+       "AWS_EB_NUM_INSTANCES": "1", // This ENV variable sets the number of instances to 1 to keep the costs within the free tier
+       "AWS_EB_INSTANCE_TYPE": "t2.micro" // This ENV variable sets the instance type to a smaller one if the application's performance allows it
+   },
+   "Volumes": [],
+   "Logging": "/var/log/nginx"
 }
 ```
-<!-- Further modification details- Correctly configured Dockerrun.aws.json for the AWS Elastic Beanstalk deployment.
-Updated 'ContainerPort' to match the application's running port, and added 'HostPort'. Also included the correct backend URL in environment variables.
-Kept the 'Update' as 'true' to ensure that the latest version of the image is always used.
-Left the 'Logging' and 'Volumes' as are, since they require no modifications. -->
+<!-- Modifications: Added two new ENV variables for adjusting the number of Elastic Beanstalk instances and the instance type. These changes are part of the plan to keep the application's costs within the free tier, while maintaining acceptable performance. -->

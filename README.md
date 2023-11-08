@@ -4,7 +4,7 @@
 
 **Name**: modal.tokai Django Application
 
-**Description**: The modal.tokai application is a state-of-the-art Django-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architected based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Django's templacing system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. It now also features Dockerization for containerization and easy deployment across all systems.
+**Description**: The modal.tokai application is a state-of-the-art Django-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architected based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Django's templating system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. It now also features Dockerization for containerization and easy deployment across all systems.
 
 The UI of the application is intentionally designed with proper theming and responsiveness in mind. It adapts properly to different screen sizes, making it mobile-friendly. It features loading spinners to indicate processing requests. The application also prompts for user feedback periodically to continuously refine its capabilities.
 
@@ -31,7 +31,9 @@ docker run -p 8000:80 -d modal.tokai
 ```
 
 ### AWS Elastic Beanstalk Deployment
-To deploy the Docker container to AWS Elastic Beanstalk, refer to the deploy.py script in the repository.
+To deploy the Docker container to AWS Elastic Beanstalk, refer to the `deploy.py` script in the repository.
+
+Update in our deployment script: We have added several environment variables in our Dockerrun.aws.json file and the deploy.py script to ensure that the costs stay within the free tier. Check out the `Dockerrun.aws.json` and `deploy.py` files for more details..
 
 ## Connecting from Anywhere
 After deploying your application, there are several options to connect to it from anywhere:

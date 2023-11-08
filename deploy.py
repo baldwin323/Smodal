@@ -4,8 +4,13 @@ import boto3
 import os
 import subprocess
 
-# AWS region
+# AWS region & essentials
 AWS_REGION = os.environ.get('AWS_REGION')
+AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
+BACKEND_URL = os.environ.get('BACKEND_URL')
+NUM_INSTANCES = os.environ.get('AWS_EB_NUM_INSTANCES')
+INSTANCE_TYPE = os.environ.get('AWS_EB_INSTANCE_TYPE')
 
 def install_docker():
     """Install Docker on the local machine."""
@@ -55,6 +60,9 @@ def create_dockerrun():
 
     This configuration file is based on AWS Elastic Beanstalk multi-container Docker platform,
     and it describes how to deploy a Docker container from a Dockerfile in your source bundle."""
+
+    # Added the BACKEND_URL, AWS_EB_NUM_INSTANCES, and AWS_EB_INSTANCE_TYPE environmental 
+    # variables from the os.environ.get values.
     
     dockerrun_content = """
     {
@@ -72,8 +80,11 @@ def create_dockerrun():
         "Volumes": [],
         "Logging": "/var/log/nginx",
         "environment": {
-            "AWS_ACCESS_KEY": "your AWS access key",
-            "AWS_SECRET_KEY": "your AWS secret key"
+            "AWS_ACCESS_KEY": """ + AWS_ACCESS_KEY + """,
+            "AWS_SECRET_KEY": """ + AWS_SECRET_KEY + """,
+            "BACKEND_URL": """ + BACKEND_URL + """,
+            "AWS_EB_NUM_INSTANCES": """ + NUM_INSTANCES + """,
+            "AWS_EB_INSTANCE_TYPE": """ + INSTANCE_TYPE + """
         }
     }
     """
@@ -98,6 +109,7 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-# This script now builds a Docker image, pushes it to Amazon ECR,
-# configures security groups to allow inbound connections on the exposed ports,
-# and triggers an AWS Elastic Beanstalk deployment.
+# Changes to this script include the setting of environment variables to get the BACKEND_URL, 
+# number of Elastic Beanstalk instances, and instance type values from the os.environ.get() 
+# values. The create_dockerrun() function was also updated to use these values when creating
+# the Dockerrun.aws.json file.
