@@ -2,24 +2,24 @@
 {
    "AWSEBDockerrunVersion": "1",
    "Image": {
-      "Name": "your Docker Hub account/image-name",
+      "Name": "your Docker Hub account/image-name", // Image field updated to pull from Docker Hub
       "Update": "true"
    },
    "Ports": [
      {
-       "ContainerPort": "8000", // Changed from 8080 to 8000 to map the exposed container port to the Elastic Beanstalk environment
-       "HostPort": "80" // Added HostPort to enable connections to Elastic Beanstalk environment 
+       "ContainerPort": "8000", // Changed from 8080 to 8000 to map the exposed container port to the Vultr instance
+       "HostPort": "80" // Added HostPort to enable connections to Vultr instance
      }
    ],
    "environment": {
        "AWS_ACCESS_KEY": "your AWS access key",
        "AWS_SECRET_KEY": "your AWS secret key",
-       "BACKEND_URL": "your_backend_url", // New ENV variable for setting the correct backend URL
-       "AWS_EB_NUM_INSTANCES": "1", // This ENV variable sets the number of instances to 1 to keep the costs within the free tier
-       "AWS_EB_INSTANCE_TYPE": "t2.micro" // This ENV variable sets the instance type to a smaller one if the application's performance allows it
+       "BACKEND_URL": "your_backend_url", 
+       "AWS_EB_NUM_INSTANCES": "1",
+       "AWS_EB_INSTANCE_TYPE": "t2.micro"
    },
    "Volumes": [],
    "Logging": "/var/log/nginx"
 }
 ```
-<!-- Modifications: Added two new ENV variables for adjusting the number of Elastic Beanstalk instances and the instance type. These changes are part of the plan to keep the application's costs within the free tier, while maintaining acceptable performance. -->
+<!-- Modifications: Updated Image field to pull from Docker Hub. Updated Ports field to expose the required ports on the Vultr instance.-->
