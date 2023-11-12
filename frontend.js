@@ -1,18 +1,21 @@
 ```javascript
 // Import necessary dependencies
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
 import './styles.css';
 
-// Import the loading spinner and feedback prompt components
+// Import the Loading Spinner, feedback prompt and helpsupport components
 import LoadingSpinner from './components/LoadingSpinner';
 import FeedbackPrompt from './components/FeedbackPrompt';
 import HelpSupport from './components/HelpSupport';
 
 // Import newly created NavBar component for improved navigation 
 import NavBar from './components/NavBar';
+
+// Import usePaginatedFetch hook
+import usePaginatedFetch from './hooks/usePaginatedFetch';
 
 // Define the ids of all pages we have
 const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
@@ -36,26 +39,17 @@ const errorHandler = (error) => {
 const MainPage = () => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0); 
   const [aiResponse, setAiResponse] = useState(''); 
-  const [isLoading, setIsLoading] = useState(false); 
+  const { data, error, isLoading, hasMore, setHasMore } = usePaginatedFetch(pageIds[currentPageIndex]);
+
+  const handleError = useCallback((error) => {
+    const { errorMsg, actionSuggestion } = errorHandler(error); 
+    console.log(`${errorMsg}. ${actionSuggestion}`);
+    setIsLoading(false);
+  }, []);
 
   useEffect(() => {
-    handleAPIFetch(pageIds[currentPageIndex]);
+    setHasMore(true);
   }, [currentPageIndex]);
-
-  const handleAPIFetch = (id) => {
-    setIsLoading(true); 
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/${id}`)
-      .then(response => {
-        const data = response.data;
-        console.log(`The returned data is: ${JSON.stringify(data)}`);
-        setIsLoading(false);
-      }) 
-      .catch(error => {
-        const { errorMsg, actionSuggestion } = errorHandler(error); 
-        console.log(`${errorMsg}. ${actionSuggestion}`);
-        setIsLoading(false);
-      });
-  }
 
   const handlePrevClick = () => {
     if (currentPageIndex > 0) {
@@ -76,21 +70,19 @@ const MainPage = () => {
         setAiResponse(response.data.response); 
         setIsLoading(false);
       })
-      .catch(error => {
-        const { errorMsg, actionSuggestion } = errorHandler(error); 
-        console.log(`${errorMsg}. ${actionSuggestion}`);
-        setIsLoading(false);
-      });
+      .catch(handleError);
   }
 
   // Updated the switch cases to load the different pages as per their IDs
   const renderContent = () => {
-    switch(currentPageIndex) {
-      case 0: return <div id='user-authentication'>This is page 0</div>;
-      case 1: return <div id='dashboard'>This is page 1</div>;
-      // Add more cases as per the page IDs
-      default: return <div>;
-    }
+    return data.map((page, index) => {
+      switch(index) {
+        case 0: return <div id='user-authentication'>{page}</div>;
+        case 1: return <div id='dashboard'>{page}</div>;
+        // Add more cases as per the page IDs
+        default: return <div>{page}</div>;
+      }
+    });
   }
 
   return (
@@ -121,3 +113,4 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+Note: The implementation assumes a usePaginatedFetch hook that encapsulates the data fetching and pagination logic using the API, which needs to be implemented. The useEffect hook was updated to reset the pagination state when the currentPageIndex changes. The handling of errors from API calls were refactored into a separate function (handleError) and is used in the artificial intelligence call. The data received from the hook is passed into the renderContent function for rendering of the relevant content.
