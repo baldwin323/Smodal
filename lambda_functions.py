@@ -1,12 +1,13 @@
+```python
 import json
 import boto3
 import os
 import logging
 import requests # for sending API requests
 import zipfile
-# Removed datadog integration because we are no longer using DigitalOcean
 from boto3.session import Session
 
+# Setting up logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -22,74 +23,73 @@ session = Session(aws_access_key_id=aws_access_key_id,
 
 lambda_client = session.client('lambda')
 
+# Generic function to make API calls
 def api_call(endpoint, payload=None, method="GET"):
     base_url = "http://api.example.com" # replace with your API base url
     headers = {"Content-Type": "application/json"}
-    response = requests.request(method, base_url + endpoint, headers=headers, data=json.dumps(payload) if payload else None)
+    # Enhanced error handling
+    try:
+        response = requests.request(method, base_url + endpoint, headers=headers, 
+                                    data=json.dumps(payload) if payload else None)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as errh:
+        logger.error("HTTP Error occurred in api_call: %s", errh)
+    except requests.exceptions.ConnectionError as errc:
+        logger.error("Error Connecting occurred in api_call: %s", errc)
+    except requests.exceptions.Timeout as errt:
+        logger.error("Timeout Error occurred in api_call: %s", errt)
+    except requests.exceptions.RequestException as err:
+        logger.error("OOps: Something Else occurred in api_call: %s", err)  
     return response.json()
 
 def register_affiliate_manager(*args, **kwargs):
-    try:
-        # API integration
-        result = api_call("/register_affiliate_manager", kwargs, "POST") # replace with your API endpoint
-        return result
-    except Exception as e:
-        logger.error('An error occurred in register_affiliate_manager: %s', str(e))
+    # API integration
+    return api_call("/register_affiliate_manager", kwargs, "POST")
 
 def monitor_affiliated_models(*args, **kwargs):
-    try:
-        # API integration
-        result = api_call("/monitor_affiliated_models", kwargs, "POST") # replace with your API endpoint
-        return result
-    except Exception as e:
-        logger.error('An error occurred in monitor_affiliated_models: %s', str(e))
+    # API integration
+    return api_call("/monitor_affiliated_models", kwargs, "POST")
 
 def give_credit(*args, **kwargs):
-    try:
-        # API integration
-        result = api_call("/give_credit", kwargs, "POST") # replace with your API endpoint
-        return result
-    except Exception as e:
-        logger.error('An error occurred in give_credit: %s', str(e))
+    # API integration
+    return api_call("/give_credit", kwargs, "POST")
 
 operations = {
-    'register_affiliate_manager': register_affiliate_manager, # Function call to register affiliate manager
-    'monitor_affiliated_models': monitor_affiliated_models, # Function call to monitor affiliated models
-    'give_credit': give_credit, # Function call for credit provision when new model signs up
+    # Map operations to related function call
+    'register_affiliate_manager': register_affiliate_manager,
+    'monitor_affiliated_models': monitor_affiliated_models,
+    'give_credit': give_credit,
 }
 
 def lambda_handler(event, context):
     try:
         operation = event['operation']
-
         if operation not in operations:
             raise ValueError(f'Invalid operation: {operation}')
-
         args = event.get('args', [])
         kwargs = event.get('kwargs', {})
-
         result = operations[operation](*args, **kwargs)
-
         return {
             'statusCode': 200,
             'body': json.dumps(result)
         }
-
     except Exception as e:
-        logger.error('An error occurred in lambda_handler: %s', str(e))
+        logger.error('An error occurred in lambda_handler: %s', e)
         return {
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})
         }
-    
+
+# Function to perform directory compression
 def compress_directory():
     dir_name = '.'
     zipobj = zipfile.ZipFile('lambda_functions.zip', 'w', zipfile.ZIP_DEFLATED)
-
     for foldername, subfolders, filenames in os.walk(dir_name):
         for filename in filenames:
             file = os.path.join(foldername, filename)
             zipobj.write(file)
     zipobj.close()
 
+# Compression execution
 compress_directory()
+```
