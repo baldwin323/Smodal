@@ -1,5 +1,7 @@
 import logging
 import json
+# Added import for third-party integrations
+from social_django.utils import BACKENDS, backends_data, load_backend, load_strategy
 from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -8,6 +10,7 @@ from django.views.debug import ExceptionReporter
 from django.contrib.auth.models import User
 from .lambda_functions import register_affiliate_manager, monitor_affiliated_models, give_credit
 from .models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, UserProfile, FileUpload, UserActivity, Banking, AIConversation
+from .offline_utils import perform_offline_login
 from .ai_model import call_model  # AI model function that generates predictions/responses
 import json
 
@@ -21,6 +24,10 @@ PAGES = {
     },
     'login': {
         'method': lambda req: login_user(req),
+        'login_required': False
+    },
+    'offline_login': {
+        'method': lambda req: offline_login(req),
         'login_required': False
     },
     'logout': {
@@ -89,6 +96,17 @@ def login_user(req):
     else:
         return render(req, 'login.html')
 
+def offline_login(req):
+    """
+    Handle User Login -- offline mode
+    """
+    # In offline mode, we assume the user is who they say they are without checking credentials
+    user = perform_offline_login(req)
+    if not user:
+        return JsonResponse({'status': 'error', 'message': 'Could not authenticate user'}, status=401)
+    login(req, user)
+    return JsonResponse({'status': 'success', 'user': user.username})
+
 @login_required
 def logout_user(req):
     """
@@ -96,7 +114,6 @@ def logout_user(req):
     """
     logout(req)
     return render(req, 'login.html')
-
 
 @login_required
 def serve(request, page):
@@ -117,7 +134,6 @@ def serve(request, page):
     except Exception as e:
         logger.error(f"There was an error serving the page: {page}", exc_info=e)
         return JsonResponse({"status": "error", "message": "There was an error serving your request."}, status=500)
-
 
 @login_required
 def api_serve(request, page_id):

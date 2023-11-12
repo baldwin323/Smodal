@@ -1,5 +1,9 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
+from django.contrib.postgres.fields import ArrayField
+from django.contrib.auth.models import User
+import secrets
+
 # Existing imports...
 
 class UserProfile(models.Model):
@@ -7,12 +11,18 @@ class UserProfile(models.Model):
     #...
     birth_date = models.DateField(blank=True, null=True)
     image = models.ImageField(upload_to='profile_images/', blank=True)
-
+    # Added field for user preferences
+    preferences = models.JSONField(blank=True, null=True)
+    # Added field for user theme preferences
+    theme_preferences = models.CharField(max_length=200, default="default")
+    
 
 class FileUpload(models.Model):
     # This model is used for file handling. It only allows extensions provided in the list.
     #...
     file = models.FileField(upload_to='uploads/', validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'jpg', 'jpeg', 'png'])])
+    # Added security token for each file upload
+    token = models.CharField(max_length=255, default=secrets.token_urlsafe)
 
     def save(self, *args, **kwargs):
         # Add error handling here
@@ -25,7 +35,7 @@ class FileUpload(models.Model):
 class Banking(models.Model):
     # This model handles banking transactions in JSON format.
     #...
-    transactions = models.JSONField(default=dict)  
+    transactions = models.JSONField(default=dict)
 
     # Error handling for this class
     def save(self, *args, **kwargs):
@@ -70,3 +80,4 @@ class UIPageData(models.Model):
 
 # Model structure has been redesigned to meet the needs of state management, interaction history, user data,
 # file management and banking transactions. The UIPageData model was further added to handle data for UI pages.
+# Features added for personal customization and security measures.

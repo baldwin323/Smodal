@@ -11,13 +11,15 @@ import LoadingSpinner from './components/LoadingSpinner';
 import FeedbackPrompt from './components/FeedbackPrompt';
 import HelpSupport from './components/HelpSupport';
 
-// Define the Ids of all pages we have
+// Import newly created NavBar component for improved navigation 
+import NavBar from './components/NavBar';
+
+// Define the ids of all pages we have
 const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
 
 // Error handler to provide better error messages
 const errorHandler = (error) => {
   if (!error.response) {
-    // Give friendly message and suggest action
     return {
       errorMsg: `Error: Network Error`,
       actionSuggestion: 'Please check your internet connection.'
@@ -32,100 +34,85 @@ const errorHandler = (error) => {
 
 // Main page component that handles all our logic
 const MainPage = () => {
-  const [currentPageIndex, setCurrentPageIndex] = useState(0); // Keep track of current page
-  const [aiResponse, setAiResponse] = useState(''); // State variable for storing AI response.
-  const [isLoading, setIsLoading] = useState(false); // State variable for loading spinner
+  const [currentPageIndex, setCurrentPageIndex] = useState(0); 
+  const [aiResponse, setAiResponse] = useState(''); 
+  const [isLoading, setIsLoading] = useState(false); 
 
-  // On page load call the api for the current page
   useEffect(() => {
     handleAPIFetch(pageIds[currentPageIndex]);
   }, [currentPageIndex]);
 
-  // Function to call APIs and handle error properly
   const handleAPIFetch = (id) => {
-    setIsLoading(true); // Start loading spinner
+    setIsLoading(true); 
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/${id}`)
       .then(response => {
         const data = response.data;
         console.log(`The returned data is: ${JSON.stringify(data)}`);
-        setIsLoading(false); // Stop loading spinner
+        setIsLoading(false);
       }) 
       .catch(error => {
-        const { errorMsg, actionSuggestion } = errorHandler(error); // Use the error handler when an error occurs
+        const { errorMsg, actionSuggestion } = errorHandler(error); 
         console.log(`${errorMsg}. ${actionSuggestion}`);
-        setIsLoading(false); // Stop loading spinner
+        setIsLoading(false);
       });
   }
 
-  // Handle Clicking on previous button
   const handlePrevClick = () => {
     if (currentPageIndex > 0) {
       setCurrentPageIndex(prevState => prevState - 1);
     }
   }
 
-  // Handle Clicking on Next button
   const handleNextClick = () => {
     if (currentPageIndex < pageIds.length - 1) {
       setCurrentPageIndex(prevState => prevState + 1);
     }
   }
   
-  // New function to handle requesting AI model predictions/responses.
   const handleAiCall = (inputData) => {
-    setIsLoading(true); // Start loading spinner
+    setIsLoading(true); 
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/ai_predict`, { input: inputData })
       .then(response => {
-        setAiResponse(response.data.response); // Save the AI response to state
-        setIsLoading(false); // Stop loading spinner
+        setAiResponse(response.data.response); 
+        setIsLoading(false);
       })
       .catch(error => {
-        const { errorMsg, actionSuggestion } = errorHandler(error); // Use the error handler when an error occurs
+        const { errorMsg, actionSuggestion } = errorHandler(error); 
         console.log(`${errorMsg}. ${actionSuggestion}`);
-        setIsLoading(false); // Stop loading spinner
+        setIsLoading(false);
       });
   }
 
-  // Using currentPageIndex to conditionally render content
+  // Updated the switch cases to load the different pages as per their IDs
   const renderContent = () => {
     switch(currentPageIndex) {
-      case 0: return <div>This is page 0</div>;
-      case 1: return <div>This is page 1</div>;
-      // Add more cases as needed for each page
+      case 0: return <div id='user-authentication'>This is page 0</div>;
+      case 1: return <div id='dashboard'>This is page 1</div>;
+      // Add more cases as per the page IDs
       default: return <div>;
     }
   }
 
   return (
     <div className="app-container">
-      <div className="nav-bar">
-        <button onClick={handlePrevClick} className="nav-button">Prev</button> {/* Prev Button */}
-        <button onClick={handleNextClick} className="nav-button">Next</button> {/* Next Button */}
-        {/* Button to call AI model. */}
-        <button onClick={() => handleAiCall('input data here')} className="nav-button">Call AI</button> 
-      </div>
-      {/* Conditionally render page content based on currentPageIndex */}
+      {/* Render newly created NavBar component for improved navigation */}
+      <NavBar handlePrevClick={handlePrevClick} handleNextClick={handleNextClick} handleAICall={handleAiCall}/>
+      
       {renderContent()}
       <div id={pageIds[currentPageIndex]} className='page-container'>
-        {/* Display AI response. */}
         <p>{aiResponse}</p>
-        {/* Display a loading spinner if isLoading is true */}
         {isLoading && <LoadingSpinner />}
-        {/* Display the feedback prompt */}
         <FeedbackPrompt />
-        {/* Display the help and support section */}
         <HelpSupport />
       </div>
     </div>
   );
 }
 
-// Render our main page into the root element
 ReactDOM.render(
   <Router>
     <Switch>
-      <Route exact path="/"><MainPage /></Route> {/* Render MainPage at root */}
-      {/* Render MainPage at all other paths based on pageIds */}
+      <Route exact path="/"><MainPage /></Route> 
       {pageIds.map((pageId, i) => (
         <Route exact path={`/${pageId}`}><MainPage /></Route>
       ))}
