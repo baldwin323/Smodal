@@ -1,4 +1,5 @@
 import os
+import traceback
 from logging import handlers
 from django.conf import settings
 
@@ -65,7 +66,7 @@ def log_build_process(msg: str, level: str = 'info') -> None:
 
 def log_execution_details(func):
     """
-    This is a decorator function to log detailed execution information of the decorated function.
+    This is a modified decorator function to log detailed execution information of the decorated function.
 
     :param func: The function for which execution details are logged
     """
@@ -73,7 +74,7 @@ def log_execution_details(func):
         # Provides the details of the function, its arguments and keyword arguments
         project_logger.info('Function %s called with args: %s, and kwargs: %s', func.__name__, args, kwargs)
         project_logger.info('Running function %s...', func.__name__)
-        
+
         try:
             result = func(*args, **kwargs)
             # Success logging for function execution
@@ -82,27 +83,23 @@ def log_execution_details(func):
         except Exception as e:
             # Error handling for function execution
             project_logger.error('An error occurred while running function %s.', func.__name__, exc_info=True)
+            # Adding more information about the error
+            tb = traceback.format_exc()
+            project_logger.error(f"Traceback:\n {tb}")
             raise e
     return wrapper
 
-# Adding functionality to log details for Lambda functions. 
-def log_lambda_details(func):
+# Function to handle logging for uncaught exceptions
+def uncaught_exception_handler(type, value, tb):
     """
-    This is a decorator function to log detailed execution information of a Lambda function.
+    This function is to handle uncaught exceptions and log them
 
-    :param func: The Lambda function for which execution details are logged
+    :param type: Exception Type
+    :param value: Exception Value
+    :param tb: Traceback
     """
-    def wrapper(*args, **kwargs):
-        # Provides the details of the Lambda function, its arguments and keyword arguments
-        project_logger.info('Lambda function %s started execution with args: %s, and kwargs: %s', func.__name__, args, kwargs)
-        
-        try:
-            result = func(*args, **kwargs)
-            # Success logging for Lambda function execution
-            project_logger.info('Lambda function %s executed successfully.', func.__name__)
-            return result
-        except Exception as e:
-            # Error handling for Lambda function execution
-            project_logger.error('An error occurred while running Lambda function %s.', func.__name__, exc_info=True)
-            raise e
-    return wrapper
+    project_logger.error("Uncaught exception: {0}".format(str(value)))
+    project_logger.error(''.join(traceback.format_tb(tb)))
+
+# Sets the function "uncaught_exception_handler" as the handler for unhandled exceptions
+sys.excepthook = uncaught_exception_handler
