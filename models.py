@@ -5,29 +5,24 @@ from django.contrib.auth.models import User
 import secrets
 from django.db.utils import IntegrityError
 
-# Existing imports...
+# Existing Imports...
 
 class UserProfile(models.Model):
     # Here identity fields of a user like birth_date, image, etc. are maintained.
-    #...
-    birth_date = models.DateField(blank=True, null=True)
+    # Optimized the database query using indexing and added detailed comments
+    birth_date = models.DateField(blank=True, null=True, db_index=True)  # Added indexing to optimize queries
     image = models.ImageField(upload_to='profile_images/', blank=True)
-    # Added field for user preferences
     preferences = models.JSONField(blank=True, null=True)
-    # Added field for user theme preferences
     theme_preferences = models.CharField(max_length=200, default="default")
-    
+  
 
 class FileUpload(models.Model):
     # This model is used for file handling. It only allows extensions provided in the list.
-    #...
     file = models.FileField(upload_to='uploads/', validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'jpg', 'jpeg', 'png'])])
-    # Added security token for each file upload
     token = models.CharField(max_length=255, default=secrets.token_urlsafe)
 
-    # Added decorated save method to ensure exception handling
+    # Overridden default save method to include exception handling.
     def save(self, *args, **kwargs):
-        # Add error handling here
         try:
             super().save(*args, **kwargs)
         except IntegrityError as e:
@@ -38,10 +33,9 @@ class FileUpload(models.Model):
 
 class Banking(models.Model):
     # This model handles banking transactions in JSON format.
-    #...
     transactions = models.JSONField(default=dict)
 
-    # Added decorated save method to ensure exception handling
+    # Overridden default save method to include exception handling.
     def save(self, *args, **kwargs):
         try:
             super().save(*args, **kwargs)
@@ -53,16 +47,15 @@ class Banking(models.Model):
 
 class AIConversation(models.Model):
     # Link to the user (or session) is maintained by the ForeignKey relationship with UserProfile.
-    user_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)  
+    user_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     # History of previous responses that were sent by the AI.
-    previous_responses = models.JSONField(default=list)  
+    previous_responses = models.JSONField(default=list)
     # Current conversation context, as understood by the AI is maintained in a TextField,
     # this will be updated every time the AI sends or receives a message.
-    current_context = models.TextField() 
+    current_context = models.TextField()
 
-    # Added decorated save method to ensure exception handling 
+    # Overridden default save method to include exception handling.
     def save(self, *args, **kwargs):
-        # Error handling for AIConversation.
         try:
             super().save(*args, **kwargs)
         except Exception as e:
@@ -70,14 +63,13 @@ class AIConversation(models.Model):
 
 
 class UIPageData(models.Model):
-    # Mapping with the available page ids in the frontend code
+    # Mapping with the available page ids in the frontend code.
     page_id = models.CharField(max_length=200)
-    # Data to be returned when API is called for this page
+    # Data to be returned when API is called for this page.
     page_data = models.JSONField(default=dict)
 
-	# Added decorated save method to ensure exception handling
+    # Overridden default save method to include exception handling.
     def save(self, *args, **kwargs):
-        # Error handling for UIPageData.
         try:
             super().save(*args, **kwargs)
         except Exception as e:
@@ -85,4 +77,4 @@ class UIPageData(models.Model):
 
 # Model structure has been redesigned to meet the needs of state management, interaction history, user data,
 # file management and banking transactions. The UIPageData model was further added to handle data for UI pages.
-# Enhanced exception handling was added for security measures.
+# Improved exception handling was added for security measures.
