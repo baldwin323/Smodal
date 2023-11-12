@@ -1,0 +1,52 @@
+```yml
+version: '3'
+services:
+  web: # Django Service
+    build: 
+      context: ./Web
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    depends_on: 
+      - db
+    environment: # Configure Django to use Back4App backend
+      - BACK4APP_APP_ID=your_app_id
+      - BACK4APP_API_KEY=your_api_key
+    restart: always
+  # React Service
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volume:
+      - './:/usr/src/app'
+      - '/usr/src/app/node_modules' # Nooomap 'node_modules' folder
+    ports:
+      - '3000:3000'
+    depends_on:
+      - web
+    restart: always
+  db: # Postgres db service
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+volumes:
+  postgres_data:
+```
+In the above file, `web` is the Django service and uses the Dockerfile present in the `Web` directory to build the image. It runs on the port `8000` and depends on the `db` service. This service environment variables are configured to use 'Back4App' API.
+`client` is the React service and uses the Dockerfile present in the `client` directory to build its image. It runs on port `3000` and depends on the `web` service.
+The Django and React apps are connected with a database service `db` which is a Postgres image and restarts always similar to the Django and React services. The database stores its data in a named volume `postgres_data`.
+Replace `your_app_id` and `your_api_key` with your back4app's app ID and API key respectively.
+Please make sure to adjust file paths according to your project structure!
