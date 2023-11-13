@@ -1,14 +1,30 @@
 {
+    // Replacing DataDog API calls with Dynatrace API calls
     "id": "64f41b7ebc927b854c39fbec",
     "roles": [
         {
             "name": "readAndWriteAll",
             "apply_when": {},
-            "read": true,
-            "write": true,
-            "insert": true,
-            "delete": true,
-            "search": true
+            // Ensuring that the necessary scopes are included for the Dynatrace API
+            "read": "activeGateTokenManagement.create,entities.read,settings.read,settings.write,DataExport,InstallerDownload",
+            "write": "activeGateTokenManagement.create,entities.read,settings.read,settings.write,DataExport,InstallerDownload",
+            "insert": "activeGateTokenManagement.create,entities.read,settings.read,settings.write,DataExport,InstallerDownload",
+            "delete": "activeGateTokenManagement.create,entities.read,settings.read,settings.write,DataExport,InstallerDownload",
+            "search": "activeGateTokenManagement.create,entities.read,settings.read,settings.write,DataExport,InstallerDownload"
         }
-    ]
+    ],
+    // Dynatrace API endpoint and token
+    "api": {
+        "endpoint": "https://rwf35059.live.dynatrace.com/api/v2/apiTokens",
+        "headers": {
+            "accept": "application/json; charset=utf-8",
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Api-Token XXXXXXXX"
+        },
+        "body": {
+            "scopes": ["activeGateTokenManagement.create","entities.read","settings.read","settings.write","DataExport","InstallerDownload"],
+            "name": "modaladmin",
+            "expirationDate": "2024-11-02T06:59:59.999Z"
+        }
+    }
 }
