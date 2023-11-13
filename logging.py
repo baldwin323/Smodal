@@ -44,6 +44,13 @@ try:
 except Exception as e:
     project_logger.error('An error occurred while applying the configuration to the logger. Error: %s', e, exc_info=True)
 
+# Function to handle specific worktree change error
+def handle_worktree_change_error(error_message: str):
+    """
+    :param error_message: Error message for the worktree change
+    """
+    detailed_logger.error('Worktree contains unstaged changes. Exact Error: %s', error_message, exc_info=True)   
+
 def log_pactflow_response(headers: dict, body: str) -> None:
     """
     The purpose of this function is to log the Pactflow response headers and body.
