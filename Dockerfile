@@ -1,40 +1,58 @@
 # Dockerfile at the root of the repository
-# This Dockerfile is used to build both the Django and React apps, and configures Nginx
+# This Dockerfile is updated to ensure that both the Django and React apps are built correctly
+# It also makes sure all the necessary dependencies are installed and the correct commands are run
 
-# Define the python version from which Django backend will be built
+# Start with a base image containing Python where Django backend will be built
 FROM python:3.8-alpine as backend
-# Define the working directory in the Docker image
+
+# Set the working directory to /app
 WORKDIR /app
-# Copy Django application along with requirements file into image
+
+# Copy the current directory contents into the working directory within the Docker image
 COPY ./backend .
-# Install the Django requirements
+
+# Update pip and install any necessary dependencies
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-# Indicate the port number the container should expose
+
+# Expose port 8000 for the Django server
 EXPOSE 8000
-# Run the Django server on container startup
+
+# Run the Django server when the Docker container has started.
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # Build the React frontend from Node.js image
 FROM node:lts-alpine as frontend
-# Create a directory named app in the Docker image
+
+# Set the working directory in the Docker container to /app
 WORKDIR /app
-# Copy the React app into the Docker image
+
+# Copy the current directory contents (React app) into the container at /app
 COPY ./frontend .
-# Install the Node.js dependencies
+
+# Install any necessary dependencies
 RUN npm install
-# Build the static files for the React app
+
+# Make port 3000 available to the world outside this container
+EXPOSE 3000
+
+# Run 'npm run build' for React's production build when the Docker container starts
 RUN npm run build
 
-# Configure the Nginx server to serve the built React app and proxy the Django backend
-# Create the final Docker image from the Nginx alpine base image
+# The final Docker image is created from the Nginx alpine base image to serve the React app and proxy the Django backend
 FROM nginx:alpine
-# Nginx listens on this port
+
+# Nginx will listen on this port
 EXPOSE 80
-# Copy the Django app from the intermediate Django image
+
+# Copy the Django app from the intermediate Django image into the new Docker image at /app/backend
 COPY --from=backend /app/ /app/backend
-# Copy the built React app from the intermediate Node.js image
+
+# Copy the built React static files from the intermediate Node.js image into the new Docker image at /var/www
 COPY --from=frontend /app/build /var/www
-# Copy the Nginx configuration file
+
+# Copy the Nginx configuration file into the new Docker image to configure Nginx
 COPY nginx.conf /etc/nginx/conf.d
-# Start the Nginx server on the container startup
+
+# Run Nginx when the Docker container starts
 CMD ["nginx", "-g", "daemon off;"]
