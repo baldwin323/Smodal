@@ -20,22 +20,21 @@ const StateContext = createContext();
 // Define the ids of all pages we have
 const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
 
-// Error handler to provide better error messages
+// Updated error handler to provide more specific error messages
 const errorHandler = (error) => {
   if (!error.response) {
     return {
       errorMsg: `Error: Network Error`,
-      actionSuggestion: 'Please check your internet connection.'
+      actionSuggestion: 'Please check your internet connection and refresh the page.'
     };
   } else {
     return {
-      errorMsg: error.response.data.message, // Modified to log error message directly from response
-      actionSuggestion: "Please try again. If the problem persists, contact our support team."  // Suggest possible action
+      errorMsg: `Error: ${error.response.data.error}`, // Show error message directly from response
+      actionSuggestion: `Possible fix: ${error.response.data.solution}` // Suggest possible fixes from the response
     };
   }
 };
 
-// Our custom hook to handle state management
 const useCustomState = () => {
   // Now using useContext for state management
   const context = useContext(StateContext);
@@ -45,8 +44,6 @@ const useCustomState = () => {
   return context;
 };
 
-// Provider component for state context
-// This will provide state and action details to children components
 const StateProvider = ({ children }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0); 
   const [aiResponse, setAiResponse] = useState(''); 
@@ -54,8 +51,6 @@ const StateProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
-  // Fetching data inside the provider
-  // Ensures data is available to all child components
   const fetchData = useCallback(() => {
     setIsLoading(true);
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/ai_predict`, { input: data })
@@ -66,8 +61,8 @@ const StateProvider = ({ children }) => {
       .catch((error) => {
         const { errorMsg, actionSuggestion } = errorHandler(error); 
         console.error(`${errorMsg}. ${actionSuggestion}`);
+        setError(`${errorMsg}. ${actionSuggestion}`); // Show error message and possible fix to user
         setIsLoading(false);
-        setError(error.response.data.message); // Setting the error state with the error message
       });
   }, [data]);
 
@@ -78,15 +73,14 @@ const StateProvider = ({ children }) => {
   return (
     <StateContext.Provider value={{ isLoading, setIsLoading, aiResponse, setAiResponse, currentPageIndex, setCurrentPageIndex, data, setData, error, fetchData }}>
       {children}
-      {error && <div className="error">{error}</div>} // Displaying error messages
+      {error && <div className="error">{error}</div>} // Show error messages to user
     </StateContext.Provider>
   );
 };
 
-// Main page component that now uses state from context
 const MainPage = () => {
   const { currentPageIndex, setCurrentPageIndex, handlePrevClick, handleNextClick, renderContent } = useCustomState();
-  
+
   return (
     <div className="app-container">
       {/* Render newly created NavBar component for improved navigation */}
@@ -109,7 +103,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/"><MainPage /></Route> 
         {pageIds.map((pageId, i) => (
-          <Route exact path={`/${pageId}`}><MainPage /></Route>
+          <Route exact path={`/${pageId}`} key={i}><MainPage /></Route>
         ))}
       </Switch>
     </StateProvider>
@@ -117,5 +111,5 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-// In the updated code, error messages are now being drawn directly from the response. They are also set in the error state and displayed to the user for better error handling.
+// The updated code includes more specific error messages and possible fixes to the user for better error handling.
 ```

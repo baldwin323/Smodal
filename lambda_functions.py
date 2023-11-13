@@ -20,6 +20,7 @@ aws_session = Session(aws_access_key_id=aws_access_key_identification,
 
 aws_lambda_client = aws_session.client('lambda')
 
+# Improved function now properly handles different types of exceptions.
 def api_call(endpoint, payload=None, method="GET"):
     base_api_url = "http://api.example.com"
     headers = {"Content-Type": "application/json"}
@@ -32,12 +33,16 @@ def api_call(endpoint, payload=None, method="GET"):
         return api_response.json()  # This should ensure function returns the expected results even in error situations.
     except requests.exceptions.HTTPError as http_err:
         application_logger.error("HTTP Error occurred during API call: %s", http_err)
+        return None
     except requests.exceptions.ConnectionError as connection_err:
         application_logger.error("Connection error occurred during API call: %s", connection_err)
+        return None
     except requests.exceptions.Timeout as timeout_err:
         application_logger.error("Timeout error occurred during API call: %s", timeout_err)
+        return None
     except requests.exceptions.RequestException as request_err:
-        application_logger.error("Unexpected error occurred during API call: %s", request_err)  
+        application_logger.error("Unexpected error occurred during API call: %s", request_err)
+        return None  
 
 def register_affiliate_manager(*args, **kwargs):
     return api_call("/register_affiliate_manager", kwargs, "POST")
@@ -54,22 +59,25 @@ operations_mapping = {
     'give_credit': give_credit,
 }
 
+# Improved function now properly handles invocation exceptions as well as providing informative log messages.
 def lambda_handler(event, context):
     try:
         operation = event['operation']
         if operation not in operations_mapping:
             raise ValueError(f'Invalid operation: {operation}')
-        # Wrapped function result in a try-except block to handle possible errors regarding the function calls.
+        # Wrapped function invocation in a try-except block to handle possible exceptions regarding the function calls.
         try:
             args = event.get('args', [])
             kwargs = event.get('kwargs', {})
             function_result = operations_mapping[operation](*args, **kwargs)
+            if function_result is None:
+                raise ValueError('Function call returned None: Possible error during execution')
         except Exception as e:
             application_logger.error('An error occurred during function call: %s', e)
             function_result = None
         return {
-            'statusCode': 200,
-            'body': json.dumps(function_result)
+            'statusCode': 200 if function_result else 500,
+            'body': json.dumps(function_result if function_result else {'error': 'Function failed to execute correctly'})
         }
     except Exception as e:
         application_logger.error('An error occurred in AWS Lambda handler: %s', e)

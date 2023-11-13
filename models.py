@@ -14,7 +14,7 @@ class UserProfile(models.Model):
     image = models.ImageField(upload_to='profile_images/', blank=True)
     preferences = models.JSONField(blank=True, null=True)
     theme_preferences = models.CharField(max_length=200, default="default")
-  
+
 
 class FileUpload(models.Model):
     # This model is used for file handling. It only allows extensions provided in the list.
