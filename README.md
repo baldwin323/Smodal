@@ -10,46 +10,38 @@ The UI of the application is intentionally designed with proper theming and resp
 
 ## Getting Started
 
-To start using this application, you'll first need to set up your Docker environment, then you'll build the Docker image and deploy the Docker container.
+The application now supports deployment using Docker Compose. This guide walks you through the process of deploying the application using Docker Compose.
 
-### Setting Up Docker Environment
+To start using this application, first, make sure you have Docker installed on your machine. If not, refer to the Docker installation guide provided here. 
+
+### Installing Docker & Docker Compose
 To install Docker on your local machine, run the following command in your terminal:
 ```bash
 curl -fsSL https://get.docker.com | sh
 ```
+To install Docker Compose, ensure you have Docker installed then follow the instructions at this link: https://docs.docker.com/compose/install/
 
-### Building Docker Image
-Once you have Docker installed, navigate to the directory containing the Dockerfile and build the Docker image using the following command:
+### Deploying with Docker Compose
+With Docker and Docker Compose installed, navigate to the directory containing the docker-compose.yml file. Deploy the application using the following command:
 ```bash
-docker build -t modal.tokai .
+docker-compose up
 ```
 
-### Docker Deployment
-After the Docker image has been built, you can deploy the container using the following command:
-```bash
-docker run -p 8000:80 -d modal.tokai
-```
-
-### AWS Elastic Beanstalk Deployment
-To deploy the Docker container to AWS Elastic Beanstalk, refer to the `deploy.py` script in the repository.
-
-Update in our deployment script: We have added several environment variables in our Dockerrun.aws.json file and the deploy.py script to ensure that the costs stay within the free tier. Check out the `Dockerrun.aws.json` and `deploy.py` files for more details..
+No need to build images or run containers manually, Docker Compose takes care of that.
 
 ## Connecting from Anywhere
 After deploying your application, there are several options to connect to it from anywhere:
 
 ### SSH Tunnel
-An SSH Tunnel can be set up to securely forward a local port to your Elastic Beanstalk environment, allowing you to connect using localhost.
+An SSH Tunnel can be set up to securely forward a local port to your Docker container, allowing you to connect using localhost.
 
 ### Public IP
-You can expose a public IP for your Elastic Beanstalk environment and connect directly to that IP. This option is less secure but easier to set up.
+You can expose a public IP for your Docker container and connect directly to that IP. This option is less secure but easier to set up.
 
 ### Elastic IP
-An Elastic IP can be assigned to your Elastic Beanstalk environment for connectivity. The IP will remain static.
+An Elastic IP can be assigned to your Docker container for connectivity. The IP will remain static.
 
-Do keep in mind to ensure the correct ports are exposed in the Docker/docker-compose configuration and that the security groups in AWS have been configured to allow inbound connections on those ports. The ports should also be mapped correctly to the Elastic Beanstalk environment.
-
-Further frontend connections might require setting up environment variables with the correct backend URL, which can either be a public URL or an internal DNS name for Elastic Beanstalk.
+Do keep in mind to ensure the correct ports are exposed in the Docker/docker-compose configuration. Also, map the ports correctly if you're using a cloud service.
 
 ## Advanced Use 
 <!--- Existing content here --->
