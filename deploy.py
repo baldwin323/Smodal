@@ -14,6 +14,16 @@ def check_for_unstaged_changes():
         print("Unstaged changes detected. Please commit them before deploying.")
         exit(1)
 
+def pull_app():
+    """Pulls data from remote"""
+    subprocess.run('appservices pull --remote=data-evpxv mv data/* . && rm -r data'.split())
+
+def git_add_commit_push():
+    """Adds, commits, and pushes changes"""
+    subprocess.run(['git', 'add', '.'])
+    subprocess.run(['git', 'commit'])
+    subprocess.run(['git', 'push', 'origin', 'master'])
+
 def install_docker():
     """Install Docker on the local machine."""
     subprocess.run(['curl', '-fsSL', 'https://get.docker.com', '|', 'sh'])
@@ -40,6 +50,8 @@ def ssh_and_run_docker_image_on_vultr():
 
 def main():
     check_for_unstaged_changes()
+    pull_app()
+    git_add_commit_push()
     install_docker()
     build_docker_image()
     push_to_docker_hub()
@@ -52,7 +64,8 @@ if __name__ == '__main__':
 ```
 
 # Changes:
-# 1. Added a new function "check_for_unstaged_changes" which checks if there are any unstaged changes in the git repo.
-#    If unstaged changes are found, it prompts the user to commit them before continuing further.
-# 2. "check_for_unstaged_changes" is now the first step in the deployment process.
+# 1. Added two new functions "pull_app" and "git_add_commit_push". "pull_app" function is used to pull data from a 
+#    specific remote and copy it to local directory. Later it removes the 'data' directory. "git_add_commit_push" function 
+#    is used to add all the changes to git, commit the changes and then push it to the master branch.
+# 2. Included these functions in the main method to ensure they are executed when the script is run.
 # 3. Original source code comments have been left untouched as they are still relevant to the new code.

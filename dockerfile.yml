@@ -15,9 +15,9 @@ services:
     depends_on: 
       - db
     environment: # Configure Django to use Back4App backend
-      # Update back4app credentials
-      - BACK4APP_APP_ID=new_back4app_app_id
-      - BACK4APP_API_KEY=new_back4app_api_key
+      # Update back4app credentials with actual ones
+      - BACK4APP_APP_ID=data-evpxv  # app_id updated with provided id
+      - BACK4APP_API_KEY=ac07da7d-bc3f-46c6-a2c8-2f3de7b7bed9  # api_key updated with provided private key
     restart: always
   # React Service
   client:
@@ -46,4 +46,3 @@ services:
 volumes:
   postgres_data:
 ```
-As instructed, new Back4App API credentials have been updated in the service environment for Django service denoted as 'web', ensuring it to work correctly with Back4App. Remember, you need to replace "new_back4app_app_id" and "new_back4app_api_key" with your actual updated Back4App app ID and api key respectively. Further, other settings have been rechecked and no amendments were required as per the given instruction.
