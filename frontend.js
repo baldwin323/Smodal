@@ -29,7 +29,7 @@ const errorHandler = (error) => {
     };
   } else {
     return {
-      errorMsg: error.response.data,
+      errorMsg: error.response.data.message, // Modified to log error message directly from response
       actionSuggestion: "Please try again. If the problem persists, contact our support team."  // Suggest possible action
     };
   }
@@ -67,7 +67,7 @@ const StateProvider = ({ children }) => {
         const { errorMsg, actionSuggestion } = errorHandler(error); 
         console.error(`${errorMsg}. ${actionSuggestion}`);
         setIsLoading(false);
-        setError(error);
+        setError(error.response.data.message); // Setting the error state with the error message
       });
   }, [data]);
 
@@ -78,6 +78,7 @@ const StateProvider = ({ children }) => {
   return (
     <StateContext.Provider value={{ isLoading, setIsLoading, aiResponse, setAiResponse, currentPageIndex, setCurrentPageIndex, data, setData, error, fetchData }}>
       {children}
+      {error && <div className="error">{error}</div>} // Displaying error messages
     </StateContext.Provider>
   );
 };
@@ -115,5 +116,6 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root')
 );
+
+// In the updated code, error messages are now being drawn directly from the response. They are also set in the error state and displayed to the user for better error handling.
 ```
-In the updated code, we have segregated the global state from the utility functions using the React context API. The StateProvider component encapsulates the state management logic and the useCustomState hook is used to access this state. The MainPage component has been simplified and now does not manage any state. All state and utilities are fetched from the context, leading to a clean and maintainable code structure. The error handling has been improved as the error messages are now being logged directly in the StateProvider.
