@@ -16,6 +16,7 @@
             "search": "activeGateTokenManagement.create,entities.read,settings.read,settings.write,DataExport,InstallerDownload"
         }
     ],
+
     // Updated Dynatrace API endpoint and token
     "api": {
         "endpoint": "https://rwf35059.live.dynatrace.com/api/v2/apiTokens",
