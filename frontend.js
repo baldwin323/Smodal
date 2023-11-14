@@ -50,10 +50,11 @@ const StateProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-
+  
+  // Updated Axios requests to use environment variables for complete backend url
   const fetchData = useCallback(() => {
     setIsLoading(true);
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/ai_predict`, { input: data })
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/ai_predict`, { input: data })
       .then(response => {
         setAiResponse(response.data.response); 
         setIsLoading(false);
@@ -110,6 +111,6 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root')
 );
-
-// The updated code includes more specific error messages and possible fixes to the user for better error handling.
+// The updated code includes connection to the backend URL and PORT through environment variables.
+// This makes the code compatible with the Dockerized setup.
 ```

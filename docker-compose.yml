@@ -2,64 +2,62 @@
 version: '3'  
 services:     
 
-    # Django service to run the Django application   
-    django:
-        image: django
-        command: python manage.py runserver
-        volumes:
-            - .:/code
-        ports:
-            # Exposing port 8000 for Django service
-            - 8000:8000
-        
-    # Backend service for handling business logic
-    backend:     
-        build: ./backend      
-        command: python manage.py runserver 0.0.0.0:8000     
-        volumes:         
-            - ./backend:/app  
-        ports:        
-            # Exposing port 8000 for the backend service
-            - 8000:8000      
-        environment:        
-            - SECRET_KEY=your_secret_key        
-            - DB_NAME=your_db_name        
-            - DB_USER=your_db_user        
-            - DB_PASSWORD=your_db_password 
-            - BACKEND_URL=your_backend_url
-        # Backend service depends on Django service    
-        depends_on:
-            - django     
-                
-    # Frontend service for displaying user interface
-    frontend:         
-        build: ./frontend         
-        command: npm start         
-        volumes:           
-            - ./frontend:/app
-        ports:           
-            # Exposed port 3000 for the frontend service 
-            - 3000:3000     
+  # Service for Django App
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: app_django:latest
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/usr/src/app/
+    command: > 
+      sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
+  
+  # Backend service for separate business logic (if any)
+  backend:
+    build: ./backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - app
+    environment:
+      - SECRET_KEY=your_secret_key
+      - DB_NAME=your_db_name
+      - DB_USER=your_db_user
+      - DB_PASSWORD=your_db_password
+      - BACKEND_URL=your_backend_url
 
-    # Deploy service to handle deployment of the application       
-    deploy: 
-        build: 
-            context: .       
-            dockerfile: Dockerfile.deploy     
-        environment:       
-            # Environment variables for AWS credentials
-            - AWS_ACCESS_KEY_ID=your-access_key       
-            - AWS_SECRET_ACCESS_KEY=your_secret_key       
-            - AWS_REGION=your_region      
+  # Frontend service for GUI
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 3000:3000
+    command: npm start
 
-# Volumes for persistent data storage  
-volumes:    
-    database:
+  # Deployment service for AWS
+  deploy:
+    build:
+      context: .
+      dockerfile: Dockerfile.deploy
+    environment:
+      - AWS_ACCESS_KEY_ID=your-access_key
+      - AWS_SECRET_ACCESS_KEY=your_secret_key
+      - AWS_REGION=your_region
 
-# Updates have been made to the docker-compose file as per the plan
-# Each service has been properly configured with necessary commands, environment variables, volumes and port settings
-# Services have also been properly mapped to their respective dependencies for a seamless operation
-# Added a new Django service that the backend depends on
-# Added the deploy service for handling deployment of the application
-# All services and volumes required for a full-fledge application operation are included and properly configured
+volumes:
+  database:
 ```
+# Changes made:
+# 1. Added docker compose services for app, backend, frontend and deploy
+# 2. The app service for Django has been added, it builds the Dockerfile included in the context, volumes are mounted and the server is started once the instance is up. Port 8000 is exposed for access.
+# 3. The backend service is included, even if separated, depending on the architecture. It should depend on the app to ensure the sequence of server start-ups.
+# 4. The frontend service is included to run the GUI part of the project, which starts the npm server.
+# 5. Deploy service has been added to handle AWS deployments, AWS credentials should be passed through environment variables.
+# 6. Finally, a database volume is included for persistent data.

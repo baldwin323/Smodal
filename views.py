@@ -1,7 +1,6 @@
 import logging
 import json
-# Added import for third-party integrations
-from social_django.utils import BACKENDS, backends_data, load_backend, load_strategy
+import os  # Added for environmental variables
 from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
@@ -12,7 +11,10 @@ from .lambda_functions import register_affiliate_manager, monitor_affiliated_mod
 from .models import OIDCConfiguration, Credentials, APICredentials, AffiliateManager, UserProfile, FileUpload, UserActivity, Banking, AIConversation
 from .offline_utils import perform_offline_login
 from .ai_model import call_model  # AI model function that generates predictions/responses
-import json
+
+# Backend services address & port (from environment variables)
+SERVICES_ADDRESS = os.getenv("SERVICES_ADDRESS", "localhost")
+SERVICES_PORT = os.getenv("SERVICES_PORT", "8000")
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +44,7 @@ def affiliate_register(request):
     Function to register affiliate manager
     """
     # Invoke the corresponding Lambda function
-    response = register_affiliate_manager(**request.POST)
+    response = register_affiliate_manager(request, SERVICES_ADDRESS, SERVICES_PORT)
     return JsonResponse(response)
 
 @login_required
@@ -51,7 +53,7 @@ def affiliate_monitor(request):
     Function to monitor affiliated models
     """
     # Invoke the corresponding Lambda function
-    response = monitor_affiliated_models(**request.POST)
+    response = monitor_affiliated_models(request, SERVICES_ADDRESS, SERVICES_PORT)
     return JsonResponse(response)
 
 @login_required
@@ -60,41 +62,37 @@ def affiliate_credit(request):
     Function to give credit when a new model signs up
     """
     # Invoke the corresponding Lambda function
-    response = give_credit(**request.POST)
+    response = give_credit(request, SERVICES_ADDRESS, SERVICES_PORT)
     return JsonResponse(response)
 
 def is_authenticated(request):
     """
     Checks if a user is authenticated
     """
-    return request.user.is_authenticated
+    user_id = request.session.get("user_id", None)
+    response = check_authentication(user_id, SERVICES_ADDRESS, SERVICES_PORT)
+    return JsonResponse(response)
 
 @login_required
 def load_dashboard(request):
     """
     Load Dashboard for the authenticated user
     """
-    user_profile = UserProfile.objects.get(user_id=request.user.id)
-    return render(request, 'dashboard.html', {'user_profile': user_profile})
+    # Load user's dashboard
+    user_id = request.session.get("user_id", None)
+    # Load data for the dashboard
+    dashboard_data = load_user_dashboard(user_id, SERVICES_ADDRESS, SERVICES_PORT)
+    return JsonResponse(dashboard_data)
 
 def login_user(req):
     """
     Handle User Login
     """
     if req.method == 'POST':
-        email = req.POST.get('email', None)
-        password = req.POST.get('password', None)
-        # Authenticate user
-        user = authenticate(req, username=email, password=password)
-        if user is None:
-            return render(req, 'login.html', {
-                'error_message': 'Invalid credentials'
-            })
-        else:
-            login(req, user)
-            return render(req, 'dashboard.html')
+        response = handle_user_login(req.POST, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
     else:
-        return render(req, 'login.html')
+        return JsonResponse({"status": "error", "message": "You must submit a POST request."}, status=400)
 
 def offline_login(req):
     """
@@ -112,8 +110,8 @@ def logout_user(req):
     """
     Handle User Logout
     """
-    logout(req)
-    return render(req, 'login.html')
+    response = handle_user_logout(req.session.get("user_id", None), SERVICES_ADDRESS, SERVICES_PORT)
+    return JsonResponse(response)
 
 @login_required
 def serve(request, page):
@@ -126,9 +124,10 @@ def serve(request, page):
 
     page_spec = PAGES[page]
     if page_spec['login_required']:
-        if not request.user.is_authenticated:
-            return JsonResponse({"status": "error", "message": "You must be logged in to access this page."}, status=401)
-        
+        response = authorize_request(request.session.get("user_id", None), SERVICES_ADDRESS, SERVICES_PORT)
+        if response.get("status") != "success":
+            return JsonResponse(response)
+
     try:
         return page_spec['method'](request, page)
     except Exception as e:
@@ -142,18 +141,10 @@ def api_serve(request, page_id):
     """
     # Check the request method
     if request.method == 'GET':
-        try:
-            # Here we simply return a JsonResponse object as a stub for each possible page_id.
-            # In practice, implement the required API functionality for each page_id.
-            response_data = {
-                'user-authentication': {"data": "Stub data for user-authentication."},
-                'dashboard': {"data": "Stub data for dashboard."},
-                # Add similar responses for each page_id.
-                'default': {"data": "Stub data for unknown page_id."},
-            }
-            return JsonResponse(response_data.get(page_id, response_data['default']))
-        except Exception as e:
-            logger.error("Error serving API page: {}".format(page_id), exc_info=e)
+        response = process_api_request(request.GET, page_id, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method. Only GET is supported."}, status=405)
 
 @login_required
 def ai_predict(request):
@@ -164,7 +155,7 @@ def ai_predict(request):
         # Extract the input data from the request
         input_data = request.GET.get('input')
         # Make a call to the AI model with the input data
-        response = call_model(input_data)
+        response = call_model(input_data, SERVICES_ADDRESS, SERVICES_PORT)
         
         # Update the AI's conversation state in the database
         conversation_state = AIConversation.objects.get(user_id=request.user.profile)
@@ -175,5 +166,5 @@ def ai_predict(request):
         conversation_state.save()
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': 'Could not process your request'}, status=500)
-      
+
     return JsonResponse({'response': response})
