@@ -4,6 +4,12 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 import secrets
 from django.db.utils import IntegrityError
+import os  # Imported os for getting environment variables
+
+# Database environments to be obtained from the host machine when running inside a Docker container.
+# The Django project settings should refer to these variables instead of hard-coded database service specs.
+os.getenv('DB_HOST', 'localhost')
+os.getenv('DB_PORT', '5432')
 
 # Existing Imports...
 
