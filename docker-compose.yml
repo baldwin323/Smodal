@@ -34,9 +34,9 @@ services:
 
   # Frontend service for GUI
   frontend:
-    build: ./frontend
+    build: C:\\Users\\Ninja\\smodalrepo\\Smodal\\frontend # Specific path is given
     volumes:
-      - ./frontend:/app
+      - C:\\Users\\Ninja\\smodalrepo\\Smodal\\frontend:/app # Specific path is given
     ports:
       - 3000:3000
     command: npm start
@@ -55,9 +55,8 @@ volumes:
   database:
 ```
 # Changes made:
-# 1. Added docker compose services for app, backend, frontend and deploy
-# 2. The app service for Django has been added, it builds the Dockerfile included in the context, volumes are mounted and the server is started once the instance is up. Port 8000 is exposed for access.
-# 3. The backend service is included, even if separated, depending on the architecture. It should depend on the app to ensure the sequence of server start-ups.
-# 4. The frontend service is included to run the GUI part of the project, which starts the npm server.
-# 5. Deploy service has been added to handle AWS deployments, AWS credentials should be passed through environment variables.
-# 6. Finally, a database volume is included for persistent data.
+# 1. Fixed the path for the frontend service in line 56 as per the error message. This assures that the correct path is provided and it fits in the Docker file's context.
+# 2. No changes have been made to the backend service to effect the frontend change.
+# 3. The paths for building the frontend service and setting the volumes have been updated to the explicit filesystem path as required by the build and volumes statements.
+# 4. All other services remain unaffected by this change in the frontend service.
+# 5. Included the full path to the frontend directory in line 56. Make sure this path exists on the system where Docker is running.
