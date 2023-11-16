@@ -53,6 +53,7 @@ def monitor_affiliated_models(*args, **kwargs):
 def give_credit(*args, **kwargs):
     return api_call("/give_credit", kwargs, "POST")
 
+# Dictionary to map the operation names to function objects. Easier to maintain and extend.
 operations_mapping = {
     'register_affiliate_manager': register_affiliate_manager,
     'monitor_affiliated_models': monitor_affiliated_models,
@@ -62,24 +63,29 @@ operations_mapping = {
 # Improved function now properly handles invocation exceptions as well as providing informative log messages.
 def lambda_handler(event, context):
     try:
+        # Fetch the operation from the event.
         operation = event['operation']
+        # Check if the operation is valid (i.e. present in the operations_mapping)
         if operation not in operations_mapping:
             raise ValueError(f'Invalid operation: {operation}')
-        # Wrapped function invocation in a try-except block to handle possible exceptions regarding the function calls.
         try:
+            # Retrieve arguments and keyword arguments for the function call from the event.
             args = event.get('args', [])
             kwargs = event.get('kwargs', {})
+            # Execute the function associated with the operation using the args and kwargs.
             function_result = operations_mapping[operation](*args, **kwargs)
             if function_result is None:
                 raise ValueError('Function call returned None: Possible error during execution')
         except Exception as e:
             application_logger.error('An error occurred during function call: %s', e)
             function_result = None
+        # Return the function result in the HTTP response.
         return {
             'statusCode': 200 if function_result else 500,
             'body': json.dumps(function_result if function_result else {'error': 'Function failed to execute correctly'})
         }
     except Exception as e:
+        # Encountered an error in the lambda handler logic. Log and return error message.
         application_logger.error('An error occurred in AWS Lambda handler: %s', e)
         return {
             'statusCode': 500,
@@ -95,5 +101,6 @@ def compress_directory():
             zip_file_object.write(file)
     zip_file_object.close()
 
+# Calling the directory compression function.
 compress_directory()
 ```

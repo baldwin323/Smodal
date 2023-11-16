@@ -31,6 +31,7 @@ class LambdaFunctionsTest(TestCase):
         response = give_credit(*self.args, **self.kwargs)
         self.assertEqual(response, 'expected response')
 
+
 class SmodalTest(TestCase):
    # existing tests ...
   
@@ -49,22 +50,36 @@ class SmodalTest(TestCase):
         response = give_credit(*self.args, **self.kwargs)
         self.assertEqual(response, 'expected response')
 
-    # other tests ...
-    
+    # additional tests to handle error cases
     def test_handle_errors(self):
+        # Testing load_dashboard with non-valid request
         with self.assertRaises(Exception):
             load_dashboard('fake_request')
+
+        # Testing login_user with non-valid request
         with self.assertRaises(Exception):
             login_user('fake_request')
+
+        # Testing logout_user with non-valid request
         with self.assertRaises(Exception):
             logout_user('fake_request')
+
+        # Testing form_submit with non-valid request
         with self.assertRaises(Exception):
             form_submit('fake_request')
+
+        # Testing file_upload with non-valid request
         with self.assertRaises(Exception):
             file_upload('fake_request')
+
+        # Testing user_activity with non-valid request
         with self.assertRaises(Exception):
             user_activity('fake_request')
+
+        # Testing banking with non-valid request
         with self.assertRaises(Exception):
             banking('fake_request')
+
+        # Testing serve with non-valid request and page
         with self.assertRaises(Exception):
             serve('fake_request', 'fake_page')
