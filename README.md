@@ -2,17 +2,17 @@
 
 ## Description
 
-**Name**: modal.tokai Django Application
+**Name**: modal.tokai Flask Application
 
-**Description**: The modal.tokai application is a state-of-the-art Django-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architected based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Django's templating system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. It now comes wrapped in a docker container which makes it easy to set up and use.
+**Description**: The modal.tokai application is a state-of-the-art Flask-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architected based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Flask's templating system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. It now comes wrapped in a docker container which makes it easy to set up and use.
 
 The UI of the application is intentionally designed with proper theming and responsiveness in mind. It adapts properly to different screen sizes, making it mobile-friendly. It features loading spinners to indicate processing requests. The application also prompts for user feedback periodically to continuously refine its capabilities.
 
 It only requires internet connection and a browser to function effectively, and can be powered on with a single click similar to a web or mobile app.
 
-## Cluster Deployment using Docker
+## Deployment using Docker
 
-The deployment of modal.tokai has been simplified with Docker. Provided you have docker installed, starting up the service should be as simple as clicking on an executable button.
+The deployment of modal.tokai has been simplified with Docker. Provided you have Docker installed, starting up the service should be as simple as following the subsequent instructions.
 
 ### Getting Started
 
@@ -24,22 +24,22 @@ Ensure you have the latest version of Docker installed on your machine. For inst
 
 ### Installation
 
-1. First, clone this repository using `git`:
+1. Clone this repository using `git`:
     ```bash
     git clone https://github.com/<username>/modal.tokai
     ```
 
-2. Switch to the repository's directory by running:
+2. Navigate to the repository's directory:
     ```bash
     cd modal.tokai
     ```
 
-3. Now you can build the Docker image by running the following command:
+3. Build the Docker image with the following command:
     ```bash
     docker build -t modal-tokai-image .
     ```
 
-4. Once the build process is complete, you can start the application by running the following command:
+4. After successful image build, initiate the application with:
     ```bash
     docker run -p 8000:8000 modal-tokai-image
     ```
@@ -47,12 +47,12 @@ The application will now be accessible at localhost:8000
 
 ## Executing Test Cases
 
-<!--- Existing content here --->
+<!--- Existing content should remain here --->
 
 ## User Support
 
-In case of any issues, you can find help documents, FAQs, and feedback forms in the help section. If further assistance is required, you can reach out to us through the provided contact support options.
+For any issues or required assistance, refer to the Help section where you can find help documents, FAQs, and feedback forms. Should you need further assistance, please don't hesitate to contact us through the provided options.
 
-We welcome feedback to improve our service. Please feel free to provide your feedback through our feedback forms. We believe in continuous improvement and your feedback is our backbone for this.
+Your opinion is important to us, so please feel free to provide your feedback through our forms. We believe in continuous improvement, and your input serves as the driving force behind it.
 
-Remember, almost all of your questions can be answered by our comprehensive Help documents and FAQs. Please make sure to go through them before reaching out for support.
+We encourage you to explore our comprehensive Help documents and FAQs before reaching out for support, as they often contain the answers to many common questions.
