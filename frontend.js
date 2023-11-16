@@ -3,10 +3,9 @@
 import React, { useEffect, useState, useCallback, createContext, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import axios from 'axios';
 import './styles.css';
 
-// Import the Loading Spinner, feedback prompt and helpsupport components
+// Import the Loading Spinner, feedback prompt and help support components
 import LoadingSpinner from './components/LoadingSpinner';
 import FeedbackPrompt from './components/FeedbackPrompt';
 import HelpSupport from './components/HelpSupport';
@@ -14,26 +13,14 @@ import HelpSupport from './components/HelpSupport';
 // Import newly created NavBar component for improved navigation 
 import NavBar from './components/NavBar';
 
+// Import API service for Axios calls 
+import * as apiService from './services/apiService'
+
 // Newly created context for state management
 const StateContext = createContext();
 
 // Define the ids of all pages we have
 const pageIds = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
-
-// Updated error handler to provide more specific error messages
-const errorHandler = (error) => {
-  if (!error.response) {
-    return {
-      errorMsg: `Error: Network Error`,
-      actionSuggestion: 'Please check your internet connection and refresh the page.'
-    };
-  } else {
-    return {
-      errorMsg: `Error: ${error.response.data.error}`, // Show error message directly from response
-      actionSuggestion: `Possible fix: ${error.response.data.solution}` // Suggest possible fixes from the response
-    };
-  }
-};
 
 const useCustomState = () => {
   // Now using useContext for state management
@@ -51,16 +38,16 @@ const StateProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   
-  // Updated Axios requests to use environment variables for complete backend url
+  // Fetch data moved to separate apiService file
   const fetchData = useCallback(() => {
     setIsLoading(true);
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/ai_predict`, { input: data })
+    apiService.getAiPredict({ input: data })
       .then(response => {
         setAiResponse(response.data.response); 
         setIsLoading(false);
       })
       .catch((error) => {
-        const { errorMsg, actionSuggestion } = errorHandler(error); 
+        const { errorMsg, actionSuggestion } = apiService.errorHandler(error); 
         console.error(`${errorMsg}. ${actionSuggestion}`);
         setError(`${errorMsg}. ${actionSuggestion}`); // Show error message and possible fix to user
         setIsLoading(false);
@@ -112,5 +99,6 @@ ReactDOM.render(
   document.getElementById('root')
 );
 // The updated code includes connection to the backend URL and PORT through environment variables.
-// This makes the code compatible with the Dockerized setup.
+// This makes the code compatible with the Dockerized setup. Also Axios calls are moved in separate apiService file 
+// to improve code organization and separation of concerns.
 ```

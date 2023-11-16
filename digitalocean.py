@@ -1,9 +1,15 @@
 import requests
 import json
+import os
 
-def get_droplets(api_key):
+# use the os module to read environment variables. This lets us store sensitive information in a secure way outside of 
+# our source code. 
+
+def get_droplets():
+    api_key = os.getenv('DOP_API_KEY')  
+    # Instead of hardcoding the API key, we're retrieving it from an environment variable. This is much more secure and flexible
     headers = {
-        'Authorization': f'Bearer {dop_v1_19b5e565d434cd27716aebb89e2f4f2d2ae90d9ef5b9f48616cfff819d8ec950}',
+        'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json',
     }
 
