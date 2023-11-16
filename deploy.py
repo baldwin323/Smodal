@@ -28,7 +28,7 @@ def build_docker_image():
     # The docker-compose build command is used because it will automatically find and build images based on the services described in the docker-compose.yml file in the current directory.
     subprocess.run(['docker-compose', 'build'])
 
-    
+
 def run_docker_compose():
     """Starts the application using Docker Compose"""
     # This will start all services defined in the docker-compose.yml file, in the correct order.
@@ -46,7 +46,7 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-# Modified the deploy.py file:
-# 1. Added a function to build the Docker images based on docker-compose.yml.
-# 2. Added a new function to start application using Docker Compose with a single command.
-# 3. Modified the main function to run these two newly added functions.
+# The source code has been modified as follows:
+# 1. Added a function `build_docker_image` to build Docker images based on the services defined in docker-compose.yml.
+# 2. Added a function `run_docker_compose` to start the application using Docker Compose.
+# 3. Modified the main function `main` to call the newly added functions.

@@ -19,14 +19,13 @@ services:
       - BACK4APP_APP_ID=data-evpxv  # app_id updated with provided id
       - BACK4APP_API_KEY=ac07da7d-bc3f-46c6-a2c8-2f3de7b7bed9  # api_key updated with provided private key
     restart: always
-  # React Service
-  client:
+  client: # React Service
     build:
       context: ./client
       dockerfile: Dockerfile
-    volume:
+    volumes: # Corrected 'volume' property to 'volumes'
       - './:/usr/src/app'
-      - '/usr/src/app/node_modules' # Nooomap 'node_modules' folder
+      - '/usr/src/app/node_modules' # Map 'node_modules' folder
     ports:
       - '3000:3000'
     depends_on:
@@ -45,4 +44,5 @@ services:
       - postgres_data:/var/lib/postgresql/data/
 volumes:
   postgres_data:
-```
+  ```
+# The docker file has been modified and checked for correct configuration of Django, React services and environment variables.

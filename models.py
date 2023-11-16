@@ -24,8 +24,10 @@ class FileUpload(models.Model):
         try:
             super().save(*args, **kwargs)
         except IntegrityError as e:
+            # This exception mainly occurs due to unique constraint violation.
             print(f"Integrity Error: {e}")
         except Exception as e:
+            # Catching all other exceptions
             print(f"An error occurred: {e}")
 
 
@@ -36,6 +38,7 @@ class Banking(models.Model):
         try:
             super().save(*args, **kwargs)
         except Exception as e:
+            # Catching all exceptions during save operation on banking model
             print(f"An error occurred while saving banking transaction: {e}")
 
 
@@ -48,6 +51,7 @@ class AIConversation(models.Model):
         try:
             super().save(*args, **kwargs)
         except Exception as e:
+            # Catching all exceptions during save operation on AIConversation model
             print(f"An error occurred while saving AI conversation: {e}")
 
 
@@ -59,4 +63,5 @@ class UIPageData(models.Model):
         try:
             super().save(*args, **kwargs)
         except Exception as e:
+            # Catching all exceptions during save operation on UIPageData model
             print(f"An error occurred while saving UI page data: {e}")
