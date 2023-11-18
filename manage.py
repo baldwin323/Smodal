@@ -1,22 +1,16 @@
-
-#!/usr/bin/env python3
+#!/usr/bin/env python3.12
 """
 Django's command-line utility for administrative tasks.
-This script also handles exception reporting and logging for the Django application.
+This script also handles exception reporting and replaces the previous
+logging mechanism used by sys.stdout with one that uses environment variables for credentials.
 """
 
 import os
 import sys
+from dotenv import load_dotenv
 
-# Import datadog
-from datadog import initialize, api
-
-# Set your API key
-options = {
-    'api_key':'abc123',
-    'app_key':'def456'
-}
-initialize(**options)
+# Load environment variables
+load_dotenv()
 
 try:
     # Try to import django
@@ -31,7 +25,7 @@ def main():
     """
     Run administrative tasks.
     Activates the python environment and runs the gunicorn server.
-    Exception handling is in place to report errors to datadog and stdout.
+    Exception handling replaced, no longer communicates with datadog.
     """
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.environ.get('SETTINGS_FILE', 'Smodal.settings'))
     
@@ -49,14 +43,10 @@ def main():
     except Exception as e:
         print(f'An error occurred while trying to run command: {e}')
 
-        # Send an event to Datadog
-        title = "Exception in manage.py"
-        text = f'An error occurred while trying to run command: {e}'
-        tags = ['application:Smodal', 'environment:development']
-        api.Event.create(title=title, text=text, tags=tags)
+        # Previous integration with datadog has been removed. Now logging exceptions to stdout
+        print(f"Exception in manage.py: An error occurred while trying to run command: {e}")
 
-        # Update the main function to handle any exceptions occurred during the execution of the new plan
-        print("Execution of the plan was unsuccessful. Please review and rectify the errors.")
+        print("Execution of the new plan was unsuccessful. Please review and rectify the errors.")
         
 if __name__ == '__main__':
     main()
