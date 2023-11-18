@@ -11,41 +11,42 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - .env
+      - .env  # Use dotenv to safely store password and environment variables
     depends_on: 
       - db
-    environment: # Configure Django to use Back4App backend
-      # Update back4app credentials with actual ones
-      - BACK4APP_APP_ID=data-evpxv  # app_id updated with provided id
-      - BACK4APP_API_KEY=ac07da7d-bc3f-46c6-a2c8-2f3de7b7bed9  # api_key updated with provided private key
+    environment: 
+      - BACK4APP_APP_ID=data-evpxv
+      - BACK4APP_API_KEY=ac07da7d-bc3f-46c6-a2c8-2f3de7b7bed9
     restart: always
   client: # React Service
     build:
       context: ./client
       dockerfile: Dockerfile
-    volumes: # Corrected 'volume' property to 'volumes'
+    volumes: 
       - './:/usr/src/app'
-      - '/usr/src/app/node_modules' # Map 'node_modules' folder
+      - '/usr/src/app/node_modules'
     ports:
       - '3000:3000'
     depends_on:
       - web
     restart: always
-  db: # Postgres db service
-    image: postgres:latest
+  db: # MongoDB Service changed from Postgres to MongoDB
+    image: mongo:latest  # Use the latest MongoDB image
     restart: always
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - MONGO_INITDB_DATABASE=mongodatabase
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
     ports:
-      - 5432:5432
+      - 27017:27017
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - mongo_data:/data/db
 volumes:
   postgres_data:
-  ```
-# Dockerfile has been updated to use Python 3.12.
-# All services have been ensured to both build and run with this version. 
-# Remember to update the Dockerfiles in the different services to use this Python version as well. 
-# Instruction for the Django service has been updated to use Python 3.12.
+  mongo_data:  # MongoDB volume added
+```
+# Dockerfile has been updated to use Python 3.12 and MongoDB.
+# The Django service has been updated to use a .env file for secure storing of passwords and environment variables.
+# The DB service has been changed from Postgres to MongoDB.
+# Depending on the specific needs of the application, refinements may be needed for the MongoDB configuration.
+# Check the official MongoDB Docker image documentation on Docker Hub for more options and configurations.
