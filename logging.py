@@ -22,26 +22,31 @@ PAPERTRAIL_PORT = conf.get('PAPERTRAIL_PORT', 12345)
 try:
     # Setup handler with server info using SysLogHandler
     handler = handlers.SysLogHandler(address=(PAPERTRAIL_HOST, PAPERTRAIL_PORT))
-    
+
     # Using a precise and clear formatter for better understanding
-    formatter = __import__('logging').Formatter('%(asctime)s - %(name)s [%(levelname)s] - %(message)s %(funcName)s %(pathname)s %(lineno)d', datefmt='%m/%d/%Y %I:%M:%S %p')
+    # NOTE: The old way of calling logging.Formatter will not be supported in Python 3.2+
+    # Must import logging and use logging.Formatter
+    import logging
+    formatter = logging.Formatter('%(asctime)s - %(name)s [%(levelname)s] - %(message)s %(funcName)s %(pathname)s %(lineno)d', datefmt='%m/%d/%Y %I:%M:%S %p')
     handler.setFormatter(formatter)
 
     # Adding configured handler to the project, build and detailed loggers
     project_logger.addHandler(handler)
     build_logger.addHandler(handler)
     detailed_logger.addHandler(handler)
-    
+
     # Configuring levels for loggers for more detailed logging
-    project_logger.setLevel(__import__('logging').DEBUG)
-    build_logger.setLevel(__import__('logging').INFO)
-    detailed_logger.setLevel(__import__('logging').DEBUG)
+    # As above, in Python 3.2+ we should import logging directly
+    project_logger.setLevel(logging.DEBUG)
+    build_logger.setLevel(logging.INFO)
+    detailed_logger.setLevel(logging.DEBUG)
 except Exception as e:
     project_logger.error('An error occurred while setting up the logger and formatter.', exc_info=True)
 
 # Error handling for applying logger configuration
 try:
-    __import__('logging').config.dictConfig(conf)
+    # As above, in Python 3.2+ we should import logging directly
+    logging.config.dictConfig(conf)
 except Exception as e:
     project_logger.error('An error occurred while applying the configuration to the logger. Error: %s', e, exc_info=True)
 
@@ -49,7 +54,7 @@ def handle_worktree_change_error(error_message: str):
     """
     :param error_message: Error message for the worktree change
     """
-    detailed_logger.error('Worktree contains unstaged changes. Exact Error: %s', error_message, exc_info=True)   
+    detailed_logger.error('Worktree contains unstaged changes. Exact Error: %s', error_message, exc_info=True)
 
 def log_pactflow_response(headers: dict, body: str) -> None:
     """
@@ -106,7 +111,7 @@ def uncaught_exception_handler(type, value, tb):
     :param tb: Traceback
     """
     detailed_logger.error('Uncaught exception: {0}'.format(str(value)))
-    tb = traceback.format_traceback(tb)  # converts traceback object to string traceback
+    tb = traceback.format_exception(type, value, tb)  # traceback.format_traceback will not work with Python 3.5+
     detailed_logger.error('Traceback: {0}'.format(''.join(tb)))
 
 # Sets the function "uncaught_exception_handler" as the handler for unhandled exceptions

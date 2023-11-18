@@ -53,7 +53,7 @@ def modify_pull_request(repository, number, title=None):
     except Exception as error:
         # Log the error in case of any issue while modifying the pull request
         LOGGER.error("Failed to change pull request #%s title from %s: %s", number, repository, error)
-        
+
         return JsonResponse({'error': str(error)}, status=400)
 
 # Django view class for handling homepage requests
@@ -137,3 +137,4 @@ urlpatterns = [
     path('takeover/', ChatTakeOverView.as_view(), name='takeover'),
     path('modal/', ModalDisplayView.as_view(), name='modal'),
 ]
+# No specific changes required for python 3.12 compatibility

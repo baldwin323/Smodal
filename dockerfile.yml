@@ -5,7 +5,7 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python3.12 manage.py runserver 0.0.0.0:8000  # Updated Python version to 3.12
     volumes:
       - .:/code
     ports:
@@ -45,4 +45,5 @@ services:
 volumes:
   postgres_data:
   ```
-# The docker file has been modified and checked for correct configuration of Django, React services and environment variables.
+# Ensure the Dockerfile is fetched from updated github repository where Dockerfile contains instruction to install latest pip and Python3.12.
+# Modified Python command version to align with the updated python version.
