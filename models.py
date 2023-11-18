@@ -1,3 +1,5 @@
+# Ensuring all Django models are compatible with python 3.12.
+
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.contrib.postgres.fields import ArrayField
@@ -6,8 +8,9 @@ import secrets
 from django.db.utils import IntegrityError
 import os
 
-os.getenv('DB_HOST', 'localhost')
-os.getenv('DB_PORT', '5432')
+# Using get() to fetch environment variables
+os.environ.get('DB_HOST', 'localhost')
+os.environ.get('DB_PORT', '5432')
 
 class UserProfile(models.Model):
     birth_date = models.DateField(blank=True, null=True, db_index=True)  
