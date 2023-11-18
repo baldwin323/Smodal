@@ -3,20 +3,18 @@
 """
 Django's command-line utility for administrative tasks.
 This script also handles exception reporting and logging for the Django application.
+Now utilizing MongoDB for these functionalities.
 """
 
 import os
 import sys
 
-# Import datadog
-from datadog import initialize, api
+# Import pymongo
+from pymongo import MongoClient
 
-# Set your API key
-options = {
-    'api_key':'abc123',
-    'app_key':'def456'
-}
-initialize(**options)
+# Create a connection to MongoDB
+client = MongoClient("mongodb+srv://username:password@cluster.region.mongodb.net/database?retryWrites=true&w=majority") 
+db = client['database_name']
 
 try:
     # Try to import django
@@ -26,12 +24,12 @@ except ModuleNotFoundError:
     # Log the error and exit if import fails
     print("Error: Django module not found.")
     exit(1)
-
+    
 def main():
     """
     Run administrative tasks.
     Activates the python environment and runs the gunicorn server.
-    Exception handling is in place to report errors to datadog and stdout.
+    Exception handling is in place to report errors to MongoDB and stdout.
     """
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.environ.get('SETTINGS_FILE', 'Smodal.settings'))
     
@@ -49,11 +47,14 @@ def main():
     except Exception as e:
         print(f'An error occurred while trying to run command: {e}')
 
-        # Send an event to Datadog
-        title = "Exception in manage.py"
-        text = f'An error occurred while trying to run command: {e}'
-        tags = ['application:Smodal', 'environment:development']
-        api.Event.create(title=title, text=text, tags=tags)
+        # Instead of sending the exception to datadog, now insert it into the MongoDB
+        collection = db['errors']
+        error_report = {
+            'title': "Exception in manage.py",
+            'text': f'An error occurred while trying to run command: {e}',
+            'tags': ['application:Smodal', 'environment:development']
+        }
+        collection.insert_one(error_report)
 
         # Update the main function to handle any exceptions occurred during the execution of the new plan
         print("Execution of the plan was unsuccessful. Please review and rectify the errors.")
