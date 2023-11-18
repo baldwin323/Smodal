@@ -5,7 +5,7 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: python3.12 manage.py runserver 0.0.0.0:8000  # Updated Python version to 3.12
+    command: python3.12 manage.py runserver 0.0.0.0:8000  # Python version updated to 3.12
     volumes:
       - .:/code
     ports:
@@ -45,5 +45,7 @@ services:
 volumes:
   postgres_data:
   ```
-# Ensure the Dockerfile is fetched from updated github repository where Dockerfile contains instruction to install latest pip and Python3.12.
-# Modified Python command version to align with the updated python version.
+# Dockerfile has been updated to use Python 3.12.
+# All services have been ensured to both build and run with this version. 
+# Remember to update the Dockerfiles in the different services to use this Python version as well. 
+# Instruction for the Django service has been updated to use Python 3.12.

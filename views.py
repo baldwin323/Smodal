@@ -5,6 +5,7 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST  # Added this to enforce POST request method where required
 from django.views.debug import ExceptionReporter
 from django.contrib.auth.models import User
 from .lambda_functions import register_affiliate_manager, monitor_affiliated_models, give_credit
@@ -84,14 +85,16 @@ def load_dashboard(request):
     dashboard_data = load_user_dashboard(user_id, SERVICES_ADDRESS, SERVICES_PORT)
     return JsonResponse(dashboard_data)
 
+@require_POST  # Ensure POST method is used
 def login_user(req):
     """
     Handle User Login
     """
-    if req.method == 'POST':
+    if req.method == "POST":
         response = handle_user_login(req.POST, SERVICES_ADDRESS, SERVICES_PORT)
         return JsonResponse(response)
     else:
+        # Unnecessary now due to require_POST decorator
         return JsonResponse({"status": "error", "message": "You must submit a POST request."}, status=400)
 
 def offline_login(req):

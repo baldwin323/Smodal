@@ -33,7 +33,7 @@ class LambdaFunctionsTest(TestCase):
 
 
 class SmodalTest(TestCase):
-   # existing tests ...
+   # existing tests...
   
     # Function to test the register_affiliate_manager lambda function
     def test_register_affiliate_manager(self):
@@ -50,36 +50,37 @@ class SmodalTest(TestCase):
         response = give_credit(*self.args, **self.kwargs)
         self.assertEqual(response, 'expected response')
 
-    # additional tests to handle error cases
+    # Additional tests to handle error cases - To ensure compatibility with Python 3.12 and handle any exceptions that may arise due to the version upgrade
+    # These tests check if correct exceptions are being handled when non-valid information is passed
     def test_handle_errors(self):
         # Testing load_dashboard with non-valid request
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
             load_dashboard('fake_request')
 
         # Testing login_user with non-valid request
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
             login_user('fake_request')
 
         # Testing logout_user with non-valid request
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
             logout_user('fake_request')
 
         # Testing form_submit with non-valid request
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
             form_submit('fake_request')
 
         # Testing file_upload with non-valid request
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
             file_upload('fake_request')
 
         # Testing user_activity with non-valid request
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
             user_activity('fake_request')
 
         # Testing banking with non-valid request
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
             banking('fake_request')
 
         # Testing serve with non-valid request and page
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
             serve('fake_request', 'fake_page')

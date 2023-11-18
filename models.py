@@ -12,6 +12,7 @@ import os
 os.environ.get('DB_HOST', 'localhost')
 os.environ.get('DB_PORT', '5432')
 
+
 class UserProfile(models.Model):
     birth_date = models.DateField(blank=True, null=True, db_index=True)  
     image = models.ImageField(upload_to='profile_images/', blank=True)

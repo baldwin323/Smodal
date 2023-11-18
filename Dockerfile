@@ -2,7 +2,8 @@
 # The application is assembled with necessary dependencies and proper configurations, thanks to a carefully phased build process.
 
 # The build process is initiated from a base image containing Python 3.8, setting up the Django backend.
-FROM python:3.8-alpine as backend
+# Updated python version to 3.12 as per the instruction  
+FROM python:3.12-alpine as backend
 
 # Defining the work directory in Docker as /app
 WORKDIR /app
