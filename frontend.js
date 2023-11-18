@@ -38,23 +38,21 @@ const StateProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
-  
-  // Fetch data moved to separate apiService file
-  const fetchData = useCallback(() => {
-    setIsLoading(true);
-    apiService.getAiPredict({ input: data })
-      .then(response => {
-        setAiResponse(response.data.response);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        const { errorMsg, actionSuggestion } = apiService.errorHandler(error);
-        console.error(`${errorMsg}. ${actionSuggestion}`);
-        setError(`${errorMsg}. ${actionSuggestion}`);
-        setIsLoading(false);
-      });
-  }, [data]);
 
+  // Fetch data moved to separate apiService file
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await apiService.getAiPredict({ input: data });
+      setAiResponse(response.data.response);
+    } catch (fetchError) {
+      const { errorMsg, actionSuggestion } = apiService.errorHandler(fetchError);
+      console.error(`${errorMsg}. ${actionSuggestion}`);
+      setError(`${errorMsg}. ${actionSuggestion}`);
+    }
+    setIsLoading(false);
+  }, [data]);
+  
   useEffect(() => {
     fetchData();
   }, [currentPageIndex, fetchData]);
@@ -72,18 +70,16 @@ const MainPage = () => {
   const { currentPageIndex, setCurrentPageIndex, fetchData, error, isLoading, aiResponse } = useCustomState();
 
   const handlePrevClick = useCallback(() => {
-    setShowError(false);
     setCurrentPageIndex(currentPageIndex - 1);
   }, [setCurrentPageIndex, currentPageIndex]);
 
   const handleNextClick = useCallback(() => {
-    setShowError(false);
     setCurrentPageIndex(currentPageIndex + 1);
   }, [setCurrentPageIndex, currentPageIndex]);
 
   useEffect(() => {
     fetchData();
-  }, [fetchData, handleNextClick, handlePrevClick]);
+  }, [fetchData]);
 
   return (
     <div className="app-container">
@@ -101,6 +97,8 @@ const MainPage = () => {
   );
 }
 
+// Wrap MainPage with Router and StateProvider, 
+// and map pageIds to Routes with MainPage serving as a template
 ReactDOM.render(
   <Router>
     <StateProvider>
@@ -116,9 +114,7 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root')
 );
-// Code refactor which includes moving relevant functions into useCallback and useEffect hooks.
-// This optimizes the code and removes unnecessary rerenders.
-// Dependencies have been added to useEffect hooks to ensure accurate execution.
-// The Error handling has been improved to display an error message upon AJAX request failure.
-// The Axios API call has been separated into its own service (apiService.js) to streamline the MainPage component.
+// Optimized the code and made it more compatible with the latest React conventions.
+// The fetchData method is now asynchronous, turning the Promise-based structure into an async/await one.
+// Removed redundant dependencies from the useEffect call in MainPage, avoiding unnecessary re-renders.
 ```
