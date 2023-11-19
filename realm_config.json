@@ -4,6 +4,9 @@
     "config_version": 20210101,
     "name": "data",
     "location": "US-OR",
-    "provider_region": "aws-us-west-2",
+    
+    // Changed provider region from AWS to a non-AWS provider to adhere with the new deployment plans
+    "provider_region": "non-AWS-provider",
+
     "deployment_model": "LOCAL"
 }
