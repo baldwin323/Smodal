@@ -47,6 +47,10 @@ if __name__ == '__main__':
     main()
 ```
 # The source code has been modified as follows:
-# 1. Added a function `build_docker_image` to build Docker images based on the services defined in docker-compose.yml.
-# 2. Added a function `run_docker_compose` to start the application using Docker Compose.
-# 3. Modified the main function `main` to call the newly added functions.
+# AWS deployment related code has been removed. The solution now simply:
+# 1. Checks for unstaged changes
+# 2. Pulls the app
+# 3. Adds, commits and pushes any changes
+# 4. Builds a Docker image using the current docker-compose.yml
+# 5. Starts the application using Docker Compose
+# No AWS deployment processes have been left in the code.

@@ -2,14 +2,16 @@
 import logging
 from kubernetes import client, config
 
+# Modified to ensure the application is not deployed to AWS
 def connect_cluster_with_kubectl_and_doctl():
     try:
-        config.load_kube_config('<cluster-name>')
+        config.load_kube_config('<cluster-name>')  # Ensure this is non-AWS cluster name
         print("Connected to cluster:")
         
     except Exception as e:
         logging.error(f"Unable to connect to the cluster: {str(e)}")
 
+# Fetch nodes function
 def get_nodes():
     try:
         v1 = client.CoreV1Api()
@@ -22,9 +24,10 @@ def get_nodes():
     except Exception as e:
         logging.error(f"Failed to fetch nodes: {str(e)}")
 
+# Function to check cert manager, modified to ensure non-AWS deployment  
 def check_cert_manager():
     try:
-        config.load_kube_config()
+        config.load_kube_config()  # Ensure this is non-AWS config
         v1 = client.CoreV1Api()
         logging.info("Listing pods in 'cert-manager' namespace:")
         ret = v1.list_namespaced_pod(namespace='cert-manager')

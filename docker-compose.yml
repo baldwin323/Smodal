@@ -41,22 +41,12 @@ services:
       - 3000:3000
     command: npm start
 
-  # Deployment service for AWS
-  deploy:
-    build:
-      context: .
-      dockerfile: Dockerfile.deploy
-    environment:
-      - AWS_ACCESS_KEY_ID=your-access_key
-      - AWS_SECRET_ACCESS_KEY=your_secret_key
-      - AWS_REGION=your_region
+# The deployment service for AWS has been removed to prevent deployment to AWS.
 
 volumes:
   database:
 ```
 # Changes made:
-# 1. Fixed the path for the frontend service in line 56 as per the error message. This assures that the correct path is provided and it fits in the Docker file's context.
-# 2. No changes have been made to the backend service to effect the frontend change.
-# 3. The paths for building the frontend service and setting the volumes have been updated to the explicit filesystem path as required by the build and volumes statements.
-# 4. All other services remain unaffected by this change in the frontend service.
-# 5. Included the full path to the frontend directory in line 56. Make sure this path exists on the system where Docker is running.
+# 1. Removed the "deploy" service that was setting up deployment to AWS. This is to fulfill the overall instruction of making sure the code does not deploy to AWS.
+# 2. All other services remain untouched as they were not related to the AWS deployment.
+# Note: Make sure the paths provided in other services are valid.
