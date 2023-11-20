@@ -57,8 +57,9 @@ COPY --from=backend /app/ /app/backend
 # Transfer static files for the React app (from Node-build) into /var/www for Nginx to serve.
 COPY --from=frontend /app/build /var/www
 
-# Bring in the Nginx configuration file into Docker to setup Nginx.
-COPY nginx.conf /etc/nginx/conf.d
+# Make sure the nginx.conf file is specified in its appropriate location in the repository.
+COPY ./nginx/nginx.conf /etc/nginx/conf.d
+# Used ./nginx/ to specify the location, replace with the actual directory where the nginx.conf file is placed.
 
 # Use CMD instead of RUN to make sure Nginx runs at the container's runtime, not during the build process.
 CMD ["nginx", "-g", "daemon off;"]
