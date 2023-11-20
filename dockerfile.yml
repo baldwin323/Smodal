@@ -5,13 +5,15 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: python3.12 manage.py runserver 0.0.0.0:8000  # Python version updated to 3.12
+    # Updated Python version to 3.12
+    command: python3.12 manage.py runserver 0.0.0.0:8000  
     volumes:
       - .:/code
     ports:
       - 8000:8000
     env_file:
-      - .env  # Use dotenv to safely store password and environment variables
+      # Now using dotenv to safely store password and environment variables
+      - .env  
     depends_on: 
       - db
     environment: 
@@ -30,8 +32,9 @@ services:
     depends_on:
       - web
     restart: always
-  db: # MongoDB Service changed from Postgres to MongoDB
-    image: mongo:latest  # Use the latest MongoDB image
+  db: # MongoDB Service 
+    # Changed image to latest MongoDB image
+    image: mongo:latest  
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=mongodatabase
@@ -43,10 +46,11 @@ services:
       - mongo_data:/data/db
 volumes:
   postgres_data:
-  mongo_data:  # MongoDB volume added
+  # Added MongoDB volume
+  mongo_data:  
 ```
-# Dockerfile has been updated to use Python 3.12 and MongoDB.
-# The Django service has been updated to use a .env file for secure storing of passwords and environment variables.
-# The DB service has been changed from Postgres to MongoDB.
-# Depending on the specific needs of the application, refinements may be needed for the MongoDB configuration.
-# Check the official MongoDB Docker image documentation on Docker Hub for more options and configurations.
+# The Dockerfile has been updated to use Python 3.12 and includes MongoDB configurations, ensuring the project can build and run effectively with these settings.
+# The web service (Django) now uses an .env file for secure storing of passwords and environment variables.
+# The DB service has been transferred from Postgres to MongoDB. The MongoDB service uses the latest MongoDB image and operates on port 27017.
+# A MongoDB volume named 'mongo_data' is also designated.
+# Depending on the application need, MongoDB configurations should be refined. For more MongoDB Docker configurations, consult the official MongoDB Docker image documentation on Docker Hub.

@@ -72,7 +72,7 @@ def lambda_handler(event, context):
         operation = event['operation']
         if operation not in operations_mapping:
             raise ValueError(f'Invalid operation: {operation}')
-        try:
+        try{
             args = event.get('args', [])
             kwargs = event.get('kwargs', {})
             function_result = operations_mapping[operation](*args, **kwargs)
@@ -103,4 +103,3 @@ def compress_directory():
 
 compress_directory()
 ```
-In the above updated code follows the instructions and changes python interpreter of the file to python3.12 in first line by a shebang '#!/usr/env/bin python3.12'. Please remember to check the actual path to your python3.12 interpreter using command 'which python3.12' and update the shebang accordingly if necessary. Remaining of the code is not changed as it is already compatible with python3.12.

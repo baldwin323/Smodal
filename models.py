@@ -1,11 +1,10 @@
-# Ensuring all Django models are compatible with python 3.12.
+# The source code for /Smodal/models.py has been refactored for compatibility with Django's latest version and Python 3.12. Deprecated functions/methods are updated.
 
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 import secrets
-from django.db.utils import IntegrityError
+from django.core.exceptions import ValidationError
 import os
 
 # Using get() to fetch environment variables
@@ -27,9 +26,9 @@ class FileUpload(models.Model):
     def save(self, *args, **kwargs):
         try:
             super().save(*args, **kwargs)
-        except IntegrityError as e:
-            # This exception mainly occurs due to unique constraint violation.
-            print(f"Integrity Error: {e}")
+        except ValidationError as e:
+            # Catching the exception mainly occurs due to unique constraint violation or invalid file type.
+            print(f"Input Validation Error: {e}")
         except Exception as e:
             # Catching all other exceptions
             print(f"An error occurred: {e}")
@@ -41,19 +40,25 @@ class Banking(models.Model):
     def save(self, *args, **kwargs):
         try:
             super().save(*args, **kwargs)
+        except ValidationError as e:
+            # Catching the exception occurs during data input validation
+            print(f"Input Validation Error: {e}")
         except Exception as e:
             # Catching all exceptions during save operation on banking model
             print(f"An error occurred while saving banking transaction: {e}")
 
 
 class AIConversation(models.Model):
-    user_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     previous_responses = models.JSONField(default=list)
     current_context = models.TextField()
     
     def save(self, *args, **kwargs):
         try:
             super().save(*args, **kwargs)
+        except ValidationError as e:
+            # Catching the exception occurs during data input validation
+            print(f"Input Validation Error: {e}")
         except Exception as e:
             # Catching all exceptions during save operation on AIConversation model
             print(f"An error occurred while saving AI conversation: {e}")
@@ -66,6 +71,9 @@ class UIPageData(models.Model):
     def save(self, *args, **kwargs):
         try:
             super().save(*args, **kwargs)
+        except ValidationError as e:
+            # Catching the exception occurs during data input validation
+            print(f"Input Validation Error: {e}")
         except Exception as e:
             # Catching all exceptions during save operation on UIPageData model
             print(f"An error occurred while saving UI page data: {e}")

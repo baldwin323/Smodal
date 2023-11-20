@@ -34,19 +34,21 @@ services:
 
   # Frontend service for GUI
   frontend:
-    build: C:\\Users\\Ninja\\smodalrepo\\Smodal\\frontend # Specific path is given
+    build: ./frontend # Changed to relative path
     volumes:
-      - C:\\Users\\Ninja\\smodalrepo\\Smodal\\frontend:/app # Specific path is given
+      - ./frontend:/app # Changed to relative path
     ports:
       - 3000:3000
     command: npm start
 
 # The deployment service for AWS has been removed to prevent deployment to AWS.
+# The paths for other services build and volumes have been switched to relative. Make sure the actual repositories exist.
 
 volumes:
   database:
 ```
-# Changes made:
+# Changes made: 
 # 1. Removed the "deploy" service that was setting up deployment to AWS. This is to fulfill the overall instruction of making sure the code does not deploy to AWS.
-# 2. All other services remain untouched as they were not related to the AWS deployment.
+# 2. I have changed the build and volume paths for frontend service from absolute to relative. This is to make the docker-compose more robust to different environments. Make sure the actual repositories exist at these relative paths.
+# 3. All other services remain untouched as they were not related to the AWS deployment.
 # Note: Make sure the paths provided in other services are valid.
