@@ -1,8 +1,14 @@
 ```yaml
-version: '3'  
+# This is the Docker Compose file for Smodal Application
+# It defines the services that make up this application and their respective configurations
+
+version: '3'
+
+# Defining the services of our application
 services:     
 
-  # Service for Django App
+  # Django Application Service
+  # This involves running our Django Application on port 8000
   app:
     build: 
       context: .
@@ -15,7 +21,9 @@ services:
     command: > 
       sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
   
-  # Backend service for separate business logic (if any)
+  # Backend Service
+  # This service is responsible for handling separate business logic, if any present
+  # This service also operates on port 8000
   backend:
     build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
@@ -32,23 +40,28 @@ services:
       - DB_PASSWORD=your_db_password
       - BACKEND_URL=your_backend_url
 
-  # Frontend service for GUI
+  # Frontend Service
+  # This service is responsible for running our front-end GUI on port 3000
   frontend:
-    build: ./frontend # Changed to relative path
+    build: ./frontend # Relative path
     volumes:
-      - ./frontend:/app # Changed to relative path
+      - ./frontend:/app # Relative path
     ports:
       - 3000:3000
     command: npm start
 
+
 # The deployment service for AWS has been removed to prevent deployment to AWS.
-# The paths for other services build and volumes have been switched to relative. Make sure the actual repositories exist.
+# The paths for the frontend service build and volumes have been switched to relative, making the composition more robust against different environment settings.
+# All existing services remain untouched as they were not associated with AWS deployment.
+# Ensure that the path provided in other services is accurate and accessible.
 
 volumes:
   database:
 ```
-# Changes made: 
-# 1. Removed the "deploy" service that was setting up deployment to AWS. This is to fulfill the overall instruction of making sure the code does not deploy to AWS.
-# 2. I have changed the build and volume paths for frontend service from absolute to relative. This is to make the docker-compose more robust to different environments. Make sure the actual repositories exist at these relative paths.
-# 3. All other services remain untouched as they were not related to the AWS deployment.
-# Note: Make sure the paths provided in other services are valid.
+# Note: Ensure the offered repositories in relative paths actually exist.
+# The services defined are in brief:
+# 1) app service: responsible for running Django
+# 2) backend service: looking after distinct business logic
+# 3) frontend service: managing front-end GUI
+# This Docker Compose thus provides a clear definition and organization of the service side for the application.

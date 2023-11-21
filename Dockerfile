@@ -25,6 +25,7 @@ RUN wget https://ca.dynatrace.com/dt-root.cert.pem ; ( echo 'Content-Type: multi
 RUN /bin/sh Dynatrace-OneAgent-Linux-1.277.165.20231024-150054.sh --set-monitoring-mode=fullstack --set-app-log-content-access=true
 
 # Django is set to run on port 8000; therefore, it's exposed to the network.
+# This is the primary service for our backend operation
 EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
@@ -41,6 +42,7 @@ COPY ./frontend .
 RUN npm install
 
 # The React server will run on port 3000, so the port is exposed.
+# This is the primary service for our frontend operation
 EXPOSE 3000
 RUN npm run build
 
@@ -49,6 +51,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Nginx listens on port 80, creating a gateway for our application to the network.
+# This service serves as a reverse proxy routing requests to our backend and frontend services
 EXPOSE 80
 
 # Copy the Django app from the working directory into /app/backend in our Docker image.
