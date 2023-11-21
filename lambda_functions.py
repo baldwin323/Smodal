@@ -34,7 +34,7 @@ def api_call(endpoint, payload=None, method="GET"):
         api_response = requests.request(method, base_api_url + endpoint, headers=headers, 
                                         data=json.dumps(payload) if payload else None)
         api_response.raise_for_status()
-        return api_response.json() 
+        return api_response.json()
     except requests.exceptions.HTTPError as http_err:
         application_logger.error("HTTP Error occurred during API call: %s", http_err)
         return None
@@ -72,7 +72,7 @@ def lambda_handler(event, context):
         operation = event['operation']
         if operation not in operations_mapping:
             raise ValueError(f'Invalid operation: {operation}')
-        try{
+        try:
             args = event.get('args', [])
             kwargs = event.get('kwargs', {})
             function_result = operations_mapping[operation](*args, **kwargs)
@@ -92,6 +92,7 @@ def lambda_handler(event, context):
             'body': json.dumps({'error': str(e)})
         }
 
+# Efficiently compresses directories into a zip for deployment
 def compress_directory():
     directory_name = '.'
     zip_file_object = zipfile.ZipFile('lambda_functions.zip', 'w', zipfile.ZIP_DEFLATED)
@@ -101,5 +102,6 @@ def compress_directory():
             zip_file_object.write(file)
     zip_file_object.close()
 
+# Call function to compress the directory
 compress_directory()
 ```

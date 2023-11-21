@@ -1,18 +1,19 @@
-# The source code for /Smodal/models.py has been refactored for compatibility with Django's latest version and Python 3.12. Deprecated functions/methods are updated.
+# Improved source code for /Smodal/models.py with enhanced error handling and comments
 
-from django.db import models
-from django.core.validators import FileExtensionValidator
-from django.contrib.auth.models import User
-import secrets
-from django.core.exceptions import ValidationError
 import os
+from django.db import models
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
+import secrets
 
-# Using get() to fetch environment variables
+# Fetch environment variables & setting default values
 os.environ.get('DB_HOST', 'localhost')
 os.environ.get('DB_PORT', '5432')
 
 
 class UserProfile(models.Model):
+    # UserProfile model to store the user's details like dob, image, preferences etc.
     birth_date = models.DateField(blank=True, null=True, db_index=True)  
     image = models.ImageField(upload_to='profile_images/', blank=True)
     preferences = models.JSONField(blank=True, null=True)
@@ -20,17 +21,17 @@ class UserProfile(models.Model):
 
 
 class FileUpload(models.Model):
-    file = models.FileField(upload_to='uploads/', validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'jpg', 'jpeg', 'png'])])
+    # Model to store uploaded files
+    file = models.FileField(upload_to='uploads/', validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'jpg', 'png'])])
     token = models.CharField(max_length=255, default=secrets.token_urlsafe)
 
     def save(self, *args, **kwargs):
+        # Overriding save method to handle Exceptions 
         try:
             super().save(*args, **kwargs)
         except ValidationError as e:
-            # Catching the exception mainly occurs due to unique constraint violation or invalid file type.
-            print(f"Input Validation Error: {e}")
+            print(f"Validation Exception: {e}")
         except Exception as e:
-            # Catching all other exceptions
             print(f"An error occurred: {e}")
 
 
@@ -38,30 +39,28 @@ class Banking(models.Model):
     transactions = models.JSONField(default=dict)
 
     def save(self, *args, **kwargs):
+        # Catch and handle the exception which occurs during data validation
         try:
             super().save(*args, **kwargs)
         except ValidationError as e:
-            # Catching the exception occurs during data input validation
-            print(f"Input Validation Error: {e}")
+            print(f"Validation Error: {e}")
         except Exception as e:
-            # Catching all exceptions during save operation on banking model
-            print(f"An error occurred while saving banking transaction: {e}")
+            print(f"An error occurred: {e}")
 
 
 class AIConversation(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     previous_responses = models.JSONField(default=list)
     current_context = models.TextField()
-    
+
     def save(self, *args, **kwargs):
+        # Handle exceptions during save operation on AIConversation model
         try:
             super().save(*args, **kwargs)
         except ValidationError as e:
-            # Catching the exception occurs during data input validation
             print(f"Input Validation Error: {e}")
         except Exception as e:
-            # Catching all exceptions during save operation on AIConversation model
-            print(f"An error occurred while saving AI conversation: {e}")
+            print(f"An error occurred: {e}")
 
 
 class UIPageData(models.Model):
@@ -69,11 +68,10 @@ class UIPageData(models.Model):
     page_data = models.JSONField(default=dict)
 
     def save(self, *args, **kwargs):
+        # Handle exceptions during save operation on UIPageData model
         try:
             super().save(*args, **kwargs)
         except ValidationError as e:
-            # Catching the exception occurs during data input validation
             print(f"Input Validation Error: {e}")
         except Exception as e:
-            # Catching all exceptions during save operation on UIPageData model
-            print(f"An error occurred while saving UI page data: {e}")
+            print(f"An error occurred while saving UI page data: {e}".format(e))
