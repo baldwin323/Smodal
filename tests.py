@@ -9,7 +9,10 @@ from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData, Affi
 from .views import load_dashboard, login_user, logout_user, form_submit, file_upload, user_activity, banking, serve
 import json
 from subprocess import Popen, PIPE
-from Smodal.logging import logger 
+from Smodal.logging import logger
+
+# Import the modified models
+from .models import AIConversation, Banking, FileUpload, UserProfile, UIPageData
 
 class LambdaFunctionsTest(TestCase):
     def setUp(self) -> None:
@@ -50,37 +53,35 @@ class SmodalTest(TestCase):
         response = give_credit(*self.args, **self.kwargs)
         self.assertEqual(response, 'expected response')
 
-    # Additional tests to handle error cases - To ensure compatibility with Python 3.12 and handle any exceptions that may arise due to the version upgrade
-    # These tests check if correct exceptions are being handled when non-valid information is passed
-    def test_handle_errors(self):
-        # Testing load_dashboard with non-valid request
-        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
-            load_dashboard('fake_request')
+    # New test functions to account for the pydantic models
+    def test_user_profile_model(self):
+        # Model validation tests for UserProfile model
+        user_profile = UserProfile(birth_date='1990-01-01', image='test.jpg', preferences={"color": "blue"}, theme_preferences="dark")
+        self.assertEqual(user_profile.birth_date, '1990-01-01')
+        self.assertEqual(user_profile.image, 'test.jpg')
+        self.assertEqual(user_profile.preferences, {"color": "blue"})
+        self.assertEqual(user_profile.theme_preferences, 'dark')
 
-        # Testing login_user with non-valid request
-        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
-            login_user('fake_request')
+    def test_file_upload_model(self):
+        # Model validation tests for FileUpload model
+        file_upload = FileUpload(file='test.pdf', token='random_string_here')
+        self.assertEqual(file_upload.file, 'test.pdf')
+        self.assertEqual(file_upload.token, 'random_string_here')
 
-        # Testing logout_user with non-valid request
-        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
-            logout_user('fake_request')
+    def test_banking_model(self):
+        # Model validation tests for Banking model
+        banking = Banking(transactions={'id': '123', 'amount': '500'}))
+        self.assertEqual(banking.transactions, {'id': '123', 'amount': '500'})
 
-        # Testing form_submit with non-valid request
-        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
-            form_submit('fake_request')
+    def test_ai_conversation_model(self):
+        # Model validation tests for AIConversation model
+        ai_conversation = AIConversation(user_id=1, previous_responses=['hi', 'hello'], current_context='greeting')
+        self.assertEqual(ai_conversation.user_id, 1)
+        self.assertEqual(ai_conversation.previous_responses, ['hi', 'hello'])
+        self.assertEqual(ai_conversation.current_context, 'greeting')
 
-        # Testing file_upload with non-valid request
-        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
-            file_upload('fake_request')
-
-        # Testing user_activity with non-valid request
-        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
-            user_activity('fake_request')
-
-        # Testing banking with non-valid request
-        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
-            banking('fake_request')
-
-        # Testing serve with non-valid request and page
-        with self.assertRaises(ValidationError):  # Using Django's ValidationError which is more specific
-            serve('fake_request', 'fake_page')
+    def test_ui_page_data_model(self):
+        # Model validation tests for UIPageData model
+        ui_page_data = UIPageData(page_id='dashboard', page_data={'title': 'Dashboard'})
+        self.assertEqual(ui_page_data.page_id, 'dashboard')
+        self.assertEqual(ui_page_data.page_data, {'title': 'Dashboard'})

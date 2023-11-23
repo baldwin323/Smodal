@@ -1,8 +1,8 @@
+from pydantic import BaseModel, ValidationError
+from Smodal.models import UserProfile, FileUpload, Banking, AIConversation, UIPageData
+from pydantic.error_wrappers import ErrorWrapper, ValidationError
+from typing import Any, Dict, Union
 import logging
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
-from django.views import View
-from django.urls import path
 from github import Github
 from Smodal.logging import logger 
 
@@ -30,7 +30,7 @@ def fetch_open_pull_requests(repository):
     except Exception as error:
         # Log the error in case of any issue while fetching pull requests
         LOGGER.error("Failed to fetch open pull requests from %s: %s", repository, error)
-        return JsonResponse({'error': str(error)}, status=400)
+        return {'error': str(error)}, 400
 
 # This function modifies the title of a pull request
 def modify_pull_request(repository, number, title=None):
@@ -54,87 +54,37 @@ def modify_pull_request(repository, number, title=None):
         # Log the error in case of any issue while modifying the pull request
         LOGGER.error("Failed to change pull request #%s title from %s: %s", number, repository, error)
 
-        return JsonResponse({'error': str(error)}, status=400)
+        return {'error': str(error)}, 400
 
-# Django view class for handling homepage requests
-class HomePageView(View):
-    template_name = 'watch_page.html'
-
-    def get(self, request):
-        """
-        Handle GET request to the home page
-        """
-        try:
-            # Render the home page using the specified template name
-            return render(request, self.template_name)
-        except Exception as error:
-            # Log the error in case of any issue while rendering the page
-            LOGGER.error("Failed to render %s: %s", self.template_name, error)
-
-            return HttpResponse(status=500)
-
-# Django view class for handling chat initiation requests
-class ChatInitiationView(View):
+def determine_model(model: Union[str, BaseModel], data: Dict[str, Any]):
     """
-    Chat functionality for users
+    Given a model and data, determines the kind of model and validates its data
     """
-    def get(self, request):
-        """
-        Handle GET request to initiate the chat
-        """
-        try:
-            chat_message = "Chat here"
-            LOGGER.info("Chat initiated.")
+    try:
+        if isinstance(model, str):
+            if (model == 'UserProfile'):
+                model = UserProfile
+            elif (model == 'FileUpload'):
+                model = FileUpload
+            elif (model == 'Banking'):
+                model = Banking
+            elif (model == 'AIConversation'):
+                model = AIConversation
+            elif (model == 'UIPageData'):
+                model = UIPageData
+            else:
+                raise ValidationError([ErrorWrapper(ValueError('Invalid model.'), loc='model')], model=BaseModel)
+            
+        model(**data)
 
-            return JsonResponse({'chat_message': chat_message})
-        except Exception as error:
-            # Log the error in case of any issue while initiating the chat
-            LOGGER.error("Failed to initiate chat: %s", error)
+    except ValidationError as ve:
+        LOGGER.error(f"Failed validation for {model}: {ve}")
+        return {'error': str(ve)}, 400
 
-            return HttpResponse(status=500)
+    except Exception as ex:
+        LOGGER.error(f"Failed to process {model}: {ex}")
+        return {'error': str(ex)}, 400
 
-# Django view class for handling chat takeover requests
-class ChatTakeOverView(View):
-    """
-    Chat takeover functionality for users
-    """
-    def get(self, request):
-        """
-        Handle GET request to take over the chat
-        """
-        try:
-            takeover_message = "Chat takeover logic"
-            LOGGER.info("Chat taken over.")
+    return {'data' : 'Validation passed.'}, 200
 
-            return JsonResponse({'takeover_message': takeover_message})
-        except Exception as error:
-            # Log the error in case of any issue while taking over the chat
-            LOGGER.error("Failed to take over chat: %s", error)
-
-            return HttpResponse(status=500)
-
-# Django view class for handling modal view requests
-class ModalDisplayView(View):
-    template_name = 'modal.html'
-
-    def get(self, request):
-        """
-        Handle GET request to render modal view
-        """
-        try:
-            # Render the modal view using the specified template name
-            return render(request, self.template_name)
-        except Exception as error:
-            # Log the error in case of any issue while rendering the modal view
-            LOGGER.error("Failed to render %s: %s", self.template_name, error)
-
-            return HttpResponse(status=500)
-
-# Django URL routes for each view
-urlpatterns = [
-    path('', HomePageView.as_view(), name='home'),
-    path('chat/', ChatInitiationView.as_view(), name='chat'),
-    path('takeover/', ChatTakeOverView.as_view(), name='takeover'),
-    path('modal/', ModalDisplayView.as_view(), name='modal'),
-]
 # No specific changes required for python 3.12 compatibility
