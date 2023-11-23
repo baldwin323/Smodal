@@ -1,10 +1,9 @@
 # Improved source code for /Smodal/models.py with enhanced error handling and comments
 
 import os
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
-from django.core.validators import FileExtensionValidator
+from datetime import date
+from pydantic import BaseModel, Field, validator
+from typing import List, Optional, Dict
 import secrets
 
 # Fetch environment variables & setting default values
@@ -12,66 +11,53 @@ os.environ.get('DB_HOST', 'localhost')
 os.environ.get('DB_PORT', '5432')
 
 
-class UserProfile(models.Model):
-    # UserProfile model to store the user's details like dob, image, preferences etc.
-    birth_date = models.DateField(blank=True, null=True, db_index=True)  
-    image = models.ImageField(upload_to='profile_images/', blank=True)
-    preferences = models.JSONField(blank=True, null=True)
-    theme_preferences = models.CharField(max_length=200, default="default")
+class UserProfile(BaseModel):
+    # UserProfile model to store the user's details like dob, image, preferences etc. using Pydantic BaseModel
+    birth_date: Optional[date] = Field(None)
+    image: Optional[str] = Field(None)
+    preferences: Optional[Dict] = Field(None)
+    theme_preferences: str = Field("default")
 
 
-class FileUpload(models.Model):
-    # Model to store uploaded files
-    file = models.FileField(upload_to='uploads/', validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'jpg', 'png'])])
-    token = models.CharField(max_length=255, default=secrets.token_urlsafe)
+class FileUpload(BaseModel):
+    # Model to store uploaded files using Pydantic BaseModel and added validation
+    file: Optional[str] = Field(None, description='uploaded file path')
+    token: str = Field(default_factory=secrets.token_urlsafe)
 
-    def save(self, *args, **kwargs):
-        # Overriding save method to handle Exceptions 
-        try:
-            super().save(*args, **kwargs)
-        except ValidationError as e:
-            print(f"Validation Exception: {e}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
-
-
-class Banking(models.Model):
-    transactions = models.JSONField(default=dict)
-
-    def save(self, *args, **kwargs):
-        # Catch and handle the exception which occurs during data validation
-        try:
-            super().save(*args, **kwargs)
-        except ValidationError as e:
-            print(f"Validation Error: {e}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+    # Adding a custom validator to check for allowed extensions
+    @validator('file')
+    def check_file_extension(cls, v):
+        allowed_extensions = ['pdf', 'doc', 'jpg', 'png']
+        if not v.split(".")[-1] in allowed_extensions:
+            raise ValueError('Invalid file extension. Please upload a pdf, doc, jpg or png file.')
+        return v
 
 
-class AIConversation(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    previous_responses = models.JSONField(default=list)
-    current_context = models.TextField()
-
-    def save(self, *args, **kwargs):
-        # Handle exceptions during save operation on AIConversation model
-        try:
-            super().save(*args, **kwargs)
-        except ValidationError as e:
-            print(f"Input Validation Error: {e}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+class Banking(BaseModel):
+    transactions: Dict = Field(default_factory=dict)
 
 
-class UIPageData(models.Model):
-    page_id = models.CharField(max_length=200)
-    page_data = models.JSONField(default=dict)
+class AIConversation(BaseModel):
+    user_id: int = Field(...)  # Representing Foreign Key relation 
+    previous_responses: List = Field(default_factory=list)
+    current_context: str = Field(...)
 
-    def save(self, *args, **kwargs):
-        # Handle exceptions during save operation on UIPageData model
-        try:
-            super().save(*args, **kwargs)
-        except ValidationError as e:
-            print(f"Input Validation Error: {e}")
-        except Exception as e:
-            print(f"An error occurred while saving UI page data: {e}".format(e))
+    # Adding a validator to assert that user_id is positive integer
+    @validator('user_id')
+    def check_positive(cls, v):
+        if v <= 0:
+            raise ValueError('user_id must be a positive integer')
+        return v
+
+
+class UIPageData(BaseModel):
+    page_id: str = Field(...)
+    page_data: Dict = Field(default_factory=dict)
+
+
+# Export the models
+UserProfileModel = UserProfile.schema_json()
+FileUploadModel = FileUpload.schema_json()
+BankingModel = Banking.schema_json()
+AIConversationModel = AIConversation.schema_json()
+UIPageDataModel = UIPageData.schema_json()

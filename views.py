@@ -1,4 +1,3 @@
-
 ```python
 import json
 import logging
@@ -6,15 +5,15 @@ import os
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
+
 from .ai_model import call_model
 from .lambda_functions import give_credit, monitor_affiliated_models, register_affiliate_manager
-from .models import (AIConversation, APICredentials, AffiliateManager, Banking,
-                     Credentials, FileUpload,
-                     OIDCConfiguration, UserProfile, UserActivity)
+
+from .models_file import (AIConversationModel, UserProfileModel, BankingModel, 
+                          FileUploadModel, UIPageDataModel)
 from .offline_utils import (authorize_request, check_authentication,
                             handle_user_login, handle_user_logout,
                             load_user_dashboard, perform_offline_login,
@@ -23,7 +22,7 @@ from .offline_utils import (authorize_request, check_authentication,
 # The address of the services
 SERVICES_ADDRESS = os.getenv("SERVICES_ADDRESS", "localhost")
 # The port where services are being served
- SERVICES_PORT = os.getenv("SERVICES_PORT", "8000")
+SERVICES_PORT = os.getenv("SERVICES_PORT", "8000")
 # Initializing logger for this file
 logger = logging.getLogger(__name__)  
 
@@ -132,12 +131,9 @@ def ai_predict(request):
         input_data = request.GET.get('input')
         response = call_model(input_data, SERVICES_ADDRESS, SERVICES_PORT)
 
-        # Save the conversation state
-        conversation_state = AIConversation.objects.get(user_id=request.user.profile)
-        conversation_state.previous_responses.append(response)
-        conversation_state.current_context = response
-        conversation_state.save()
-    
+        # Use imported Pydantic model instead of Django model for conversation state
+        conversation_state = AIConversationModel(user_id=request.user.profile, previous_responses=[], current_context=response)
+
     # Return error if any issues occur during prediction
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': 'Could not process your request'}, status=500)

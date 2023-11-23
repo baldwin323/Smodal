@@ -1,10 +1,8 @@
 ```python
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.core.exceptions import ValidationError, SuspiciousOperation
-from django.views import View
-from .models import User, Platform, AccessToken, SocialMediaBot, Credentials, EncryptedSensitiveData
+from pydantic import ValidationError
 from .logging import logger
+from .models import UserProfileModel, FileUploadModel, BankingModel, AIConversationModel, UIPageDataModel
+from .models import UserProfile, FileUpload, Banking, AIConversation, UIPageData
 
 import hashlib, binascii, os
 from Crypto.Cipher import AES
@@ -14,7 +12,7 @@ from Crypto.Util.Padding import pad, unpad
 SECRET_KEY = "This is a secret"
 BLOCK_SIZE = 16
 
-class SocialMediaBotView(View):
+class SocialMediaBot:
 
     def encrypt(self, plain_text: str, password: str) -> bytes:
         try:
@@ -33,52 +31,21 @@ class SocialMediaBotView(View):
             salt, cipher_text = cipher_text[:BLOCK_SIZE], cipher_text[BLOCK_SIZE:]
             key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
             cipher_config = AES.new(key, AES.MODE_CBC, iv=salt)
-        
             return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE).decode()
         except Exception as e:
             logger.error(f"Error during decryption: {e}")
             return f"Error during decryption: {e}"
 
-    def get(self, request, user_id: str, platform_name: str) -> HttpResponse:
-        try:
-            credentials = Credentials.objects.get(platform=platform_name)
-            encrypted_data = EncryptedSensitiveData.objects.get(platform=platform_name)
+    def authenticate(self, user_id: str, decoded_data: str):
+        # authenticate method using the new pydantic model
+        user = UserProfile.parse_raw(decoded_data)
+        if user_id != user.id:
+            raise ValidationError(f"User id did not match")
 
-            decrypted_data = self.decrypt(encrypted_data.encrypted_data, SECRET_KEY)
-
-            self.bot = SocialMediaBot()
-            self.bot.authenticate(credentials.username, decrypted_data)
-
-            logger.info(f"Authenticated user {user_id}!")
-            return HttpResponse(f"Authenticated user {user_id}!")
-        except User.DoesNotExist:
-            logger.error("User does not exist")
-            return HttpResponse("User does not exist", status=404)
-        except ValidationError as e:
-            logger.error("Validation error: {}".format(e))
-            return HttpResponse("Validation error: {}".format(e), status=400)
-        except Exception as e:
-            logger.error(f"Unknown error during user authentication: {e}")
-            return HttpResponse(f"Unknown error during user authentication: {e}", status=500)
-
-    def post(self, request, user_id: str, platform_name: str, message: str) -> HttpResponse:
-        if not all([user_id, platform_name, message]):
-            raise SuspiciousOperation("Invalid form data - all of User ID, Platform Name and Message are required.")
-        
-        try:
-            self.bot.post_message(user_id, platform_name, message)
-            logger.info(f"Posted message {message} to {platform_name} for user {user_id}!")
-            return HttpResponse(f"Posted message {message} to {platform_name} for user {user_id}!")
-        except Platform.DoesNotExist:
-            logger.error("Specified platform does not exist")
-            return HttpResponse("Specified platform does not exist", status=404)
-        except AccessToken.DoesNotExist:
-            logger.error("Invalid or expired Access Token")
-            return HttpResponse("Invalid or expired Access Token", status=403)
-        except ValidationError as e:
-            logger.error("Validation error: {}".format(e))
-            return HttpResponse("Validation error: {}".format(e), status=400)
-        except Exception as e:
-            logger.error(f"Unknown error during message posting: {e}")
-            return HttpResponse(f"Unknown error during message posting: {e}", status=500)
+    def post_message(self, user_id: str, platform_name: str, message: str):
+        # method for performing api call to post message using the new pydantic models
+        post_data = UIPageData.parse_raw(message)
+        # Simulating API call and response
+        response = post_data
+        return response
 ```
