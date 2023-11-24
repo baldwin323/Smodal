@@ -42,6 +42,7 @@ services:
 
   # Frontend Service
   # This service is responsible for running our front-end GUI on port 3000
+  # Ensure the front end service is able to connect with the backend service
   frontend:
     build: ./frontend # Relative path
     volumes:
@@ -49,7 +50,8 @@ services:
     ports:
       - 3000:3000
     command: npm start
-
+    depends_on:
+      - backend
 
 # The deployment service for AWS has been removed to prevent deployment to AWS.
 # The paths for the frontend service build and volumes have been switched to relative, making the composition more robust against different environment settings.
@@ -58,10 +60,11 @@ services:
 
 volumes:
   database:
+
 ```
-# Note: Ensure the offered repositories in relative paths actually exist.
+# Note: Ensure the offered directories in relative paths actually exist.
 # The services defined are in brief:
 # 1) app service: responsible for running Django
 # 2) backend service: looking after distinct business logic
-# 3) frontend service: managing front-end GUI
+# 3) frontend service: managing front-end GUI, now depends on backend for data
 # This Docker Compose thus provides a clear definition and organization of the service side for the application.

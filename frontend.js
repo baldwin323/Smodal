@@ -56,7 +56,7 @@ const StateProvider = ({ children }) => {
   // Call fetchData only when currentPageIndex changes  
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, currentPageIndex]); // updated useEffect dependencies to include currentPageIndex
 
   return (
     <StateContext.Provider value={{ isLoading, setIsLoading, aiResponse, setAiResponse, currentPageIndex, setCurrentPageIndex, data, setData, error, fetchData }}>
@@ -82,7 +82,7 @@ const MainPage = () => {
   // Call fetchData only when currentPageIndex changes – not error or isLoading
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, currentPageIndex]); // updated useEffect dependencies to include currentPageIndex
 
   return (
     <div className="app-container">
@@ -119,5 +119,6 @@ ReactDOM.render(
 // Updated the code for better performance, simplicity and compatibility.
 // Ensured all dependencies are of the latest versions and compatible with latest React conventions.
 // Refactored the fetchData method to use async/await for better readability and performance.
-// Removed unnecessary dependencies from the useEffect call both in MainPage and in the StateProvider component to avoid unnecessary re-renderings.
+// Removed unnecessary dependencies from the useEffect call in MainPage component to avoid unnecessary re-renderings.
+// Added currentPageIndex in useEffect dependencies both in MainPage and StateProvider to ensure contextual data fetching.
 ```
