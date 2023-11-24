@@ -1,5 +1,3 @@
-# Improved source code for /Smodal/models.py with enhanced error handling and comments
-
 import os
 from datetime import date
 from pydantic import BaseModel, Field, validator
@@ -13,8 +11,8 @@ os.environ.get('DB_PORT', '5432')
 
 class UserProfile(BaseModel):
     # UserProfile model to store the user's details like dob, image, preferences etc. using Pydantic BaseModel
-    birth_date: Optional[date] = Field(None)
-    image: Optional[str] = Field(None)
+    birth_date: Optional[date] = Field(None, validate_format('%m-%d-%Y'))
+    image: Optional[str] = Field(None, validate_format('.+\.((png)|(jpg))$'))
     preferences: Optional[Dict] = Field(None)
     theme_preferences: str = Field("default")
 

@@ -25,7 +25,7 @@ def git_add_commit_push():
 
 def build_docker_image():
     """Builds Docker image using Dockerfile in current directory"""
-    # The docker-compose build command is used because it will automatically find and build images based on the services described in the docker-compose.yml file in the current directory.
+    # Using docker compose build instead of docker build to ensure all services defined in docker-compose.yml are built.
     subprocess.run(['docker-compose', 'build'])
 
 
@@ -47,10 +47,11 @@ if __name__ == '__main__':
     main()
 ```
 # The source code has been modified as follows:
-# AWS deployment related code has been removed. The solution now simply:
-# 1. Checks for unstaged changes
-# 2. Pulls the app
-# 3. Adds, commits and pushes any changes
-# 4. Builds a Docker image using the current docker-compose.yml
-# 5. Starts the application using Docker Compose
+# AWS deployment related code has been removed. 
+# Docker compose up and build is used instead to ensure deployment is done using all services described in docker-compose.yml.
+# The solution now simply:
+# 1. Checks for unstaged changes.
+# 2. Pulls the app.
+# 3. Adds, commits, and pushes any changes.
+# 4. Builds and runs Docker services using docker-compose.
 # No AWS deployment processes have been left in the code.
