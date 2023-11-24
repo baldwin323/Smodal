@@ -9,15 +9,18 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 
+# Import the AI config module
+from .ai_config import MutableAIConfig, Credentials
+
 from .ai_model import call_model
 from .lambda_functions import give_credit, monitor_affiliated_models, register_affiliate_manager
-
-from .models_file import (AIConversationModel, UserProfileModel, BankingModel, 
-                          FileUploadModel, UIPageDataModel)
-from .offline_utils import (authorize_request, check_authentication,
-                            handle_user_login, handle_user_logout,
-                            load_user_dashboard, perform_offline_login,
-                            process_api_request)
+from .models_file import (
+    AIConversationModel, UserProfileModel, BankingModel,
+    FileUploadModel, UIPageDataModel)
+from .offline_utils import (
+    authorize_request, check_authentication, handle_user_login,
+    handle_user_logout, load_user_dashboard, perform_offline_login,
+    process_api_request)
 
 SERVICES_ADDRESS = os.getenv("SERVICES_ADDRESS", "localhost")
 SERVICES_PORT = os.getenv("SERVICES_PORT", "8000")
@@ -133,7 +136,11 @@ def ai_predict(request):
     try:  
         input_data = request.GET.get('input')
         response = call_model(input_data, SERVICES_ADDRESS, SERVICES_PORT)
-        conversation_state = AIConversationModel(user_id=request.user.profile, previous_responses=[], current_context=response)
+        conversation_state = AIConversationModel(
+            user_id=request.user.profile,
+            previous_responses=[],
+            current_context=response
+            )
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': 'Could not process your request'}, status=500)
 

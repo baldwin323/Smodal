@@ -9,6 +9,9 @@ import requests  # Module used for sending HTTP requests
 import zipfile
 from boto3.session import Session
 
+# Importing mutable.ai configuration and credentials
+from ai_config import MutableAIConfig, Credentials
+
 # logger setup
 application_logger = logging.getLogger(__name__)
 application_logger.setLevel(logging.INFO)
@@ -27,8 +30,12 @@ aws_lambda_client = aws_session.client('lambda')
 
 # This function makes API calls and handles exceptions properly.
 def api_call(endpoint, payload=None, method="GET"):
-    base_api_url = "http://api.example.com"
-    headers = {"Content-Type": "application/json"}
+    base_api_url = MutableAIConfig.BASE_URL  # Using mutable.ai base URL from imported config 
+    headers = {
+        "Content-Type": MutableAIConfig.HEADER_CONTENT_TYPE,  # Using content type from imported config
+        "api-key": Credentials.API_KEY,  # Using API key from imported credentials
+        "secret-key": Credentials.SECRET_KEY  # Using secret key from imported credentials
+    }
 
     try:
         api_response = requests.request(method, base_api_url + endpoint, headers=headers, 
