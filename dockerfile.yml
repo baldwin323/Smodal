@@ -1,37 +1,37 @@
 ```yml
 version: '3'
 services:
-  web: # Django Service - This service handles the backend of the application
+  web: 
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: python3.12 manage.py runserver 0.0.0.0:8000  # Runs the Django server using Python 3.12
+    command: python3.12 manage.py runserver 0.0.0.0:8000  
     volumes:
       - .:/code
     ports:
       - 8000:8000
     env_file:
-      - .env  # Storing environment variables and passwords securely with dotenv
+      - .env 
     depends_on: 
       - db
     environment: 
       - BACK4APP_APP_ID=data-evpxv
       - BACK4APP_API_KEY=ac07da7d-bc3f-46c6-a2c8-2f3de7b7bed9
     restart: always
-  client: # React Service - This service is the frontend, serving client requests
+  client: # Angular Service - This service is the frontend, serving client requests
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.angular
     volumes: 
       - './:/usr/src/app'
       - '/usr/src/app/node_modules'
     ports:
-      - '3000:3000'
+      - '4200:4200' # Angular default port is 4200
     depends_on:
       - web
     restart: always
-  db: # MongoDB Service - The database service of the application
-    image: mongo:latest  # Using the latest MongoDB image
+  db: 
+    image: mongo:latest  
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=mongodatabase
@@ -43,9 +43,8 @@ services:
       - mongo_data:/data/db
 volumes:
   postgres_data:
-  mongo_data:  # Volume for MongoDB data
+  mongo_data:  
 ```
-# The Dockerfile has been updated to use Python 3.12, store environment variables and passwords securely with dotenv, and includes MongoDB configurations. 
-# The Django service (web) runs on Python 3.12 and depends on the MongoDB service (db).
-# The React service (client) runs independently but depends on the Django service (web).
-# The MongoDB service (db) uses the latest MongoDB image and runs on the port 27017. A volume named 'mongo_data' has been added for MongoDB data.
+# The Dockerfile has been updated to use Angular instead of React for the frontend service. Angular runs on port 4200. 
+# The build context for Angular has also been updated, and a specific Dockerfile has been referred to (Dockerfile.angular)
+# Other services remain unchanged.
