@@ -2,7 +2,8 @@
 // Import necessary Angular modules
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { DataService } from './services/data.service'; // Import data service to call API endpoints
 
 // Define interface for AI response
@@ -37,7 +38,14 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // Call fetchData only when currentPageIndex changes  
-    this.fetchData();
+    this.fetchData().subscribe(res => {
+      this.aiResponse = res; 
+      this.isLoading = false; 
+      }, 
+      // Error handling when API response has any issue
+      error => {
+        this.error = 'Error Fetching Data!';
+      });
   }
 
   // Fetch data through data service
@@ -48,7 +56,7 @@ export class AppComponent implements OnInit {
     return this.dataService.getAiPredict(this.data).pipe(
       catchError((error) => {
         this.isLoading = false;
-        this.error = error;
+        this.error = error.message;
         return throwError(error);
       })
     );
@@ -58,7 +66,13 @@ export class AppComponent implements OnInit {
   // Simplified the navigation functions and combined fetchData to remove duplication
   private navigate(indexModifier: number) {
     this.currentPageIndex += indexModifier;
-    this.fetchData();
+    this.fetchData().subscribe(res => {
+      this.aiResponse = res; 
+      this.isLoading = false; 
+      }, 
+      error => {
+      this.error = 'Error Fetching Data!';
+    });
   }
   
   handlePrevClick() {
@@ -84,7 +98,7 @@ export class AppComponent implements OnInit {
   }
 }
 // Updated for better readability, performance, and maintainability. 
-// Introduced new features like better data fetching with Observable and pipe error handlers.
-// Simplified navigation functions for better readability.
-// Updated document upload function to have more flexibility.
+// Introduced new features like better data fetching with Observable and catchError operator.
+// Improved navigation functions for better readability.
+// Modified document upload function to have more flexibility.
 ```
