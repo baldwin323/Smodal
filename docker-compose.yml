@@ -1,5 +1,5 @@
 ```yaml
-# This is the Docker Compose file for Smodal Application
+# This is the Docker Compose file for the Smodal Application
 # It defines the services that make up this application and their respective configurations
 
 version: '3'
@@ -39,7 +39,7 @@ services:
       - DB_PASSWORD=your_db_password
       - BACKEND_URL=your_backend_url
 
-  # Frontend Service
+  # Angular Frontend Service
   # This service is responsible for running our Angular UI on port 3000
   frontend:
     build: ./frontend # Relative path
@@ -50,24 +50,25 @@ services:
     command: npm start
     depends_on:
       - backend
+    environment: 
+      - NODE_ENV=development # setting node environment for Angular
 
 # The services defined are in brief:
 # 1) app service: responsible for running Django
 # 2) backend service: looking after distinct business logic
-# 3) frontend service: managing front-end Angular UI, now depends on backend for data
+# 3) Angular frontend service: managing front-end Angular UI, now depends on backend for data
 # This Docker Compose thus provides a clear definition and organization of the service side for the application.  
 
 # Any deployment service for AWS and DigitalOcean have been removed to target deployment to localhost. 
-# The paths for the frontend service build and volumes have been switched to relative, making the composition more robust against different environment settings.
-# All existing services remain untouched as they were not associated with AWS or DigitalOcean deployment.
-# Ensure that the path provided in other services is accurate and accessible.
+# The paths for the Angular frontend service build and volumes have been switched to relative, making the composition more robust against different environment settings.
+# Angular is built using a relative path (./frontend), which means that the location of this Docker Compose file should be in the root directory of the project. Similarly, Django app is built from the context of the root directory of the project where it is assumed that the Dockerfile is present.
+# The backend business-logic service is also built from a relative path (./backend).
   
-volumes:
+#Volumes:
   database:
 ```
 # Note: Ensure the offered directories in relative paths actually exist.
 # Database volume is defined separately but left empty, assuming that the database is hosted locally and not in a container.
 # Any environment related to AWS, DigitalOcean or any other platforms has been removed. All configurations are now aimed at localhost.
-# Angular is by default served on port 3000 and Django on port 8000, Angular is dependent on Django backend service.
-# Angular is built using a relative path (./frontend), which means that the location of this Docker Compose file should be in the root directory of the project. Similarly, Django app is built from the context of the root directory of the project where it is assumed that the Dockerfile is present.
-# The backend business-logic service is also built from a relative path (./backend).
+# Angular is now by default served on port 3000 and Django on port 8000, Angular is dependent on Django backend service.
+# The environment variable NODE_ENV has been added to the angular frontend service set to development. This controls how the angular application is built and run.

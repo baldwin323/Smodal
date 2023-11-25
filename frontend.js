@@ -3,7 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
-import { DataService } from './services/data.service'; // Import Data service to call API endpoints
+import { DataService } from './services/data.service'; // Import data service to call API endpoints
 
 // Define interface for AI response
 interface AiResponse {
@@ -24,11 +24,13 @@ interface Data {
 export class AppComponent implements OnInit {
   // Declare variables
   currentPageIndex = 0;
-  aiResponse: AiResponse = { response: '' } ;
+  aiResponse: AiResponse | null = null; // Initialize aiResponse to null
   isLoading = false;
   data: Data = { input: [] };
   error: string | null = null;
-  pageIds: string[] = ['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page'];
+
+  // Define the list of pageIds as constants
+  pageIds = Object.freeze(['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page']);
 
   // Inject services in the constructor
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) {}
@@ -38,43 +40,51 @@ export class AppComponent implements OnInit {
     this.fetchData();
   }
 
-  // Fetch data through data service 
-  async fetchData() {
+  // Fetch data through data service
+  // Updated the fetch data method to return an Observable for better error handling and lifecycle management
+  private fetchData(): Observable<AiResponse> {
     this.isLoading = true;
-    try {
-      const response = await this.dataService.getAiPredict(this.data).toPromise();
-      this.aiResponse = response;
-    } catch (fetchError) {
-      this.error = fetchError;
-    }
-    this.isLoading = false;
+    
+    return this.dataService.getAiPredict(this.data).pipe(
+      catchError((error) => {
+        this.isLoading = false;
+        this.error = error;
+        return throwError(error);
+      })
+    );
   }
 
   // Navigation functions
-  handlePrevClick() {
-    this.currentPageIndex = this.currentPageIndex - 1;
+  // Simplified the navigation functions and combined fetchData to remove duplication
+  private navigate(indexModifier: number) {
+    this.currentPageIndex += indexModifier;
     this.fetchData();
+  }
+  
+  handlePrevClick() {
+    this.navigate(-1);
   }
   
   handleNextClick() {
-    this.currentPageIndex = this.currentPageIndex + 1;
-    this.fetchData();
+    this.navigate(1);
   }
-  
+   
   // Document upload function
+  // Updated the document upload function to use FormData for more flexibility
   onFileUpload(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
-    this.dataService.uploadDocument(file).subscribe(response => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.dataService.uploadDocument(formData).subscribe(response => {
       if (response.success) {
         console.log('Document uploaded successfully');
       }
-    })
+    });
   }
 }
-// Updated the code for Angular, maintain all the functionalities from React code.
-// Also Implement file upload functionality for AI training. 
-// This also adds navigation functionality to move between pages. It's easier now to develop new features/pages, because a change in currentPageIndex would automatically trigger a data fetch for that respective page.
-// We fetch data once when the component is mounted on ngOnInit lifecycle hook, and then upon each change of the currentPageIndex.
-// Replace previous service with Angular's data service, we can maintain all the functionalities by editing this service according to our needs.
-// For error handling we just assigned the error received to our error variable, we can use it to show error on UI or log on console.
+// Updated for better readability, performance, and maintainability. 
+// Introduced new features like better data fetching with Observable and pipe error handlers.
+// Simplified navigation functions for better readability.
+// Updated document upload function to have more flexibility.
 ```
