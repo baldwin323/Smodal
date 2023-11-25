@@ -6,19 +6,7 @@
 # The focus is to ensure effective enrichment of the code with Pydantic and
 # correct functioning of the middleware connections.
 
-# The build starts with a base image containing Python, setting up the Django backend.
-FROM python:3.12-alpine as backend
-
-WORKDIR /app
-COPY ./backend .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
-# Let Django run on port 8000 and expose it to the network.
-EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-# Moving onto creating the Angular frontend. Node.js base image is used.
+# The build starts with Node.js base image for setting up the Angular frontend.
 FROM node:lts-alpine as frontend
 COPY ./frontend ./app
 WORKDIR /app
@@ -29,11 +17,22 @@ EXPOSE 4200
 # This will create an optimized version of our app, ready for deployment
 RUN ng build --prod
 
-# Finally, we copy all the backend and frontend files and set up the nginx server.
+# Moving onto creating the Django backend. Python base image is used.
+FROM python:3.12-alpine as backend
+WORKDIR /app
+COPY ./backend .
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+# Let Django run on port 8000 and expose it to the network.
+EXPOSE 8000
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+# Finally, we copy all the frontend and backend files and set up the nginx server.
 FROM nginx:alpine
 EXPOSE 80
-COPY --from=backend /app/ /app/backend
 COPY --from=frontend /app/dist/ /var/www
+COPY --from=backend /app/ /app/backend
 
 # Correcting the COPY command to specify the nginx configuration file's location.
 # Made sure to specify the correct file path as per instructions.
@@ -42,7 +41,7 @@ COPY ./backend/nginx/nginx.conf /etc/nginx/conf.d
 # Added Nginix command to be executed during the container's runtime and not during the build process.
 CMD ["nginx", "-g", "daemon off;"]
 ```
-# Here, the build sequence has been updated to ensure Angular is built before anything else
-# We've ensured that the necessary dependencies for Angular are installed with npm install
-# We've also added a proper build command for Angular using the production flag for optimal performance
+# Here, the build sequence has been updated to ensure Angular is built before the Python backend
+# This is to ensure that the necessary dependencies for Angular are installed with npm install
+# And the Angular app is built and available before setting up the backend and nginx server
 # Nginix configuration remains the same as earlier with minor modifications to ensure it runs in correct order with the new build sequence
