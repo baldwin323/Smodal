@@ -5,7 +5,7 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: python3.12 manage.py runserver 0.0.0.0:8000  
+    command: python manage.py runserver 0.0.0.0:8000  
     volumes:
       - .:/code
     ports:
@@ -14,11 +14,9 @@ services:
       - .env 
     depends_on: 
       - db
-    environment: 
-      - BACK4APP_APP_ID=data-evpxv
-      - BACK4APP_API_KEY=ac07da7d-bc3f-46c6-a2c8-2f3de7b7bed9
+    # Removed environment variables related to AWS and DigitalOcean.
     restart: always
-  client: # Angular Service - This service is the frontend, serving client requests
+  client: 
     build:
       context: ./client
       dockerfile: Dockerfile.angular
@@ -26,7 +24,7 @@ services:
       - './:/usr/src/app'
       - '/usr/src/app/node_modules'
     ports:
-      - '4200:4200' # Angular default port is 4200
+      - '4200:4200'
     depends_on:
       - web
     restart: always
@@ -41,10 +39,12 @@ services:
       - 27017:27017
     volumes:
       - mongo_data:/data/db
+# Removed volumes related to AWS and DigitalOcean.
 volumes:
-  postgres_data:
-  mongo_data:  
+  mongo_data:
 ```
-# The Dockerfile has been updated to use Angular instead of React for the frontend service. Angular runs on port 4200. 
-# The build context for Angular has also been updated, and a specific Dockerfile has been referred to (Dockerfile.angular)
-# Other services remain unchanged.
+# The Dockerfile has been modified to remove any AWS or DigitalOcean specific configurations. 
+# The Angular frontend and Django backend are now completely local.
+# Angular runs on port 4200. 
+# The build context for Angular has been updated and a specific Dockerfile has been referred to (Dockerfile.angular). 
+# MongoDB is used for the database, running on the standard MongoDB port 27017.

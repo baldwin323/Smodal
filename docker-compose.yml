@@ -23,7 +23,6 @@ services:
   
   # Backend Service
   # This service is responsible for handling separate business logic, if any present
-  # This service also operates on port 8000
   backend:
     build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
@@ -41,8 +40,7 @@ services:
       - BACKEND_URL=your_backend_url
 
   # Frontend Service
-  # This service is responsible for running our front-end GUI on port 3000
-  # Ensure the front end service is able to connect with the backend service
+  # This service is responsible for running our Angular UI on port 3000
   frontend:
     build: ./frontend # Relative path
     volumes:
@@ -53,18 +51,23 @@ services:
     depends_on:
       - backend
 
-# The deployment service for AWS has been removed to prevent deployment to AWS.
-# The paths for the frontend service build and volumes have been switched to relative, making the composition more robust against different environment settings.
-# All existing services remain untouched as they were not associated with AWS deployment.
-# Ensure that the path provided in other services is accurate and accessible.
-
-volumes:
-  database:
-
-```
-# Note: Ensure the offered directories in relative paths actually exist.
 # The services defined are in brief:
 # 1) app service: responsible for running Django
 # 2) backend service: looking after distinct business logic
-# 3) frontend service: managing front-end GUI, now depends on backend for data
-# This Docker Compose thus provides a clear definition and organization of the service side for the application.
+# 3) frontend service: managing front-end Angular UI, now depends on backend for data
+# This Docker Compose thus provides a clear definition and organization of the service side for the application.  
+
+# Any deployment service for AWS and DigitalOcean have been removed to target deployment to localhost. 
+# The paths for the frontend service build and volumes have been switched to relative, making the composition more robust against different environment settings.
+# All existing services remain untouched as they were not associated with AWS or DigitalOcean deployment.
+# Ensure that the path provided in other services is accurate and accessible.
+  
+volumes:
+  database:
+```
+# Note: Ensure the offered directories in relative paths actually exist.
+# Database volume is defined separately but left empty, assuming that the database is hosted locally and not in a container.
+# Any environment related to AWS, DigitalOcean or any other platforms has been removed. All configurations are now aimed at localhost.
+# Angular is by default served on port 3000 and Django on port 8000, Angular is dependent on Django backend service.
+# Angular is built using a relative path (./frontend), which means that the location of this Docker Compose file should be in the root directory of the project. Similarly, Django app is built from the context of the root directory of the project where it is assumed that the Dockerfile is present.
+# The backend business-logic service is also built from a relative path (./backend).
