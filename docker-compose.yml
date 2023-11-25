@@ -29,7 +29,7 @@ services:
     volumes:
       - ./backend:/app
     ports:
-      - 8000:8000
+      - 8001:8001 # Changed port to avoid conflict with app service
     depends_on:
       - app
     environment:
@@ -63,12 +63,8 @@ services:
 # The paths for the Angular frontend service build and volumes have been switched to relative, making the composition more robust against different environment settings.
 # Angular is built using a relative path (./frontend), which means that the location of this Docker Compose file should be in the root directory of the project. Similarly, Django app is built from the context of the root directory of the project where it is assumed that the Dockerfile is present.
 # The backend business-logic service is also built from a relative path (./backend).
-  
+# The backend service port has been changed to 8001 to avoid conflict with the app service.
 #Volumes:
   database:
 ```
-# Note: Ensure the offered directories in relative paths actually exist.
-# Database volume is defined separately but left empty, assuming that the database is hosted locally and not in a container.
-# Any environment related to AWS, DigitalOcean or any other platforms has been removed. All configurations are now aimed at localhost.
-# Angular is now by default served on port 3000 and Django on port 8000, Angular is dependent on Django backend service.
-# The environment variable NODE_ENV has been added to the angular frontend service set to development. This controls how the angular application is built and run.
+# There is no need to alter the context file. It is only given for reference and should not be changed.

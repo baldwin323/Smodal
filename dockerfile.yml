@@ -1,4 +1,4 @@
- ```yml
+```yml
 version: '3'
 services:
   web: 
@@ -19,6 +19,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.angular
+      args:
+        - environment=development # setting node environment for Angular
     volumes: 
       - './:/usr/src/app'
       - '/usr/src/app/node_modules'
@@ -28,7 +30,7 @@ services:
       - web
     restart: always
     environment:
-      - NODE_ENV=development # setting node environment for Angular
+      - NODE_ENV=development 
   db: 
     image: mongo:latest  
     restart: always
@@ -43,8 +45,13 @@ services:
 volumes:
   mongo_data:
 ```
-# The Dockerfile has been modified to improve the Angular build environment configurations. 
-# New environmental variable for Angular NODE_ENV is set to development. 
-# The Angular frontend and Django backend are now completely local.
-# Angular runs on port 4200. 
-# MongoDB continues to run as the database solution on port 27017.
+# The Dockerfile has been updated to improve the Angular build environment configurations. 
+# The 'client' service's Dockerfile has been updated with build arguments. 
+# This allows us to pass in the Angular build environment as a Docker build argument. 
+# Docker will use the argument to build the Angular application appropriately.
+# The 'client' service's 'environment' key has been updated with the NODE_ENV variable set to development.
+# This setting will be used at runtime when Docker runs the container for the Angular application.
+# The Angular frontend service is named 'client', and the Django backend is named 'web'.
+# Both services are set to always restart.
+# Angular runs on port 4200. Django runs on port 8000.
+# MongoDB, named 'db', is our database service and runs on port 27017.
