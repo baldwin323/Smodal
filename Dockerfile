@@ -1,4 +1,3 @@
-```Dockerfile
 # This Dockerfile configures a multi-stage build process to create a Docker
 # container that can run a Django backend and an Angular frontend independently.
 # The application is assembled using necessary dependencies and proper configurations,
@@ -40,7 +39,6 @@ COPY ./backend/nginx/nginx.conf /etc/nginx/conf.d
 
 # Added Nginix command to be executed during the container's runtime and not during the build process.
 CMD ["nginx", "-g", "daemon off;"]
-```
 # Here, the build sequence has been updated to ensure Angular is built before the Python backend
 # This is to ensure that the necessary dependencies for Angular are installed with npm install
 # And the Angular app is built and available before setting up the backend and nginx server
