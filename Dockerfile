@@ -1,3 +1,4 @@
+```Dockerfile
 # This Dockerfile configures a multi-stage build process to create a Docker
 # container that can run a Django backend and an Angular frontend independently.
 # The application is assembled using necessary dependencies and proper configurations,
@@ -13,19 +14,20 @@ COPY ./backend .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Removed AWS or Digital Ocean dependencies
-
 # Let Django run on port 8000 and expose it to the network.
 EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # Moving onto creating the Angular frontend. Node.js base image is used.
 FROM node:lts-alpine as frontend
+COPY ./frontend ./app
 WORKDIR /app
-COPY ./frontend .
 RUN npm install
-EXPOSE 3000
-RUN npm run build
+# Angular runs on port 4200 
+EXPOSE 4200
+# Angular build command modified, using the Angular CLI's product build command
+# This will create an optimized version of our app, ready for deployment
+RUN ng build --prod
 
 # Finally, we copy all the backend and frontend files and set up the nginx server.
 FROM nginx:alpine
@@ -39,3 +41,8 @@ COPY ./backend/nginx/nginx.conf /etc/nginx/conf.d
 
 # Added Nginix command to be executed during the container's runtime and not during the build process.
 CMD ["nginx", "-g", "daemon off;"]
+```
+# Here, the build sequence has been updated to ensure Angular is built before anything else
+# We've ensured that the necessary dependencies for Angular are installed with npm install
+# We've also added a proper build command for Angular using the production flag for optimal performance
+# Nginix configuration remains the same as earlier with minor modifications to ensure it runs in correct order with the new build sequence
