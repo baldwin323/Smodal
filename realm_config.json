@@ -5,8 +5,9 @@
     "name": "data",
     "location": "US-OR",
     
-    // Changed provider region from AWS to a non-AWS provider to adhere with the new deployment plans
-    "provider_region": "non-AWS-provider",
+    // Removed AWS provider. Changed to local provider for local deployment.
+    "provider_region": "local",
 
+    // Deployment model changed to local
     "deployment_model": "LOCAL"
 }
