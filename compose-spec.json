@@ -1,0 +1,66 @@
+```json
+{
+  "version": "3",
+  "services": {
+    "app": {
+      "build": {
+        "context": ".",
+        "dockerfile": "Dockerfile"
+      },
+      "image": "app_django:latest",
+      "ports": [
+        "8000:8000"
+      ],
+      "volumes": [
+        "./:/usr/src/app/"
+      ],
+      "command": "sh -c \"pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000\""
+    },
+    "backend": {
+      "build": "./backend",
+      "command": "python manage.py runserver 0.0.0.0:8000",
+      "volumes": [
+        "./backend:/app"
+      ],
+      "ports": [
+        "8001:8001"
+      ],
+      "depends_on": [
+        "app"
+      ],
+      "environment": {
+        "SECRET_KEY": "your_secret_key",
+        "DB_NAME": "your_db_name",
+        "DB_USER": "your_db_user",
+        "DB_PASSWORD": "your_db_password",
+        "BACKEND_URL": "your_backend_url"
+      }
+    },
+    "frontend": {
+      "build": "./frontend",
+      "volumes": [
+        "./frontend:/app"
+      ],
+      "ports": [
+        "3000:3000"
+      ],
+      "command": "npm start",
+      "depends_on": [
+        "backend"
+      ],
+      "environment": {
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}
+```
+# This new file will contain the complete compose specification for the entire app. It will include all the services, networks, volumes, and environment variables extracted from the docker-compose.yml file.
+# The services defined are in brief:
+# 1) app service: responsible for running Django
+# 2) backend service: looking after distinct business logic
+# 3) Angular frontend service: managing front-end Angular UI, now depends on backend for data
+# Any deployment service for AWS and DigitalOcean have been removed to target deployment to localhost.
+# The paths for the Angular frontend service build and volumes have been switched to relative, the same goes for the backend service, making the composition more robust against different environment settings. 
+# The backend service port has been changed to 8001 to avoid conflict with the app service.
+# Notice: This compose-spec.json file is generated based on the docker-compose.yml provided by the developer. Future changes in docker-compose.yml need to be manually reflected into this json file.
