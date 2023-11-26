@@ -4,8 +4,6 @@ import traceback
 from logging import handlers
 from django.conf import settings
 
-# Changed the logging configuration to be compatible with TeamCity's build log
-
 # Initialize the project, build and new detailed loggers
 project_logger = __import__('logging').getLogger(__name__)
 build_logger = __import__('logging').getLogger('build_process')
@@ -18,16 +16,18 @@ LOGGING_PORT = conf.get('LOGGING_PORT', 514)
 
 # TeamCity specific settings
 TEAMCITY_HOST = conf.get('TEAMCITY_HOST', 'localhost')
-TEAMCITY_PORT = conf.get('TEAMCITY_PORT', 12345) 
+TEAMCITY_PORT = conf.get('TEAMCITY_PORT', 12345)
 
 # Error handling for logging setup
 try:
-    # Setup handler with server info using SysLogHandler
+    # Setup handler with server info using SysLogHandler, the final destination for the log messages in TeamCity console
     handler = handlers.SysLogHandler(address=(TEAMCITY_HOST, TEAMCITY_PORT))
+    handler.ident = "[Smodal.log] "  # prefix added to every log message to differentiate from other logs in system
 
-    # Using a precise and clear formatter for better understanding
+    # Using a custom formatter for TeamCity
+    # The message field has been changed to follow TeamCity's service messages format
     import logging
-    formatter = logging.Formatter('%(name)s[%(levelname)s] - %(message)s %(funcName)s %(pathname)s %(lineno)d', datefmt='%H:%M:%S')
+    formatter = logging.Formatter("%(levelname)s '%(__name__)s' - #%(funcName)s[%(pathname)s:%(lineno)d] %(message)s")
     handler.setFormatter(formatter)
 
     # Adding configured handler to the project, build and detailed loggers
