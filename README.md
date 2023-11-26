@@ -45,6 +45,17 @@ Ensure you have the latest version of Docker installed on your machine. For inst
     ```
 The application will now be accessible at localhost:8000
 
+## Deployment using TeamCity
+
+To automate the deployment of modal.tokai, we can utilize our build configuration template for TeamCity. 
+The template can also be found within 'deploy.py' script and is methodically sequenced to perform stages such as unstaged changes check, pulling the latest version of application code, building Angular app, committing and pushing changes, building docker image and running docker compose.
+
+### Prerequisites
+
+Ensure you have TeamCity installed on your machine.
+
+You can set up this configuration in your TeamCity project and correctly map the repository and steps to be executed. Once correctly set up, TeamCity will trigger builds and optionally deployments based on your criteria.
+
 ## Executing Test Cases
 
 <!--- Existing content should remain here --->
