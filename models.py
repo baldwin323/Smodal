@@ -5,26 +5,26 @@ from typing import List, Optional, Dict
 import secrets
 
 # Fetch environment variables & setting default values
-os.environ.get('DB_HOST', 'localhost')
-os.environ.get('DB_PORT', '5432')
+DB_HOST = os.environ.get('DB_HOST', 'localhost')
+DB_PORT = os.environ.get('DB_PORT', '5432')
 
 
 class UserProfile(BaseModel):
-    # UserProfile model to store the user's details like dob, image, preferences etc. using Pydantic BaseModel
-    birth_date: Optional[date] = Field(None, validate_format('%m-%d-%Y'))
-    image: Optional[str] = Field(None, validate_format('.+\.((png)|(jpg))$'))
+    """UserProfile model to store the user's details."""
+    birth_date: Optional[date] = Field(None, format='%m-%d-%Y')
+    image: Optional[str] = Field(None, format='.+\.((png)|(jpg))$')
     preferences: Optional[Dict] = Field(None)
     theme_preferences: str = Field("default")
 
 
 class FileUpload(BaseModel):
-    # Model to store uploaded files using Pydantic BaseModel and added validation
+    """Model to store uploaded files."""
     file: Optional[str] = Field(None, description='uploaded file path')
     token: str = Field(default_factory=secrets.token_urlsafe)
 
-    # Adding a custom validator to check for allowed extensions
     @validator('file')
     def check_file_extension(cls, v):
+        """Check file extension."""
         allowed_extensions = ['pdf', 'doc', 'jpg', 'png']
         if not v.split(".")[-1] in allowed_extensions:
             raise ValueError('Invalid file extension. Please upload a pdf, doc, jpg or png file.')
@@ -32,23 +32,26 @@ class FileUpload(BaseModel):
 
 
 class Banking(BaseModel):
+    """Model to keep track of banking transactions."""
     transactions: Dict = Field(default_factory=dict)
 
 
 class AIConversation(BaseModel):
-    user_id: int = Field(...)  # Representing Foreign Key relation 
+    """Model for keeping track of AI conversation."""
+    user_id: int = Field(...) 
     previous_responses: List = Field(default_factory=list)
     current_context: str = Field(...)
 
-    # Adding a validator to assert that user_id is positive integer
     @validator('user_id')
     def check_positive(cls, v):
+        """Assert user_id is positive."""
         if v <= 0:
             raise ValueError('user_id must be a positive integer')
         return v
 
 
 class UIPageData(BaseModel):
+    """Model for UI page data."""
     page_id: str = Field(...)
     page_data: Dict = Field(default_factory=dict)
 
