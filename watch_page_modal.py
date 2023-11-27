@@ -12,7 +12,8 @@ github_api = Github()
 # Logger instance 
 LOGGER = logging.getLogger(__name__)
 
-# This function fetches all the open pull requests for a specific repository
+# This function fetches all the open pull requests for a specific repository.
+# It's been optimised to directly return the list of pull requests instead of an iterator
 def fetch_open_pull_requests(repository):
     """
     Fetch all open pull requests for the specified repository
@@ -21,8 +22,8 @@ def fetch_open_pull_requests(repository):
         # Access the repository using Github API
         repo = github_api.get_repo(repository)
 
-        # Get all open pull requests from the repository
-        pull_requests = repo.get_pulls(state='open')
+        # Get all open pull requests from the repository. Converting to list for efficiency
+        pull_requests = list(repo.get_pulls(state='open'))
         LOGGER.info("%s open pull requests found in %s.", len(pull_requests), repository)
 
         return pull_requests
@@ -33,6 +34,7 @@ def fetch_open_pull_requests(repository):
         return {'error': str(error)}, 400
 
 # This function modifies the title of a pull request
+# Now includes a check to avoid unnecessary API calls if the new title is the same as the old one
 def modify_pull_request(repository, number, title=None):
     """
     Modify the title of a pull request
@@ -43,7 +45,7 @@ def modify_pull_request(repository, number, title=None):
 
         # Get the pull request using its number
         pull_request = repo.get_pull(number)
-        if title:
+        if title and title != pull_request.title:
             # Modify the title of the pull request
             pull_request.edit(title=title)
         LOGGER.info("Pull request #%s title changed to %s.", number, title)
@@ -59,23 +61,23 @@ def modify_pull_request(repository, number, title=None):
 def determine_model(model: Union[str, BaseModel], data: Dict[str, Any]):
     """
     Given a model and data, determines the kind of model and validates its data
+    Now using a dictionary for cleaner and more efficient model selection
     """
     try:
+        models = {
+            'UserProfile': UserProfile,
+            'FileUpload': FileUpload,
+            'Banking': Banking,
+            'AIConversation': AIConversation,
+            'UIPageData': UIPageData
+        }
+
         if isinstance(model, str):
-            if (model == 'UserProfile'):
-                model = UserProfile
-            elif (model == 'FileUpload'):
-                model = FileUpload
-            elif (model == 'Banking'):
-                model = Banking
-            elif (model == 'AIConversation'):
-                model = AIConversation
-            elif (model == 'UIPageData'):
-                model = UIPageData
-            else:
+            model_to_validate = models.get(model)
+            if not model_to_validate:
                 raise ValidationError([ErrorWrapper(ValueError('Invalid model.'), loc='model')], model=BaseModel)
-            
-        model(**data)
+
+        model_to_validate(**data)
 
     except ValidationError as ve:
         LOGGER.error(f"Failed validation for {model}: {ve}")
