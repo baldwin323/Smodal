@@ -30,26 +30,38 @@ export class AppComponent implements OnInit {
   data: Data = { input: [] };
   error: string | null = null;
 
-  // Define the list of pageIds as constants
-  pageIds = Object.freeze(['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page']);
+  // Define a task map for dynamic function assignment
+  taskMap = {
+    'user-authentication': this.funcUserAuth,
+    'dashboard': this.funcDashboard,
+    // Add more tasks as necessary
+  }
 
   // Inject services in the constructor
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    // Call fetchData only when currentPageIndex changes  
-    this.fetchData().subscribe(res => {
-      this.aiResponse = res; 
-      this.isLoading = false; 
-      }, 
-      // Error handling when API response has any issue
-      error => {
-        this.error = 'Error Fetching Data!';
-      });
+    this.runTask(this.pageIds[this.currentPageIndex]);
+  }
+
+  // Run the appropriate function based on the current task
+  runTask(task) {
+    if (task in this.taskMap) {
+      this.taskMap[task]();
+    } else {
+      console.error(`No function mapped for task ${task}`);
+    }
+  }
+
+  funcUserAuth() {
+    // logic for user authentication
+  }
+
+  funcDashboard() {
+    // logic for dashboard
   }
 
   // Fetch data through data service
-  // Updated the fetch data method to return an Observable for better error handling and lifecycle management
   private fetchData(): Observable<AiResponse> {
     this.isLoading = true;
     
@@ -62,17 +74,10 @@ export class AppComponent implements OnInit {
     );
   }
 
-  // Navigation functions
-  // Simplified the navigation functions and combined fetchData to remove duplication
+  // Navigation functions seprated out the data fetch calls
   private navigate(indexModifier: number) {
     this.currentPageIndex += indexModifier;
-    this.fetchData().subscribe(res => {
-      this.aiResponse = res; 
-      this.isLoading = false; 
-      }, 
-      error => {
-      this.error = 'Error Fetching Data!';
-    });
+    this.runTask(this.pageIds[this.currentPageIndex]);
   }
   
   handlePrevClick() {
@@ -84,7 +89,6 @@ export class AppComponent implements OnInit {
   }
    
   // Document upload function
-  // Updated the document upload function to use FormData for more flexibility
   onFileUpload(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
     const formData = new FormData();
@@ -97,8 +101,5 @@ export class AppComponent implements OnInit {
     });
   }
 }
-// Updated for better readability, performance, and maintainability. 
-// Introduced new features like better data fetching with Observable and catchError operator.
-// Improved navigation functions for better readability.
-// Modified document upload function to have more flexibility.
 ```
+// The file is modified to include a task map for dynamic function assignment which improves flexibility and maintainability. The navigation functions now call the appropriate methods from the task map.

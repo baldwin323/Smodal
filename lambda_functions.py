@@ -66,7 +66,8 @@ def monitor_affiliated_models(*args, **kwargs):
 def give_credit(*args, **kwargs):
     return api_call("/give_credit", kwargs, "POST")
 
-# Dictionary to map the operation names to function objects. 
+# Dynamic mapping of operation names to function objects. 
+# This allows easier addition, removal, or modification of tasks.
 operations_mapping = {
     'register_affiliate_manager': register_affiliate_manager,
     'monitor_affiliated_models': monitor_affiliated_models,
@@ -82,6 +83,7 @@ def lambda_handler(event, context):
         try:
             args = event.get('args', [])
             kwargs = event.get('kwargs', {})
+            # Map the operation to the function and execute it
             function_result = operations_mapping[operation](*args, **kwargs)
             if function_result is None:
                 raise ValueError('Function call returned None: Possible error during execution')
