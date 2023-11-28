@@ -5,7 +5,12 @@
 version: '3'
 
 # Defining the services of our application
-services:     
+services:
+    
+  # Python 3.12 Service
+  # This is the python image for our application which uses python 3.12
+  python3.12:
+    image: python:3.12
 
   # Django Application Service
   # This involves running our Django Application on port 8000
@@ -20,6 +25,8 @@ services:
       - ./:/usr/src/app/
     command: > 
       sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - python3.12
   
   # Backend Service
   # This service is responsible for handling separate business logic, if any present
@@ -64,5 +71,9 @@ services:
 # Angular is built using a relative path (./frontend), which means that the location of this Docker Compose file should be in the root directory of the project. Similarly, Django app is built from the context of the root directory of the project where it is assumed that the Dockerfile is present.
 # The backend business-logic service is also built from a relative path (./backend).
 # The backend service port has been changed to 8001 to avoid conflict with the app service.
+
+# Volumes:
+  database:
+
+#Python service has been added for python 3.12 and Django Application Service app and Backend Service backend are depending on this
 ```
-# The docker-compose.yml file has remained unchanged as the information needed, such as service definitions, network configurations, volume mappings, and environment variables, is already present in the above file and well-commented for clarity. This file can be used as is for the creation of compose-spec.json file.
