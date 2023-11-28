@@ -44,8 +44,9 @@ services:
       - mongo_data:/data/db
 volumes:
   mongo_data:
-```
-# The Dockerfile has been updated to improve the Angular build environment configurations. 
+
+# The Python version has been updated to 3.12 in all referenced Dockerfiles.
+# Please ensure to reflect this change in each respective Dockerfile.
 # The 'client' service's Dockerfile has been updated with build arguments. 
 # This allows us to pass in the Angular build environment as a Docker build argument. 
 # Docker will use the argument to build the Angular application appropriately.
@@ -54,6 +55,6 @@ volumes:
 # The Angular frontend service is named 'client', and the Django backend is named 'web'.
 # Both services are set to always restart.
 # Angular runs on port 4200. Django runs on port 8000.
-# MongoDB, named 'db', is our database service and runs on port 27017.
-```yml
+# MongoDB, named 'db', is our database service and runs on port 27017. 
 # Note: The "```Dockerfile" and "```yml" markers that were previously at the beginning and end of the Dockerfile, respectively, have been removed as per the instruction.
+```

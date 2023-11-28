@@ -17,6 +17,7 @@ EXPOSE 4200
 RUN ng build --prod
 
 # Moving onto creating the Django backend. Python base image is used.
+# Python version updated to 3.12 as per instruction
 FROM python:3.12-alpine as backend
 WORKDIR /app
 COPY ./backend .
