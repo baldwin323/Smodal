@@ -40,6 +40,14 @@ COPY ./backend/nginx/nginx.conf /etc/nginx/conf.d
 
 # Added Nginix command to be executed during the container's runtime and not during the build process.
 CMD ["nginx", "-g", "daemon off;"]
+
+# Setting environment variables for the entire app as per instruction
+ENV APP_ENV=kinsta 
+ENV DB_HOST=database_kinsta_example
+ENV DB_NAME=my_database_name 
+ENV DB_USER=my_database_user 
+ENV DB_PASS=my_database_password 
+
 # Here, the build sequence has been updated to ensure Angular is built before the Python backend
 # This is to ensure that the necessary dependencies for Angular are installed with npm install
 # And the Angular app is built and available before setting up the backend and nginx server

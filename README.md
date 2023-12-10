@@ -6,6 +6,9 @@
 
 **Description**: The modal.tokai application is a state-of-the-art Flask-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architected based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Flask's templating system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. It now comes wrapped in a docker container which makes it easy to set up and use.
 
+## New Updates
+Ensure your Python version is updated to Python3.12 and Angular to the latest version as the modal functionality now requires these updated versions.
+
 The UI of the application is intentionally designed with proper theming and responsiveness in mind. It adapts properly to different screen sizes, making it mobile-friendly. It features loading spinners to indicate processing requests. The application also prompts for user feedback periodically to continuously refine its capabilities.
 
 It only requires internet connection and a browser to function effectively, and can be powered on with a single click similar to a web or mobile app.
@@ -45,16 +48,20 @@ Ensure you have the latest version of Docker installed on your machine. For inst
     ```
 The application will now be accessible at localhost:8000
 
-## Deployment using TeamCity
+## Deployment on Kinsta
 
-To automate the deployment of modal.tokai, we can utilize our build configuration template for TeamCity. 
-The template can also be found within 'deploy.py' script and is methodically sequenced to perform stages such as unstaged changes check, pulling the latest version of application code, building Angular app, committing and pushing changes, building docker image and running docker compose.
+To deploy modal.tokai on Kinsta, follow these instructions:
 
-### Prerequisites
+1. Navigate to your Kinsta Dashboard.
+2. Select the 'Sites' option from the left-hand menu and choose 'Add Site'.
+3. Input the desired settings and click 'Add Site'.
+4. Now under the 'Sites' menu, select your site, and click on the 'Info' tab.
+5. Under the 'SFTP/SSH' section, you can find your SSH/SFTP details. Use this info to enable Git and SSH on your Kinsta site.
+6. Log in to your Kinsta site via SSH and clone your Git repository.
+7. After successful repository cloning, navigate to your site's root directory (/www/your_site/public), and setup the .env file with your environment variables.
+8. Finally, you can deploy the application using the init script.
 
-Ensure you have TeamCity installed on your machine.
-
-You can set up this configuration in your TeamCity project and correctly map the repository and steps to be executed. Once correctly set up, TeamCity will trigger builds and optionally deployments based on your criteria.
+Please ensure the code is clean and all functions and classes have appropriate comments documenting their behavior. Keep track of all environment variables and make sure they are correctly loaded in all instances.
 
 ## Executing Test Cases
 
