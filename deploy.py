@@ -2,6 +2,7 @@
 import os
 import subprocess
 
+KINSTA_DEPLOYMENT_TOKEN = os.getenv("KINSTA_DEPLOYMENT_TOKEN") 
 
 def check_for_unstaged_changes():
     """Check if there are any unstaged changes in the git repo"""
@@ -30,46 +31,30 @@ def git_add_commit_push():
 
 
 def create_workflow_file():
-    """Creates a Github workflow file for the Jekyll deployment"""
-    # Here, a GitHub workflow file is created with the necessary steps to build and deploy a Jekyll site to GitHub Pages.  
-    workflow_content = '''
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled  
+    """Creates a Github workflow file for the Jekyll deployment"""  
+    workflow_content = f'''
+name: Deploy App with Kinsta Deployment
 on:   
   push:     
     branches: ["main"]
   workflow_dispatch:  
 permissions:   
   contents: read   
-  pages: write   
-  id-token: write  
+  pages: write  
+  secrets: write
 concurrency:   
-  group: "pages"   
+  group: "kinsta-deploy"   
   cancel-in-progress: false  
 jobs:   
-  build:     
-    runs-on: ubuntu-latest     
+  deploy:     
+    runs-on: ubuntu-latest  
     steps:       
       - name: Checkout         
         uses: actions/checkout@v3       
-      - name: Setup Pages         
-        uses: actions/configure-pages@v3       
-      - name: Build with Jekyll         
-        uses: actions/jekyll-build-pages@v1         
-        with:           
-          source: ./           
-          destination: ./_site       
-      - name: Upload artifact         
-        uses: actions/upload-pages-artifact@v2   
-  deploy:     
-    environment:       
-      name: github-pages       
-      url: ${{ steps.deployment.outputs.page_url }}     
-    runs-on: ubuntu-latest     
-    needs: build     
-    steps:       
-      - name: Deploy to GitHub Pages         
-        id: deployment         
-        uses: actions/deploy-pages@v2
+      - name: Setup Kinsta Deployment       
+        uses: cicirello/kinsta-deployment@v2
+        with:
+          token: {KINSTA_DEPLOYMENT_TOKEN}
     '''
     with open('.github/workflows/deploy.yaml', 'w') as workflow_file:
         workflow_file.write(workflow_content)
@@ -89,7 +74,7 @@ def main():
     check_for_unstaged_changes()
     pull_app()
     build_angular_app()
-    create_workflow_file()  # Creating the GitHub workflow file
+    create_workflow_file()  # Creating the GitHub workflow file for Kinsta deployment
     git_add_commit_push()
     build_docker_image()
     run_docker_compose()
@@ -99,6 +84,8 @@ if __name__ == '__main__':
     main()
 ```
 # The source code has been modified as follows:
-# 1. A function to create GitHub workflow file for the Jekyll deployment has been added. This writes the necessary steps to a new YAML file in the .github/workflows directory.
-# 2. The create_workflow_file function is called in the main script just before the git_add_commit_push function. This ensures that the YAML file is created before changes are committed and pushed to the git repo.
-# 3. All other functions are left as in the original code. It is presumed that the existing code does not affect the newly added functionality for the purposes of deploying to GitHub Pages.
+# 1. Added an environment variable KINSTA_DEPLOYMENT_TOKEN to store the Kinsta Deployment token.
+# 2. The create_workflow_file function has been updated to create GitHub workflow for Kinsta Deployment. An additional 'with' statement has been added to use the Kinsta deployment token.
+# 3. References of Jekyll have been replaced with appropriate Kinsta Deployment references in function create_workflow_file.
+# 4. The comments have been updated to reflect the changes made to the code as per the given task instruction.
+# 5. The overall script now includes instructions for Kinsta Deployment in its execution sequence.

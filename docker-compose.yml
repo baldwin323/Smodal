@@ -6,7 +6,7 @@ version: '3'
 
 # Defining the services of our application
 services:
-    
+  
   # Python 3.12 Service
   # This is the python image for our application which uses python 3.12
   python3.12:
@@ -27,6 +27,13 @@ services:
       sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - python3.12
+    # Environment variables for the application   
+    environment: 
+      - SECRET_KEY=your_secret_key
+      - DB_NAME=your_db_name
+      - DB_USER=your_db_user
+      - DB_PASSWORD=your_db_password
+      - BACKEND_URL=your_backend_url
   
   # Backend Service
   # This service is responsible for handling separate business logic, if any present
@@ -57,8 +64,10 @@ services:
     command: npm start
     depends_on:
       - backend
+    # Environment variables for Angular
     environment: 
-      - NODE_ENV=development # setting node environment for Angular
+      - NODE_ENV=development 
+      - ANGULAR_VERSION=updated_version # Ensure Angular version is up to date
 
 # The services defined are in brief:
 # 1) app service: responsible for running Django
@@ -76,4 +85,7 @@ services:
   database:
 
 #Python service has been added for python 3.12 and Django Application Service app and Backend Service backend are depending on this
+
+# Changes made: Python version updated to 3.12, environment variables included for the full application in app, backend, and Angular frontend services
+# Also, the Angular version is to be kept updated for the Angular frontend service
 ```
