@@ -5,7 +5,7 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: python3.12 manage.py runserver 0.0.0.0:8000  # Python version updated to 3.12
+    command: /usr/bin/docker python3.12 manage.py runserver 0.0.0.0:8000  # Python version updated to 3.12 and full path to docker binary added
     volumes:
       - .:/code
     ports:
@@ -48,6 +48,7 @@ volumes:
   mongo_data:
   
 # Changes made:
+# Added the full path to the docker binary in the 'web' service command to fix the "docker: command not found" error.
 # Updated Python version to 3.12 in the command of the 'web' service.
 # Added environment variables for the 'web' service for Kinsta deployment.
 # For the 'client' service, updated the Dockerfile arguments and environment to be suitable for Kinsta deployment.
