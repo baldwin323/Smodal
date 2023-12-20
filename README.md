@@ -7,6 +7,7 @@
 **Description**: The modal.tokai application is a state-of-the-art Flask-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architected based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Flask's templating system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. It now comes wrapped in a docker container which makes it easy to set up and use.
 
 ## New Updates
+
 Ensure your Python version is updated to Python3.12 and Angular to the latest version as the modal functionality now requires these updated versions.
 
 The UI of the application is intentionally designed with proper theming and responsiveness in mind. It adapts properly to different screen sizes, making it mobile-friendly. It features loading spinners to indicate processing requests. The application also prompts for user feedback periodically to continuously refine its capabilities.
@@ -23,7 +24,7 @@ These instructions will help you get a copy of the project up and running on you
 
 ### Prerequisites
 
-Ensure you have the latest version of Docker installed on your machine. For installation guide check [here](https://docs.docker.com/install/)
+Ensure you have the latest version of Docker and Docker-compose installed on your machine. For installation guide check [here](https://docs.docker.com/install/)
 
 ### Installation
 
@@ -42,9 +43,9 @@ Ensure you have the latest version of Docker installed on your machine. For inst
     docker build -t modal-tokai-image .
     ```
 
-4. After successful image build, initiate the application with:
+4. After successful image build, initiate the Docker Compose with:
     ```bash
-    docker run -p 8000:8000 modal-tokai-image
+    docker-compose up
     ```
 The application will now be accessible at localhost:8000
 
