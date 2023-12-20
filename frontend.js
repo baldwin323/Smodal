@@ -94,4 +94,6 @@ export class AppComponent implements OnInit {
 // This code has been updated to ensure compatibility with the latest stable version of Angular and to improve cleanliness, readability and maintainability.
 // The fetchData function now returns an Observable for better error handling and management.
 // The navigation and document upload functions have been simplified and enhanced as well, for increased flexibility.
+
+// Update: npm install commands are now using the --omit=dev option when installing packages in production.
 ```
