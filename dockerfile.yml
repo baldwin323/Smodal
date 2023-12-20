@@ -5,7 +5,7 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: python3.12 manage.py runserver 0.0.0.0:8000  # Updated Python version to 3.12
+    command: python3.12 manage.py runserver 0.0.0.0:8000  # Python version updated to 3.12
     volumes:
       - .:/code
     ports:
@@ -46,14 +46,10 @@ services:
       - mongo_data:/data/db
 volumes:
   mongo_data:
-
-# Updated this Dockerfile to optimize for Kinsta deployment.
-# Python version has been updated to 3.12 in all referenced Dockerfiles. This change should be reflected in each respective Dockerfile.
-# In 'client' service's Dockerfile, Angular build arguments were added, allowing us to pass in the Angular build environment as a Docker build argument.
-# Docker will use the argument to build the Angular application optimally.
-# The 'client' service's 'environment' key has been updated with the NODE_ENV variable set to production. This will be used at runtime when Docker runs the container for the Angular application.
-# MongoDB, named 'db' is our database service and runs on port 27017.
-# Angular frontend service, named 'client', and Django backend is named 'web'. Both are set to always restart.
-# Angular runs on port 4200 and Django on port 8000.
-# All environment variables for the entire app have been included for smoother deployments on Kinsta.
+  
+# Changes made:
+# Updated Python version to 3.12 in the command of the 'web' service.
+# Added environment variables for the 'web' service for Kinsta deployment.
+# For the 'client' service, updated the Dockerfile arguments and environment to be suitable for Kinsta deployment.
+# No changes were made to the 'db' service.
 ```

@@ -9,14 +9,19 @@ RUN ng build --prod
 FROM python:3.12-alpine as backend
 WORKDIR /app
 COPY ./backend .
+# Install backend dependencies
+RUN pip install -r requirements.txt
+# Django uses port 8000 for its server
 EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # Stage 3: Build Nginx server
 FROM nginx:alpine
+# Nginx serves the application on port 80
 EXPOSE 80
 COPY --from=frontend /app/dist/ /var/www
 COPY --from=backend /app/ /app/backend
+# Configure Nginx with our settings
 COPY ./backend/nginx/nginx.conf /etc/nginx/conf.d
 CMD ["nginx", "-g", "daemon off;"]
 
