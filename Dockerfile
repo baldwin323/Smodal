@@ -5,7 +5,8 @@
 # This Dockerfile describes the necessary steps to build the Docker image
 
 # 'builder' stage—this is a temporary image used for building our application
-FROM python:3.7-slim-buster as builder
+# Updated Python version to 3.12
+FROM python:3.12-slim-buster as builder
 
 # Set a working directory for the 'builder' stage
 WORKDIR /builder
@@ -21,7 +22,8 @@ RUN pip install -r requirements.txt
 
 
 # 'app' stage—this contains the final application image
-FROM python:3.7-slim-buster as app
+# Updated Python version to 3.12
+FROM python:3.12-slim-buster as app
 
 # Set a working directory for the 'app' stage
 WORKDIR /app
