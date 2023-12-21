@@ -5,7 +5,7 @@ import os
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotAllowed
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseServerError
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 
@@ -41,44 +41,76 @@ PAGES = {
 
 @login_required
 def affiliate_register(request):
-    response = register_affiliate_manager(request, SERVICES_ADDRESS, SERVICES_PORT)
-    return JsonResponse(response)
+    try:
+        response = register_affiliate_manager(request, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    except Exception as e:
+        logger.error(f"There was an error registering afiliate manager: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
 @login_required
 def affiliate_monitor(request):
-    response = monitor_affiliated_models(request, SERVICES_ADDRESS, SERVICES_PORT)
-    return JsonResponse(response)
+    try:
+        response = monitor_affiliated_models(request, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    except Exception as e:
+        logger.error(f"There was an error monitoring affiliated models: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
 @login_required
 def affiliate_credit(request):
-    response = give_credit(request, SERVICES_ADDRESS, SERVICES_PORT)
-    return JsonResponse(response)
+    try:
+        response = give_credit(request, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    except Exception as e:
+        logger.error(f"There was an error giving credit: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
 @login_required
 def is_authenticated(request):
     userid = request.session.get("user_id", None)
     if not userid: 
         return HttpResponseBadRequest("User is not authenticated.")
-    return JsonResponse(check_authentication(userid, SERVICES_ADDRESS, SERVICES_PORT))
+    try:
+        response = check_authentication(userid, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    except Exception as e:
+        logger.error(f"There was an error checking authentication: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
 @login_required
 def load_dashboard(request):
     userid = request.session.get("user_id", None)
     if not userid: 
         return HttpResponseBadRequest("User is not authenticated.")
-    return JsonResponse(load_user_dashboard(userid, SERVICES_ADDRESS, SERVICES_PORT))
+    try:
+        response = load_user_dashboard(userid, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    except Exception as e:
+        logger.error(f"There was an error loading dashboard: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
 @require_POST
 def login_user(request):
     if request.method != "POST":
         return HttpResponseNotAllowed("Invalid request method. Only POST is supported.")
-    return JsonResponse(handle_user_login(request.POST, SERVICES_ADDRESS, SERVICES_PORT))
+    try:
+        response = handle_user_login(request.POST, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    except Exception as e:
+        logger.error(f"There was an error logging user in: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
 @login_required
 def logout_user(request):
     if not request.session.get("user_id", None): 
         return HttpResponseBadRequest("User is not authenticated.")
-    return JsonResponse(handle_user_logout(request.session.get("user_id", None), SERVICES_ADDRESS, SERVICES_PORT))
+    try:
+        response = handle_user_logout(request.session.get("user_id", None), SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    except Exception as e:
+        logger.error(f"There was an error logging user out: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
 @login_required
 def serve(request, page):
@@ -91,13 +123,18 @@ def serve(request, page):
         return page_spec['method'](request)
     except Exception as e:
         logger.error(f"There was an error serving the page: {page}", exc_info=e)
-        return JsonResponse({"status": "error", "message": "There was an error serving your request."}, status=500)
+        return HttpResponseServerError('Internal Server Error')
 
 @login_required
 def api_serve(request, page_id):
     if request.method != 'GET':
         return HttpResponseNotAllowed("Invalid request method. Only GET is supported.")
-    return JsonResponse(process_api_request(request.GET, page_id, SERVICES_ADDRESS, SERVICES_PORT))
+    try:
+        response = process_api_request(request.GET, page_id, SERVICES_ADDRESS, SERVICES_PORT)
+        return JsonResponse(response)
+    except Exception as e:
+        logger.error(f"There was an error processing API request: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
 @login_required
 def ai_predict(request):
@@ -112,7 +149,9 @@ def ai_predict(request):
             current_context=response
             )
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': 'Could not process your request'}, status=500)
+        logger.error(f"There was an error processing predictions: {e}")
+        return HttpResponseServerError('Internal Server Error')
 
     return JsonResponse({'response': response})
 ```
+This modified source code now properly handles exceptions that might have been causing the 503 error by returning a 500 error message, allowing you to locate and address the issue. It also logs these errors.

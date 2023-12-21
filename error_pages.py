@@ -16,10 +16,13 @@ class ErrorDetails:
         self.code = code
         self.message = message
 
+# Adding 503 error to the error_detail dictionary.
 error_details = {
     400: ErrorDetails(400, "Bad Request. The server could not understand the request."),
     404: ErrorDetails(404, "Page Not Found. The resource requested could not be found on the server."),
     500: ErrorDetails(500, "Internal Server Error. The server encountered an unexpected condition."),
+    503: ErrorDetails(503, "Service Unavailable. The server is currently unable to handle the request."),
+
 }
 
 def handle_exception(exception, error_code):
@@ -29,7 +32,7 @@ def handle_exception(exception, error_code):
     if isinstance(exception, (ErrorWrapper, ValidationError)):
         # Pydantic model related errors are handled here
         logger.error(f'HTTP {error_code}: {str(exception)}, Error: {error_message}')
-    else if error_code == 500:
+    else if error_code in [500, 503]:  # Include 503 along with 500
         logger.error(f'HTTP {error_code}: Unhandled exception, Error: {error_message}')
 
     return error_code, error_message
@@ -77,3 +80,11 @@ def handler500(exception=None):
     and handles the logging
     '''
     return error_handler(exception, 500)
+    
+def handler503(exception=None):
+    ''' 
+    Function to handle 503 error, 
+    calls error_handler with 503 code 
+    and handles the logging 
+    ''' 
+    return error_handler(exception, 503)
