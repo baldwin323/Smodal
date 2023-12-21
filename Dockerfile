@@ -30,6 +30,10 @@ COPY --from=backend /app/ /app/backend
 COPY ./backend/nginx/nginx.conf /etc/nginx/conf.d
 CMD ["nginx", "-g", "daemon off;"]
 
+# Added an additional Nginx configuration to handle 503 error by directing it to a custom error page or fallback service
+# in case of the main service unavailability.
+COPY ./backend/nginx/error503.conf /etc/nginx/conf.d
+
 # Set environment variables for the app
 # These variables are specific to the Kinsta deployment
 ENV APP_ENV=kinsta 

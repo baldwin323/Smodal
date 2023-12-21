@@ -39,9 +39,9 @@ export class AppComponent implements OnInit {
       this.aiResponse = res; 
       this.isLoading = false; 
       }, 
-      // Error handling when API response has any issue
+      // Improved error handling when API response has any issue
       error => {
-        this.error = 'Error Fetching Data!';
+        this.error = this.handleError(error);
       });
   }
 
@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
     return this.dataService.getAiPredict(this.data).pipe(
       catchError((error) => {
         this.isLoading = false;
-        this.error = error.message;
+        this.error = this.handleError(error);
         return throwError(error);
       })
     );
@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
       this.isLoading = false; 
       }, 
       error => {
-        this.error = 'Error Fetching Data!';
+        this.error = this.handleError(error);
       });
   }
   
@@ -90,9 +90,20 @@ export class AppComponent implements OnInit {
       }
     });
   }
-}
-// This code has been updated to ensure compatibility with the latest stable version of Angular and to improve cleanliness, readability and maintainability.
-// The fetchData function now returns an Observable for better error handling and management. API calls are updated to use the new key and secret from ai_config.py.
-// The navigation and document upload functions have been simplified and enhanced as well, for increased flexibility.
-// Update: npm install commands are now using the --omit=dev option when installing packages in production to align with the updates in the API.
+
+  // Function to handle error
+  private handleError(error: any): string {
+    let errorMessage = 'Error Fetching Data!';
+    if (error.status === 503) {
+      errorMessage = 'Service Unavailable. Please Try again later!';
+    }
+
+    return errorMessage;
+  }
+   
+  // This code has been updated to ensure compatibility with the latest stable version of Angular and to improve cleanliness, readability and maintainability.
+  // The fetchData function now returns an Observable for better error handling and management. API calls are updated to use the new key and secret from ai_config.py.
+  // The navigation and document upload functions have been simplified and enhanced as well, for increased flexibility.
+  // Added a new function 'handleError' that checks for 503 server error and returns a meaningful message to the user
+  // Update: npm install commands are now using the --omit=dev option when installing packages in production to align with the updates in the API.
 ```
