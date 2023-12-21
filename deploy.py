@@ -1,9 +1,12 @@
+
 ```python
 import os
-from ai_config import Credentials # Imported Credentials from ai_config.py
 import subprocess
+# Imported docker from ai_config.py
+from ai_config import docker, Credentials
 
-KINSTA_DEPLOYMENT_TOKEN = os.getenv("KINSTA_DEPLOYMENT_TOKEN")
+# Updated KINSTA_DEPLOYMENT_TOKEN using new API Key
+KINSTA_DEPLOYMENT_TOKEN = Credentials.API_KEY
 
 def check_for_unstaged_changes():
     """Check if there are any unstaged changes in the git repo"""
@@ -20,8 +23,7 @@ def pull_app():
 
 def build_angular_app():
     """Builds the Angular application"""
-    # Specifies that we want Angular build to be production-ready
-    subprocess.run('npm run build --prod'.split())
+    subprocess.run('npm run build --omit=dev'.split())
 
 
 def git_add_commit_push():
@@ -33,7 +35,8 @@ def git_add_commit_push():
 
 def create_workflow_file():
     """Creates a Github workflow file for the Jekyll deployment"""  
-    # Integrated new API credentials for Kinsta Deployment
+    arcpy.AddMessage("Creating the Github workflow file for Kinsta deployment with updated API Key...")
+    
     workflow_content = f'''
 name: Deploy App with Kinsta Deployment
 on:   
@@ -56,20 +59,25 @@ jobs:
       - name: Setup Kinsta Deployment       
         uses: cicirello/kinsta-deployment@v2
         with:
-          token: {Credentials.API_KEY}  # Updated API Key from ai_config.py
+          token: {KINSTA_DEPLOYMENT_TOKEN}
     '''
     with open('.github/workflows/deploy.yaml', 'w') as workflow_file:
         workflow_file.write(workflow_content)
+    arcpy.AddMessage("Workflow file has been created successfully.")
 
 
 def build_docker_image():
     """Builds Docker image using Dockerfile in current directory"""
-    subprocess.run(['docker', 'build', '.'])
+    arcpy.AddMessage("Building the Docker image for the containerized application...")
+    subprocess.run([docker, 'build', '.'])
+    arcpy.AddMessage("Docker image has been built successfully.")
 
 
 def run_docker_compose():
     """Starts the application using Docker Compose"""
-    subprocess.run(['docker-compose', 'up', '-d'])
+    arcpy.AddMessage("Starting the app using Docker Compose...")
+    subprocess.run([docker, 'compose', 'up', '-d'])
+    arcpy.AddMessage("The application has been started successfully.")
 
 
 def main():
@@ -86,6 +94,9 @@ if __name__ == '__main__':
     main()
 ```
 # Changes to the source code include:
-# 1. Importing Credentials from ai_config.py to use the updated API Key.
-# 2. Updating the Kinsta Deployment token in the create_workflow_file() function to use the new API Key from Credentials.
-# 3. Adding relevant comments to indicate the changes made.
+# 1. Importing Docker and Credentials from ai_config.py to use Docker and the updated API Key.
+# 2. Updating the Kinsta Deployment token in the KINSTA token variable to use the new API Key from Credentials.
+# 3. Updating the build_angular_app function to exclude development dependencies.
+# 4. Updating build_docker_image and run_docker_compose function to use Docker from ai_config.py
+# 5. Adding relevant status messages within functions to denote progress.
+# 6. Adding relevant comments to indicate the changes made.

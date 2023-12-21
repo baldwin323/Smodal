@@ -9,18 +9,23 @@ RUN ng build --prod
 FROM python:3.12-alpine as backend
 WORKDIR /app
 COPY ./backend .
-# Install backend dependencies
-RUN pip install -r requirements.txt
+
+# Install backend dependencies and Docker
+RUN apk add --no-cache docker \
+    && pip install -r requirements.txt
+
 # Django uses port 8000 for its server
 EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
 # Stage 3: Build Nginx server
 FROM nginx:alpine
+
 # Nginx serves the application on port 80
 EXPOSE 80
 COPY --from=frontend /app/dist/ /var/www
 COPY --from=backend /app/ /app/backend
+
 # Configure Nginx with our settings
 COPY ./backend/nginx/nginx.conf /etc/nginx/conf.d
 CMD ["nginx", "-g", "daemon off;"]
@@ -32,5 +37,10 @@ ENV DB_HOST=database_kinsta_example
 ENV DB_NAME=my_database_name 
 ENV DB_USER=my_database_user 
 ENV DB_PASS=my_database_password
+
 # API key for Smodal-Kinsta-app
 ENV SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
+
+# Correct the npm configuration error message by setting NODE_ENV to 'production' 
+# to omit dev dependencies from the final docker image
+ENV NODE_ENV=production
