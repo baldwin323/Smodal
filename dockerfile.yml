@@ -22,7 +22,7 @@ services:
       context: ./client
       dockerfile: Dockerfile.angular
       args:
-        - environment=development  # Updated the Angular environment setting for Kinsta deployment
+        - environment=production  # Updated the Angular environment setting for Kinsta deployment
     volumes: 
       - './:/usr/src/app'
       - '/usr/src/app/node_modules'
