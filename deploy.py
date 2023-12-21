@@ -1,5 +1,6 @@
 ```python
 import os
+from ai_config import Credentials # Imported Credentials from ai_config.py
 import subprocess
 
 KINSTA_DEPLOYMENT_TOKEN = os.getenv("KINSTA_DEPLOYMENT_TOKEN")
@@ -32,6 +33,7 @@ def git_add_commit_push():
 
 def create_workflow_file():
     """Creates a Github workflow file for the Jekyll deployment"""  
+    # Integrated new API credentials for Kinsta Deployment
     workflow_content = f'''
 name: Deploy App with Kinsta Deployment
 on:   
@@ -54,7 +56,7 @@ jobs:
       - name: Setup Kinsta Deployment       
         uses: cicirello/kinsta-deployment@v2
         with:
-          token: {KINSTA_DEPLOYMENT_TOKEN}
+          token: {Credentials.API_KEY}  # Updated API Key from ai_config.py
     '''
     with open('.github/workflows/deploy.yaml', 'w') as workflow_file:
         workflow_file.write(workflow_content)
@@ -74,7 +76,7 @@ def main():
     check_for_unstaged_changes()
     pull_app()
     build_angular_app()
-    create_workflow_file()  # Creating the GitHub workflow file for Kinsta deployment
+    create_workflow_file()  # Creating the GitHub workflow file for Kinsta deployment with updated API Key
     git_add_commit_push()
     build_docker_image()  # Build the Docker image for the containerized application
     run_docker_compose()  # Run the app using Docker Compose
@@ -83,7 +85,7 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-# The source code has been modified as follows:
-# 1. Added the function of building a Docker image build_docker_image() and running Docker Compose run_docker_compose() to create a containerized application.
-# 2. Updated the main() function to include build_docker_image() and run_docker_compose() in the end so these changes are integrated into the complete workflow.
-# 3. Added relevant comments to the new functions and modifications to clearly signify their roles in the improved script.
+# Changes to the source code include:
+# 1. Importing Credentials from ai_config.py to use the updated API Key.
+# 2. Updating the Kinsta Deployment token in the create_workflow_file() function to use the new API Key from Credentials.
+# 3. Adding relevant comments to indicate the changes made.

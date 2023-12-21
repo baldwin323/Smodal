@@ -26,8 +26,11 @@ COPY ./backend/nginx/nginx.conf /etc/nginx/conf.d
 CMD ["nginx", "-g", "daemon off;"]
 
 # Set environment variables for the app
+# These variables are specific to the Kinsta deployment
 ENV APP_ENV=kinsta 
 ENV DB_HOST=database_kinsta_example
 ENV DB_NAME=my_database_name 
 ENV DB_USER=my_database_user 
 ENV DB_PASS=my_database_password
+# API key for Smodal-Kinsta-app
+ENV SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
