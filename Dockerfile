@@ -1,6 +1,3 @@
-# The code is improved from the original Dockerfile where comments are added for each step, 
-# unnecessary files are not copied, multi-stage build is used to reduce the size of the final image.
-
 # Dockerfile for smodal
 # This Dockerfile describes the necessary steps to build the Docker image
 
@@ -19,6 +16,11 @@ COPY src /builder/src
 # Install requirements in the 'builder' stage
 # We separate this command because Docker can cache the output to speed up rebuilds
 RUN pip install -r requirements.txt
+
+# now also install docker-compose in the 'builder' stage
+# this ensure docker-compose is available when the Docker image is built
+RUN apt-get update && \
+    apt-get install -y docker-compose
 
 
 # 'app' stage—this contains the final application image

@@ -1,12 +1,13 @@
-
 ```python
 import os
 import subprocess
 # Imported docker from ai_config.py
 from ai_config import docker, Credentials
+import shutil
 
 # Updated KINSTA_DEPLOYMENT_TOKEN using new API Key
 KINSTA_DEPLOYMENT_TOKEN = Credentials.API_KEY
+
 
 def check_for_unstaged_changes():
     """Check if there are any unstaged changes in the git repo"""
@@ -14,6 +15,15 @@ def check_for_unstaged_changes():
     if result.stdout:
         print("Unstaged changes detected. Please commit them before deploying.")
         exit(1)
+
+
+def check_and_install_docker_compose():
+    """Checks if docker-compose is installed and if not, installs it"""
+    if shutil.which("docker-compose") is None:
+        print("docker-compose not found. Installing now.")
+        subprocess.run('apt-get update'.split())
+        subprocess.run('apt-get install docker-compose'.split())
+    print("docker-compose is installed.")
 
 
 def pull_app():
@@ -82,6 +92,7 @@ def run_docker_compose():
 
 def main():
     check_for_unstaged_changes()
+    check_and_install_docker_compose()  # New function to check and install docker-compose if not present
     pull_app()
     build_angular_app()
     create_workflow_file()  # Creating the GitHub workflow file for Kinsta deployment with updated API Key
@@ -94,9 +105,5 @@ if __name__ == '__main__':
     main()
 ```
 # Changes to the source code include:
-# 1. Importing Docker and Credentials from ai_config.py to use Docker and the updated API Key.
-# 2. Updating the Kinsta Deployment token in the KINSTA token variable to use the new API Key from Credentials.
-# 3. Updating the build_angular_app function to exclude development dependencies.
-# 4. Updating build_docker_image and run_docker_compose function to use Docker from ai_config.py
-# 5. Adding relevant status messages within functions to denote progress.
-# 6. Adding relevant comments to indicate the changes made.
+# New function check_and_install_docker_compose() to check if docker-compose is installed and if not, it gets installed.
+# Main function adds call to check_and_install_docker_compose function
