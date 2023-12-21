@@ -62,7 +62,7 @@ To deploy modal.tokai on Kinsta, follow these instructions:
 7. After successful repository cloning, navigate to your site's root directory (/www/your_site/public), and setup the .env file with your environment variables.
 8. Finally, you can deploy the application using the init script.
 
-Please ensure the code is clean and all functions and classes have appropriate comments documenting their behavior. Keep track of all environment variables and make sure they are correctly loaded in all instances.
+Ensure the code is clean and all functions and classes have appropriate comments documenting their behavior. Keep track of all environment variables and make sure they are correctly loaded in all instances.
 
 ## Executing Test Cases
 
