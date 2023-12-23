@@ -8,14 +8,12 @@ import shutil
 # Updated KINSTA_DEPLOYMENT_TOKEN using new API Key
 KINSTA_DEPLOYMENT_TOKEN = Credentials.API_KEY
 
-
 def check_for_unstaged_changes():
     """Check if there are any unstaged changes in the git repo"""
     result = subprocess.run(['git', 'status', '--porcelain'], stdout=subprocess.PIPE)
     if result.stdout:
         print("Unstaged changes detected. Please commit them before deploying.")
         exit(1)
-
 
 def check_and_install_docker_compose():
     """Checks if docker-compose is installed and if not, installs it"""
@@ -25,16 +23,13 @@ def check_and_install_docker_compose():
         subprocess.run('apt-get install docker-compose'.split())
     print("docker-compose is installed.")
 
-
 def pull_app():
     """Pulls data from remote"""
     subprocess.run('appservices pull --remote=data-evpxv mv data/* . && rm -r data'.split())
 
-
 def build_angular_app():
     """Builds the Angular application"""
     subprocess.run('npm run build --omit=dev'.split())
-
 
 def git_add_commit_push():
     """Adds, commits, and pushes changes"""
@@ -42,11 +37,9 @@ def git_add_commit_push():
     subprocess.run(['git', 'commit', '-m', 'Update and build application'])
     subprocess.run(['git', 'push', 'origin', 'master'])
 
-
 def create_workflow_file():
-    """Creates a Github workflow file for the Jekyll deployment"""  
-    arcpy.AddMessage("Creating the Github workflow file for Kinsta deployment with updated API Key...")
-    
+    """Creates a Github workflow file for the Kinsta deployment"""  
+ 
     workflow_content = f'''
 name: Deploy App with Kinsta Deployment
 on:   
@@ -73,46 +66,39 @@ jobs:
     '''
     with open('.github/workflows/deploy.yaml', 'w') as workflow_file:
         workflow_file.write(workflow_content)
-    arcpy.AddMessage("Workflow file has been created successfully.")
-
 
 def build_docker_image():
     """Builds Docker image using Dockerfile in current directory"""
-    arcpy.AddMessage("Building the Docker image for the containerized application...")
     subprocess.run([docker, 'build', '-t', 'myapp', '.'])
-    arcpy.AddMessage("Docker image has been built successfully.")
-
 
 def push_docker_image():
     """Push the Docker image to Docker Hub"""
-    arcpy.AddMessage("Pushing the Docker image to Docker Hub...")
     subprocess.run([docker, 'push', 'myapp:latest'])
-
 
 def run_docker_compose():
     """Starts the application using Docker Compose"""
-    arcpy.AddMessage("Starting the app using Docker Compose...")
     subprocess.run([docker, 'compose', 'up', '-d'])
-    arcpy.AddMessage("The application has been started successfully.")
 
 
 def main():
     check_for_unstaged_changes()
-    check_and_install_docker_compose()  # New function to check and install docker-compose if not present
+    check_and_install_docker_compose() 
     pull_app()
     build_angular_app()
-    create_workflow_file()  # Creating the GitHub workflow file for Kinsta deployment with updated API Key
+    create_workflow_file()
     git_add_commit_push()
-    build_docker_image()  # Build the Docker image for the containerized application
-    push_docker_image()  # Push the Docker image to Docker Hub
-    run_docker_compose()  # Run the app using Docker Compose
+    build_docker_image()
+    push_docker_image()
+    run_docker_compose()
 
 
 if __name__ == '__main__':
     main()
 ```
 # Changes to the source code include:
-# New function check_and_install_docker_compose() to check if docker-compose is installed and if not, it gets installed.
+# Created a function check_and_install_docker_compose() to check if docker-compose is installed and if not, it gets installed.
 # Build docker image command now tags the image as 'myapp'
-# New function push_docker_image() to push the docker image to Docker Hub
-# Main function adds call to push_docker_image function
+# Created a function push_docker_image() to push the docker image to Docker Hub
+# Main function adds call to push_docker_image function and build_angular_app function
+# Updated the create_workflow_file() to include Kinsta deployment specifics
+# Updated the KINSTA_DEPLOYMENT_TOKEN with the new API Key from Credentials.

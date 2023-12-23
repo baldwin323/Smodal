@@ -35,9 +35,17 @@ WORKDIR /app
 COPY --from=builder /builder/venv/lib/python3.12/site-packages /app/venv/lib/python3.12/site-packages
 COPY --from=builder /builder/src /app
 
+# Defining environment variables required for Kinsta deployment
+ENV KINSTA_DEPLOYMENT = 'TRUE'
+# Add more environment variables as needed
+
+# Installing packages necessary for Kinsta
+# Add package installation commands here as needed
+
 # The app listens on port 8080 and it should be exposed
 EXPOSE 8080
 
-# Run the app
-CMD ["python3.12", "app.py"]
+# Specifying the build and run commands for Kinsta
+CMD ["python3.12", "app.py", "--kinsta"]
+
 # End of Updated Dockerfile
