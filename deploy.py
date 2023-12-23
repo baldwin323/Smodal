@@ -79,8 +79,14 @@ jobs:
 def build_docker_image():
     """Builds Docker image using Dockerfile in current directory"""
     arcpy.AddMessage("Building the Docker image for the containerized application...")
-    subprocess.run([docker, 'build', '.'])
+    subprocess.run([docker, 'build', '-t', 'myapp', '.'])
     arcpy.AddMessage("Docker image has been built successfully.")
+
+
+def push_docker_image():
+    """Push the Docker image to Docker Hub"""
+    arcpy.AddMessage("Pushing the Docker image to Docker Hub...")
+    subprocess.run([docker, 'push', 'myapp:latest'])
 
 
 def run_docker_compose():
@@ -98,6 +104,7 @@ def main():
     create_workflow_file()  # Creating the GitHub workflow file for Kinsta deployment with updated API Key
     git_add_commit_push()
     build_docker_image()  # Build the Docker image for the containerized application
+    push_docker_image()  # Push the Docker image to Docker Hub
     run_docker_compose()  # Run the app using Docker Compose
 
 
@@ -106,4 +113,6 @@ if __name__ == '__main__':
 ```
 # Changes to the source code include:
 # New function check_and_install_docker_compose() to check if docker-compose is installed and if not, it gets installed.
-# Main function adds call to check_and_install_docker_compose function
+# Build docker image command now tags the image as 'myapp'
+# New function push_docker_image() to push the docker image to Docker Hub
+# Main function adds call to push_docker_image function
