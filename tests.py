@@ -1,7 +1,4 @@
 ```python
-# Modified the test cases to be compatible with Team City by changing the
-# way test results are outputted so that they can be properly read by Team City.
-
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from Smodal.social_media_bot import SocialMediaBot
@@ -16,10 +13,14 @@ from subprocess import Popen, PIPE
 from Smodal.logging import logger
 
 from .models import AIConversation, Banking, FileUpload, UserProfile, UIPageData
+import xmlrunner
+from teamcity.unittestpy import TeamcityTestRunner
 
-# To make the test results compatible with TeamCity, we will output the
-# test results in a format that's compatible with the TeamCity JUnit reporter.
-# This involves using a custom test runner that can output XML reports.
+# Modified the test cases to be compatible with Team City by changing the
+# way test results are outputted so that they can be properly read by Team City.
+
+# Custom test runner XMLTestRunner that outputs XML reports compatible with
+# the TeamCity JUnit reporter is implemented.
 
 class XMLTestRunner(TeamcityTestRunner):
     """
@@ -46,10 +47,7 @@ class XMLTestRunner(TeamcityTestRunner):
         return self.suite_result(suite, result)
 
 # Update the Django test settings to use the XMLTestRunner.
-
 TEST_RUNNER = 'Smodal.tests.XMLTestRunner'
-
-# The rest of the test cases go here...
 ```
 # Note: The implementation of XMLTestRunner class and TEST_RUNNER might be project specific and might require additional packages like xmlrunner. The above code is a general approach and can be modified according to the specific requirements of the project.
 # Note: You would need to pass XML_REPORTS_DIRECTORY as an environment variable where you want to generate XML reports.
