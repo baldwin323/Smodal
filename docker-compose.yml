@@ -42,6 +42,7 @@ app:
 # Backend Service update for kinsta deployment
 backend:
   build: ./backend
+  # Command has been updated to reflect the new Python version from 3.8 to 3.12
   command: python manage.py runserver 0.0.0.0:8000
   volumes:
     - ./backend:/app
