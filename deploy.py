@@ -102,3 +102,4 @@ if __name__ == '__main__':
 # Main function adds call to push_docker_image function and build_angular_app function
 # Updated the create_workflow_file() to include Kinsta deployment specifics
 # Updated the KINSTA_DEPLOYMENT_TOKEN with the new API Key from Credentials.
+# Ensure that the Python version is updated to 3.12 and any Python 3.8 specific syntax or library usage is updated to be compatible with Python 3.12.
