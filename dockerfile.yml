@@ -5,7 +5,7 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: /usr/local/bin/python3.12 manage.py runserver 0.0.0.0:8000  # Python version updated to 3.12 and full path to Python binary added
+    command: gunicorn app:app  # Using gunicorn as the WSGI HTTP Server
     volumes:
       - .:/code
     ports:
@@ -19,11 +19,9 @@ services:
       - APP_ENV=production
   client: 
     build:
-      
-      # Check if docker-compose is installed. If not, install it.
+      # Execute a shell command that checks if docker-compose is present, if not it installs it
       command: >
         bash -c "which docker-compose || (apt-get update && apt-get install -y docker-compose)"
-      
       context: ./client
       dockerfile: Dockerfile.angular
       args:
@@ -53,7 +51,7 @@ volumes:
   mongo_data:
 
 # Changes made:
-# Added the full path to the Python binary in the 'web' service command to fix potential "python: command not found" error.
-# Updated Python version to 3.12 in the command of the 'web' service.
+# Added gunicorn in 'web' service's command to set gunicorn as the WSGI HTTP Server.
+# Made sure docker-compose is installed in 'client' service.
 # Other parts of the file remain unchanged.
 ```

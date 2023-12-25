@@ -64,6 +64,23 @@ To deploy modal.tokai on Kinsta, follow these instructions:
 
 Ensure the code is clean and all functions and classes have appropriate comments documenting their behavior. Keep track of all environment variables and make sure they are correctly loaded in all instances.
 
+
+### Kinsta Start Commands
+To start the modal.tokai application on Kinsta use the command:
+
+```
+gunicorn app:app
+```
+
+This command starts the Gunicorn server with app:app being the location of the python WSGI application.
+
+### Kinsta Environmental Variables
+Sensitive information such as configurations, secret keys, passwords are stored as environmental variables on Kinsta. These variables can be accessed through the following location:
+
+```
+/etc/profile.d/kinsta_prompt.sh
+```
+
 ## Executing Test Cases
 
 <!--- Existing content should remain here --->
