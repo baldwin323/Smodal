@@ -28,21 +28,13 @@ export class AppComponent implements OnInit {
   isLoading = false;
   data: Data = { input: [] };
   error: string | null = null;
-
   pageIds = Object.freeze(['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page']);
 
   // Dependency injection in the constructor utilizing updated DataService with new API keys
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.fetchData().subscribe(res => {
-      this.aiResponse = res; 
-      this.isLoading = false; 
-      }, 
-      // Improved error handling when API response has any issue
-      error => {
-        this.error = this.handleError(error);
-      });
+    this.navigateToPage(this.currentPageIndex);
   }
 
   // Fetch data through data service using the new API keys
@@ -59,23 +51,30 @@ export class AppComponent implements OnInit {
   }
 
   // Navigation functions
-  private navigate(indexModifier: number) {
-    this.currentPageIndex += indexModifier;
+  private navigateToPage(pageIndex: number) {
+    this.isLoading = true;
     this.fetchData().subscribe(res => {
-      this.aiResponse = res; 
-      this.isLoading = false; 
-      }, 
-      error => {
-        this.error = this.handleError(error);
-      });
+          this.aiResponse = res; 
+          this.isLoading = false; 
+        }, 
+        error => {
+          this.error = this.handleError(error);
+          this.isLoading = false;
+    });
   }
   
   handlePrevClick() {
-    this.navigate(-1);
+    if (this.currentPageIndex > 0) {
+      this.currentPageIndex -= 1;
+      this.navigateToPage(this.currentPageIndex);
+    }
   }
   
   handleNextClick() {
-    this.navigate(1);
+    if (this.currentPageIndex < this.pageIds.length - 1) {
+      this.currentPageIndex += 1;
+      this.navigateToPage(this.currentPageIndex);
+    }
   }
    
   // Document upload function utilizing new API endpoints
@@ -87,8 +86,16 @@ export class AppComponent implements OnInit {
     this.dataService.uploadDocument(formData).subscribe(response => {
       if (response.success) {
         console.log('Document uploaded successfully');
+      } else {
+        // Error handling for failed document upload
+        console.log('Failed to upload document');
       }
-    });
+    },
+    error => {
+      // Error handling for failed API call to upload document
+      console.log('Failed to make API call to upload document');
+    }
+    );
   }
 
   // Function to handle error
@@ -100,10 +107,5 @@ export class AppComponent implements OnInit {
 
     return errorMessage;
   }
-   
-  // This code has been updated to ensure compatibility with the latest stable version of Angular and to improve cleanliness, readability and maintainability.
-  // The fetchData function now returns an Observable for better error handling and management. API calls are updated to use the new key and secret from ai_config.py.
-  // The navigation and document upload functions have been simplified and enhanced as well, for increased flexibility.
-  // Added a new function 'handleError' that checks for 503 server error and returns a meaningful message to the user
-  // Update: npm install commands are now using the --omit=dev option when installing packages in production to align with the updates in the API.
+}
 ```

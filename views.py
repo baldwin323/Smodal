@@ -46,7 +46,7 @@ def affiliate_register(request):
         return JsonResponse(response)
     except Exception as e:
         logger.error(f"There was an error registering afiliate manager: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue registering affiliate manager.')
 
 @login_required
 def affiliate_monitor(request):
@@ -55,7 +55,7 @@ def affiliate_monitor(request):
         return JsonResponse(response)
     except Exception as e:
         logger.error(f"There was an error monitoring affiliated models: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue monitoring affiliated models.')
 
 @login_required
 def affiliate_credit(request):
@@ -64,7 +64,7 @@ def affiliate_credit(request):
         return JsonResponse(response)
     except Exception as e:
         logger.error(f"There was an error giving credit: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue giving credit.')
 
 @login_required
 def is_authenticated(request):
@@ -76,7 +76,7 @@ def is_authenticated(request):
         return JsonResponse(response)
     except Exception as e:
         logger.error(f"There was an error checking authentication: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue checking authentication.')
 
 @login_required
 def load_dashboard(request):
@@ -88,7 +88,7 @@ def load_dashboard(request):
         return JsonResponse(response)
     except Exception as e:
         logger.error(f"There was an error loading dashboard: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue loading the dashboard.')
 
 @require_POST
 def login_user(request):
@@ -99,7 +99,7 @@ def login_user(request):
         return JsonResponse(response)
     except Exception as e:
         logger.error(f"There was an error logging user in: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue logging user in.')
 
 @login_required
 def logout_user(request):
@@ -110,7 +110,7 @@ def logout_user(request):
         return JsonResponse(response)
     except Exception as e:
         logger.error(f"There was an error logging user out: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue logging user out.')
 
 @login_required
 def serve(request, page):
@@ -123,7 +123,7 @@ def serve(request, page):
         return page_spec['method'](request)
     except Exception as e:
         logger.error(f"There was an error serving the page: {page}", exc_info=e)
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue serving the page.')
 
 @login_required
 def api_serve(request, page_id):
@@ -134,7 +134,7 @@ def api_serve(request, page_id):
         return JsonResponse(response)
     except Exception as e:
         logger.error(f"There was an error processing API request: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue processing API request.')
 
 @login_required
 def ai_predict(request):
@@ -150,7 +150,7 @@ def ai_predict(request):
             )
     except Exception as e:
         logger.error(f"There was an error processing predictions: {e}")
-        return HttpResponseServerError('Internal Server Error')
+        return HttpResponseServerError('Internal server error, there was an issue processing predictions.')
 
     return JsonResponse({'response': response})
 ```

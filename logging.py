@@ -2,12 +2,13 @@ import os
 import sys
 import traceback
 from logging import handlers
+from logging import getLogger, Formatter, DEBUG, INFO
 from django.conf import settings
 
 # Initialized the project, build and detail loggers
-project_logger = __import__('logging').getLogger(__name__)
-build_logger = __import__('logging').getLogger('build_process')
-detailed_logger = __import__('logging').getLogger('detailed')
+project_logger = getLogger(__name__)
+build_logger = getLogger('build_process')
+detailed_logger = getLogger('detailed')
 
 # Loaded settings from configuration file
 conf = settings.LOGGING
@@ -16,21 +17,20 @@ LOGGING_PORT = conf.get('LOGGING_PORT', 534)
 
 # TeamCity specific settings
 TEAMCITY_HOST = conf.get('TEAMCITY_HOST', 'localhost')
-TEAMCITY_PORT = conf.get('TEAMCITY_PORT', 12345) 
+TEAMCITY_PORT = conf.get('TEAMCITY_PORT', 12345)
 
 # Error handling for logging setup
 try:
-    # Setup handler with server info using SysLogHandler
-    handler = handlers.SysLogHandler(address=(TEAMCITY_HOST, TEAMCITY_PORT))
-    import logging
-    formatter = logging.Formatter('%(asctime)s [%(name)s][%(levelname)s] - %(message)s (%(funcName)s in %(pathname)s line %(lineno)d)', datefmt='%Y-%m-%d %H:%M:%S')
+    # Optimized handler with server info using SysLogHandler
+    handler = handlers.SysLogHandler(address=(LOGGING_HOST, LOGGING_PORT)) # Used LOGGING_HOST and LOGGING_PORT instead of TeamCity settings 
+    formatter = Formatter('%(asctime)s [%(name)s][%(levelname)s] - %(message)s (%(funcName)s in %(pathname)s line %(lineno)d)', datefmt='%Y-%m-%d %H:%M:%S')
     handler.setFormatter(formatter)
     project_logger.addHandler(handler)
     build_logger.addHandler(handler)
     detailed_logger.addHandler(handler)
-    project_logger.setLevel(logging.DEBUG)
-    build_logger.setLevel(logging.INFO)
-    detailed_logger.setLevel(logging.DEBUG)
+    project_logger.setLevel(DEBUG)
+    build_logger.setLevel(INFO)
+    detailed_logger.setLevel(DEBUG)
 except Exception as e:
     project_logger.error('An error occurred while setting up the logger and formatter.', exc_info=True)
 
@@ -42,9 +42,14 @@ except Exception as e:
 
 # Handlers for different types of logging situations
 def handle_worktree_change_error(error_message: str):
-    detailed_logger.error('Worktree contains unstaged changes. Exact Error: %s', error_message, exc_info=True)
+    # Added Error Handling
+    try:
+        detailed_logger.error('Worktree contains unstaged changes. Exact Error: %s', error_message, exc_info=True)
+    except Exception as e:
+        detailed_logger.error('An error occurred while logging worktree change error.', exc_info=True)
 
 def log_pactflow_response(headers: dict, body: str) -> None:
+    # Improved Error Handling
     try:
         detailed_logger.info('Pactflow Response Headers: %s', str(headers))
         detailed_logger.info('Pactflow Response Body: %s', body)
@@ -52,11 +57,13 @@ def log_pactflow_response(headers: dict, body: str) -> None:
         detailed_logger.error('An error occurred during the logging of pactflow response.', exc_info=True)
 
 def log_build_process(msg: str, level: str = 'info') -> None:
+    # Improved Error Handling
     try:
         log_func = getattr(build_logger, level, None)
         if log_func:
             log_func(msg)
         else:
+            build_logger.warning('Log level %s not known, using info level instead', level)
             build_logger.info(msg)
     except Exception as e:
         detailed_logger.error('An error occurred during the logging of build process.', exc_info=True)
