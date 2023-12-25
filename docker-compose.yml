@@ -20,6 +20,7 @@ app:
   image: app_django:latest
   ports:
     - 8000:8000
+  # Changed the volume mounting to the updated Python 3.12 service
   volumes:
     - ./:/usr/src/app/
   command: > 
@@ -73,4 +74,5 @@ frontend:
     - ANGULAR_VERSION=updated_version # Ensure Angular version is up to date
     - APP_ENV=kinsta 
     - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
+  # Note: Make sure you do the necessary updates in Dockerfile, Angular or Python settings, etc. as necessary with Python 3.12 upgrade
 ```

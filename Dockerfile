@@ -36,7 +36,7 @@ COPY --from=builder /builder/venv/lib/python3.12/site-packages /app/venv/lib/pyt
 COPY --from=builder /builder/src /app
 
 # Defining environment variables required for Kinsta deployment
-ENV KINSTA_DEPLOYMENT = 'TRUE'
+ENV KINSTA_DEPLOYMENT='TRUE'
 # Add more environment variables as needed
 
 # Installing packages necessary for Kinsta
