@@ -5,7 +5,7 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: /usr/bin/docker python3.12 manage.py runserver 0.0.0.0:8000  # Python version updated to 3.12 and full path to docker binary added
+    command: /usr/local/bin/python3.12 manage.py runserver 0.0.0.0:8000  # Python version updated to 3.12 and full path to Python binary added
     volumes:
       - .:/code
     ports:
@@ -15,7 +15,7 @@ services:
     depends_on: 
       - db
     restart: always
-    environment:  # Added environment variables for Kinsta deployment
+    environment:  
       - APP_ENV=production
   client: 
     build:
@@ -27,7 +27,7 @@ services:
       context: ./client
       dockerfile: Dockerfile.angular
       args:
-        - environment=production  # Updated the Angular environment setting for Kinsta deployment
+        - environment=production
     volumes: 
       - './:/usr/src/app'
       - '/usr/src/app/node_modules'
@@ -37,7 +37,7 @@ services:
       - web
     restart: always
     environment:
-      - NODE_ENV=production  # Updated Node environment for Angular to production for Kinsta deployment
+      - NODE_ENV=production
   db: 
     image: mongo:latest  
     restart: always
@@ -51,12 +51,9 @@ services:
       - mongo_data:/data/db
 volumes:
   mongo_data:
-  
+
 # Changes made:
-# Added the full path to the docker binary in the 'web' service command to fix the "docker: command not found" error.
+# Added the full path to the Python binary in the 'web' service command to fix potential "python: command not found" error.
 # Updated Python version to 3.12 in the command of the 'web' service.
-# Added environment variables for the 'web' service for Kinsta deployment.
-# For the 'client' service, updated the Dockerfile arguments and environment to be suitable for Kinsta deployment.
-# Added a check and installation procedure for docker-compose in the client service's build command.
-# No changes were made to the 'db' service.
+# Other parts of the file remain unchanged.
 ```
