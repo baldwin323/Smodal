@@ -1,8 +1,9 @@
-# Here is the updated Dockerfile with Python 3.12
+# Dockerfile with Python version updated to 3.12
+
 # 'builder' stage -- this is a temporary image used for building our application
 FROM python:3.12-slim as builder
 
-# Setting up Python path to Python 3.12 and creating work directory
+# Setting up Python path to Python 3.12 and creating a new work directory
 ENV PATH="/usr/local/bin:${PATH}"
 ENV PYTHON="/usr/local/bin/python3.12"
 WORKDIR /builder
@@ -17,7 +18,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # 'app' stage -- this contains our final application image
 FROM python:3.12-slim as app
 
-# Setting up Python path to Python 3.12 and creating work directory
+# Setting up Python path to Python 3.12 and creating a new work directory
 ENV PATH="/usr/local/bin:${PATH}"
 ENV PYTHON="/usr/local/bin/python3.12"
 WORKDIR /app
