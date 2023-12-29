@@ -1,19 +1,8 @@
 ```yaml
-# This is the Docker Compose file for the Smodal Application
-# It defines the services that make up this application and their respective configurations
-
 version: '3'
-
-# Defining the services of our application
-
-# Python 3.12 service
-# This is the python image for our application which uses python 3.12
 python3.12:
-  # Specifying the Python version to 3.12 here
   image: python:3.12
 
-# Django Application Service
-# This is the updated configuration to ensure compatibility with the Docker environment and successful Kinsta deployment  
 app:
   build: 
     context: .
@@ -21,14 +10,12 @@ app:
   image: app_django:latest
   ports:
     - 8000:8000
-  # Changed the volume mounting to the updated Python 3.12 service
   volumes:
     - ./:/usr/src/app/
   command: > 
     sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
   depends_on:
     - python3.12
-  # Updated Environment variables for Kinsta App with the key provided   
   environment: 
     - SECRET_KEY=your_secret_key
     - DB_NAME=your_db_name
@@ -38,11 +25,8 @@ app:
     - APP_ENV=kinsta 
     - DB_HOST=database_kinsta_example
     - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
-
-# Backend Service update for kinsta deployment
 backend:
   build: ./backend
-  # Command has been updated to reflect the new Python version from 3.8 to 3.12
   command: python manage.py runserver 0.0.0.0:8000
   volumes:
     - ./backend:/app
@@ -59,23 +43,19 @@ backend:
     - APP_ENV=kinsta
     - DB_HOST=database_kinsta_example
     - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
-
-# Angular Frontend Service update for the Kinsta deployment
 frontend:
-  build: ./frontend # New relative path for building the front end
+  build: ./frontend
   volumes:
-    - ./frontend:/app # New relative path for the frontend volume
+    - ./frontend:/app
   ports:
     - 3000:3000
   command: npm start
   depends_on:
     - backend
-  # Environment variables for Angular updated for Kinsta deployment
   environment: 
     - NODE_ENV=development 
-    - ANGULAR_VERSION=updated_version # Ensure Angular version is up to date
+    - ANGULAR_VERSION=updated_version
     - APP_ENV=kinsta 
     - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
-
-# Note: Make sure you do the necessary updates in Dockerfile, Angular or Python settings, etc. as necessary with Python 3.12 upgrade
 ```
+
