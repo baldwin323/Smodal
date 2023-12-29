@@ -1,6 +1,7 @@
 ```python
 import os
 import subprocess
+
 # Imported docker from ai_config.py
 from ai_config import docker, Credentials
 import shutil
@@ -38,8 +39,7 @@ def git_add_commit_push():
     subprocess.run(['git', 'push', 'origin', 'master'])
 
 def create_workflow_file():
-    """Creates a Github workflow file for the Kinsta deployment"""  
- 
+    """Creates a Github workflow file for the Kinsta deployment"""   
     workflow_content = f'''
 name: Deploy App with Kinsta Deployment
 on:   
@@ -79,7 +79,6 @@ def run_docker_compose():
     """Starts the application using Docker Compose"""
     subprocess.run([docker, 'compose', 'up', '-d'])
 
-
 def main():
     check_for_unstaged_changes()
     check_and_install_docker_compose() 
@@ -91,15 +90,7 @@ def main():
     push_docker_image()
     run_docker_compose()
 
-
 if __name__ == '__main__':
     main()
 ```
-# Changes to the source code include:
-# Created a function check_and_install_docker_compose() to check if docker-compose is installed and if not, it gets installed.
-# Build docker image command now tags the image as 'myapp'
-# Created a function push_docker_image() to push the docker image to Docker Hub
-# Main function adds call to push_docker_image function and build_angular_app function
-# Updated the create_workflow_file() to include Kinsta deployment specifics
-# Updated the KINSTA_DEPLOYMENT_TOKEN with the new API Key from Credentials.
-# Ensure that the Python version is updated to 3.12 and any Python 3.8 specific syntax or library usage is updated to be compatible with Python 3.12.
+
