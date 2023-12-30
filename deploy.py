@@ -1,10 +1,14 @@
 ```python
+#!/usr/bin/env python3
+# Ensure the shebang line at the top of the deploy.py script specifies the correct interpreter. 
+# It is recommended to use "/usr/bin/env python3" which will work for virtually all systems where python3 is installed.
+
 import os
 import subprocess
+import shutil
 
 # Imported docker from ai_config.py
 from ai_config import docker, Credentials
-import shutil
 
 # Updated KINSTA_DEPLOYMENT_TOKEN using new API Key
 KINSTA_DEPLOYMENT_TOKEN = Credentials.API_KEY
@@ -18,6 +22,7 @@ def check_for_unstaged_changes():
 
 def check_and_install_docker_compose():
     """Checks if docker-compose is installed and if not, installs it"""
+    # This is a new function to ensure docker-compose is existing in the system before proceed forward. 
     if shutil.which("docker-compose") is None:
         print("docker-compose not found. Installing now.")
         subprocess.run('apt-get update'.split())
@@ -93,4 +98,3 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-
