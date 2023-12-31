@@ -16,7 +16,7 @@ interface Data {
   input: string[];
 }
 
-// Define Component
+// Define Angular 17 Component
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  // Navigation functions
+  // Modern styled Navigation functions with use of Angular 17
   private navigateToPage(pageIndex: number) {
     this.isLoading = true;
     this.fetchData().subscribe(res => {
