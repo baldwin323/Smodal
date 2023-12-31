@@ -16,12 +16,19 @@ COPY src /builder/src
 # Install Python packages from requirements.txt without caching
 RUN pip3 install --no-cache-dir -r requirements.txt
 
+
 # Start new stage for the app 
 FROM python:3.9-slim as app
 
 # Add Python to path and set python version
 ENV PATH="/usr/local/bin:${PATH}"
 ENV PYTHON="/usr/local/bin/python3.9"
+
+# Also install nginx as part of our docker set-up
+RUN apt-get update && apt-get install -y nginx
+
+# Copying nginx config file
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Setting the workdir to /app
 WORKDIR /app
@@ -37,5 +44,5 @@ ENV KINSTA_DEPLOYMENT='TRUE'
 EXPOSE 8080
 
 # The command that will be run on container start
-CMD ["python3.9", "app.py", "--kinsta"]
+CMD ["nginx", "-g", "daemon off;"]
 ```
