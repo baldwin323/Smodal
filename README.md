@@ -8,7 +8,7 @@
 
 ## New Updates
 
-Ensure your Python version is updated to Python3.12 and Angular to the latest version as the modal functionality now requires these updated versions.
+Ensure your Python version is updated to Python3.12 and Angular to 17, as the app now requires these updated versions. 
 
 The UI of the application is intentionally designed with proper theming and responsiveness in mind. It adapts properly to different screen sizes, making it mobile-friendly. It features loading spinners to indicate processing requests. The application also prompts for user feedback periodically to continuously refine its capabilities.
 
@@ -92,3 +92,52 @@ For any issues or required assistance, refer to the Help section where you can f
 Your opinion is important to us, so please feel free to provide your feedback through our forms. We believe in continuous improvement, and your input serves as the driving force behind it.
 
 We encourage you to explore our comprehensive Help documents and FAQs before reaching out for support, as they often contain the answers to many common questions.
+
+## Angular 17 Setup and Deployment
+
+## Prerequisites
+
+Ensure you have the latest version of Node.js and npm installed on your machine. For installation guide check [here](https://nodejs.org/en/download/)
+
+### Installation
+
+1. To build the Angular 17 application, navigate to the root directory and install dependencies with:
+
+    ```bash
+    npm install
+    ```
+
+2. Build the Angular app with the following command:
+
+    ```bash
+    ng build --prod
+    ```
+
+3. The built files will be available under `dist/`. These are the files to be deployed on the server.
+
+## nginx setup and configuration
+
+1. Install nginx on your machine. For installation guide check [here](https://nginx.org/en/docs/install.html)
+
+2. Modify the nginx configuration file located at `/etc/nginx/nginx.conf` and add the following:
+
+    ```
+    server {
+        listen 80;
+        server_name localhost;
+        
+        location / {
+            root /path/to/your/angular/dist;
+            try_files $uri $uri/ /index.html;
+        }
+
+        # other configurations...
+    }
+    ```
+  
+3. Restart the nginx server:
+
+    ```bash
+    service nginx restart
+    ```
+This part of setting up Angular 17 application and nginx server is important for making the codebase fully useable for further deployment.

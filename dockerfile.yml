@@ -5,7 +5,8 @@ services:
     build: 
       context: ./Web
       dockerfile: Dockerfile
-    command: gunicorn app:app  # Using gunicorn as the WSGI HTTP Server
+    # Using ngxin + gunicorn as the WSGI HTTP Server to increase performance and security
+    command: nginx && gunicorn app:app 
     volumes:
       - .:/code
     ports:
@@ -20,8 +21,9 @@ services:
   client: 
     build:
       # Execute a shell command that checks if docker-compose is present, if not it installs it
+      # Also ensuring Angular version of project is 17 for modern styled application
       command: >
-        bash -c "which docker-compose || (apt-get update && apt-get install -y docker-compose)"
+        bash -c "which docker-compose || (apt-get update && apt-get install -y docker-compose) && (ng version | grep 'Angular CLI: 17.' || npm i -g @angular/cli@17)"
       context: ./client
       dockerfile: Dockerfile.angular
       args:
@@ -51,7 +53,8 @@ volumes:
   mongo_data:
 
 # Changes made:
-# Added gunicorn in 'web' service's command to set gunicorn as the WSGI HTTP Server.
+# Added nginx in 'web' service's command along with gunicorn as the WSGI HTTP Server for improved performance and security.
 # Made sure docker-compose is installed in 'client' service.
+# Checked and made sure that the Angular version of the project is 17. If not, installed the specific version.
 # Other parts of the file remain unchanged.
 ```

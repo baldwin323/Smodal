@@ -16,7 +16,6 @@ COPY src /builder/src
 # Install Python packages from requirements.txt without caching
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-
 # Start new stage for the app 
 FROM python:3.9-slim as app
 
@@ -24,8 +23,15 @@ FROM python:3.9-slim as app
 ENV PATH="/usr/local/bin:${PATH}"
 ENV PYTHON="/usr/local/bin/python3.9"
 
-# Also install nginx as part of our docker set-up
-RUN apt-get update && apt-get install -y nginx
+# Also install nginx and necessary tools for our Angular setup as part of our docker set-up
+RUN apt-get update && apt-get install -y nginx curl gnupg
+
+# Install NodeJS, which is required for Angular
+RUN curl -sL https://deb.nodesource.com/setup_17.x | bash -
+RUN apt-get install -y nodejs
+
+# Install the Angular CLI, specifying version 17
+RUN npm install -g @angular/cli@17
 
 # Copying nginx config file
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -40,9 +46,13 @@ COPY --from=builder /builder/src /app
 # Changes for Kinsta environment
 ENV KINSTA_DEPLOYMENT='TRUE'
 
-# Expose a port to allow external access
-EXPOSE 8080
+# Build the Angular application
+RUN ng build --prod
+
+# Expose the nginx server port
+EXPOSE 80
 
 # The command that will be run on container start
 CMD ["nginx", "-g", "daemon off;"]
 ```
+This Dockerfile now includes the steps needed to set up the Nginx server and build the Angular application. The Angular CLI has been installed globally using npm, allowing the usage of the 'ng build --prod' command to create a production build of the Angular app. The built app will then be served by the Nginx server. Please ensure that your angular.json file correctly specifies the output directory for the build. If any additional setup is required for the Nginx server, such as copying SSL certificate files, please add those steps to this Dockerfile as well.
