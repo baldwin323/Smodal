@@ -60,10 +60,7 @@ To deploy modal.tokai on Kinsta, follow these instructions:
 5. Under the 'SFTP/SSH' section, you can find your SSH/SFTP details. Use this info to enable Git and SSH on your Kinsta site.
 6. Log in to your Kinsta site via SSH and clone your Git repository.
 7. After successful repository cloning, navigate to your site's root directory (/www/your_site/public), and setup the .env file with your environment variables.
-8. Finally, you can deploy the application using the init script.
-
-Ensure the code is clean and all functions and classes have appropriate comments documenting their behavior. Keep track of all environment variables and make sure they are correctly loaded in all instances.
-
+8. Finally, you can deploy the application using the Procfile and docker-compose.
 
 ### Kinsta Start Commands
 To start the modal.tokai application on Kinsta use the command:
@@ -140,4 +137,5 @@ Ensure you have the latest version of Node.js and npm installed on your machine.
     ```bash
     service nginx restart
     ```
-This part of setting up Angular 17 application and nginx server is important for making the codebase fully useable for further deployment.
+
+This part of setting up Angular 17 application and nginx server is important for making the codebase fully usable for further deployment.
