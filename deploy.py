@@ -33,6 +33,7 @@ def git_add_commit_push():
     subprocess.run(['git', 'push', 'origin', 'master'])
 
 def create_workflow_file():
+    # Create a workflow file for a Github action that deploys the app using Kinsta Deployment
     workflow_content = f'''
 name: Deploy App with Kinsta Deployment
 on:   
