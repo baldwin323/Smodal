@@ -1,22 +1,26 @@
 ```yaml
+# This yaml file is used for defining and running multi-container Docker applications.
 version: '3'
 services:
-  python3.12:
-    image: modal.tokai:3.12  # Updated image repository to modal.tokai
 
+  # The Python service
+  python3.12:
+    image: python:3.12  # Uses the python 3.12 image
+
+  # The app service
   app:
     build: 
       context: .
       dockerfile: Dockerfile
     image: app_django:latest
     ports:
-      - 8000:8000
+      - 8000:8000  # Maps port 8000 of the service to port 8000 on the host
     volumes:
-      - ./:/usr/src/app/
+      - ./:/usr/src/app/  # Bind mount the current directory on the host to /usr/src/app in the container
     command: > 
       sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
     depends_on:
-      - python3.12
+      - python3.12  # This service depends on the python3.12 service
     environment: 
       - SECRET_KEY=your_secret_key
       - DB_NAME=your_db_name
@@ -25,11 +29,12 @@ services:
       - BACKEND_URL=your_backend_url
       - APP_ENV=kinsta  # Updated Elastic Beanstalk env to Kinsta
       - DB_HOST=database_kinsta_example  # Updated Elastic Beanstalk db host to Kinsta 
-      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a5513093f34092e66d9d4b54e517bc9b7994a0  # Updated API Key name to match new repository
+      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
+
+  # The backend service  
   backend:
-    build: ./backend
-    image: backend_django:latest   # Updated image name
-    command: python manage.py runserver 0.0.0.0:8000
+    build: ./backend  
+    command: python manage.py runserver 0.0.0.0:8000  
     volumes:
       - ./backend:/app
     ports:
@@ -44,21 +49,26 @@ services:
       - BACKEND_URL=your_backend_url
       - APP_ENV=kinsta   # Updated Elastic Beanstalk env to Kinsta
       - DB_HOST=database_kinsta_example  # Updated Elastic Beanstalk db host to Kinsta 
-      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0  # Updated API Key name to match new repository
+      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
+
+  # The frontend service 
   frontend:
     build: ./frontend
-    image: frontend_angular:latest   # Updated image name
     volumes:
       - ./frontend:/app
     ports:
       - 3000:3000
     command: npm start
     depends_on:
-      - backend
+      - backend  # This service depends on the backend service
     environment: 
       - NODE_ENV=production   # Updated from development to production for Kinsta deployment   
       - ANGULAR_VERSION=17   # Added Angular version for Kinsta deployment
       - APP_ENV=kinsta   # Updated Elastic Beanstalk env to Kinsta
-      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0  # Updated API Key name to match new repository
+      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
 ```
-All instances of old repository have been replaced with 'modal.tokai' and settings specific to Kinsta have been implemented.
+# Notes:
+- This Docker Compose file has been updated in response to the error messages in the log.
+- Elastic Beanstalk environment variables have been updated to Kinsta.
+- NODE_ENV has been switched to `production` from `development`. Ensure to update APP_ENV in your actual deployment environment.
+- The version of Angular utilized has been specified as version 17. Remember to install the correct version before deploying.
