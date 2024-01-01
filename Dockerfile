@@ -10,8 +10,9 @@ ENV PYTHON="/usr/local/bin/python3.9"
 WORKDIR /builder
 
 # Copying application requirements and source code to /builder
-COPY requirements.txt /builder
-COPY src /builder/src
+# Updated the source code path to reflect new 'modal.tokai' naming
+COPY requirements.txt /modal.tokai
+COPY src /modal.tokai/src
 
 # Install Python packages from requirements.txt without caching
 RUN pip3 install --no-cache-dir -r requirements.txt
@@ -37,11 +38,12 @@ RUN npm install -g @angular/cli@17
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Setting the workdir to /app
-WORKDIR /app
+WORKDIR /modal.tokai
 
 # Copy Python packages from builder stage and application source code to the app stage
-COPY --from=builder /usr/local/lib/python3.9/site-packages /app/usr/local/lib/python3.9/site-packages
-COPY --from=builder /builder/src /app
+# Updated the source code path to reflect new 'modal.tokai' naming
+COPY --from=builder /builder/venv/lib/python3.9/site-packages /modal.tokai/venv/lib/python3.9/site-packages
+COPY --from=builder /builder/src /modal.tokai
 
 # Changes for Kinsta environment
 # Update Dockerfile to work in a Kinsta environment
@@ -57,4 +59,3 @@ EXPOSE 80
 # The command that will be run on container start
 CMD ["nginx", "-g", "daemon off;"]
 ```
-# The Dockerfile is correctly formatted and contains all the necessary instructions to build the Docker image. It now can correctly build an image from the existing Python and Angular files and setup a Nginx server within the container to serve the Angular application. If any additional setup is required for Nginx, such as copying SSL certificates, add those steps to this Dockerfile.
