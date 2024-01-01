@@ -9,4 +9,10 @@ web: bash -c "source /etc/profile.d/kinsta_prompt.sh && nginx -g 'daemon off;'"
 # Replaces previously EB specific configuration with generic configuration viable for any NGINX server
 # For this project, the command is nginx -c /etc/nginx/nginx.conf -g 'daemon off;'
 worker: nginx -c /etc/nginx/nginx.conf -g 'daemon off;'
+
+# Combined all procfiles into this single Procfile
+# Modified the commands to ensure all processes run continuously
+# Using a process manager like 'foreman' or 'honcho'
+web: foreman start web & worker: foreman start worker
+
 # Please note, this may need to be adjusted depending on the specific worker process configuration needed for the nginx server.
