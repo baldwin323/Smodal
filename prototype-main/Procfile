@@ -1,0 +1,3 @@
+# This is the Procfile, a mechanism for declaring what commands are run by your application's dynos on the Heroku platform.
+# Here we define our command to start the server.
+web: node app.js
