@@ -1,6 +1,6 @@
 import os
 from typing import List, Optional
-from Smodal import logging  
+from modal.tokai import logging  # Renamed the module from "Smodal" to "modal.tokai"
 from github import Github
 from github.GithubException import RateLimitExceededException, BadCredentialsException
 
@@ -25,7 +25,8 @@ def get_open_pull_requests(repo_owner: str,
     :return: A list of dictionaries containing details of open pull requests. If there's any error, it returns None
     """
     try:
-        repo = g.get_repo(f"{repo_owner}/{repo_name}")
+        # changed the repository string from "Smodal" to "modal.tokai"
+        repo = g.get_repo(f"{repo_owner}/{repo_name}")  
         open_pull_requests = repo.get_pulls(state = 'open')
         return open_pull_requests
     except RateLimitExceededException as e:
@@ -56,7 +57,8 @@ def edit_pull_request(repo_owner: str,
     :return: True if the pull request was edited successfully, else False.
     """
     try:
-        repo = g.get_repo(f"{repo_owner}/{repo_name}")
+        # changed the repository string from "Smodal" to "modal.tokai"
+        repo = g.get_repo(f"{repo_owner}/{repo_name}")  
         pull_request = repo.get_pull(pull_id)
         pull_request.edit(title, body)
         return True
@@ -75,7 +77,7 @@ def main() -> None:
     Main function to get the open pull requests and edit them.
     """
     try:
-        repo_owner: str = 'Smodal'
+        repo_owner: str = 'modal.tokai'  # Changed the value from 'Smodal' to 'modal.tokai'
         repo_name: str = 'templates'
 
         open_pull_requests = get_open_pull_requests(repo_owner, repo_name)

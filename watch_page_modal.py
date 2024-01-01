@@ -1,10 +1,10 @@
 from pydantic import BaseModel, ValidationError
-from Smodal.models import UserProfile, FileUpload, Banking, AIConversation, UIPageData
+from modal.tokai.models import UserProfile, FileUpload, Banking, AIConversation, UIPageData
 from pydantic.error_wrappers import ErrorWrapper, ValidationError
 from typing import Any, Dict, Union
 import logging
 from github import Github
-from Smodal.logging import logger 
+from modal.tokai.logging import logger 
 
 # Alias to access Github API 
 github_api = Github()

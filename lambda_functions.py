@@ -11,8 +11,8 @@ import zipfile
 from boto3.session import Session
 from functools import lru_cache  # using lru_cache for optimizing the repeated function calls
 
-# Importing mutable.ai configuration and credentials
-from ai_config import MutableAIConfig, Credentials
+# Importing modal.tokai configuration and credentials
+from modal_tokai_config import ModalTokaiConfig, Credentials
 
 # setting up the logger
 application_logger = logging.getLogger(__name__)
@@ -34,9 +34,9 @@ aws_lambda_client = aws_session.client('lambda')
 # Adding typing and caching to this function
 @lru_cache
 def api_call(endpoint: str, payload: Optional[dict], method: str="GET") -> Optional[dict]:
-    base_api_url = MutableAIConfig.BASE_URL  
+    base_api_url = ModalTokaiConfig.BASE_URL  # renamed from MutableAIConfig to ModalTokaiConfig
     headers = {
-        "Content-Type": MutableAIConfig.HEADER_CONTENT_TYPE,
+        "Content-Type": ModalTokaiConfig.HEADER_CONTENT_TYPE,  # renamed from MutableAIConfig to ModalTokaiConfig
         "api-key": Credentials.API_KEY,  
         "secret-key": Credentials.SECRET_KEY 
     }

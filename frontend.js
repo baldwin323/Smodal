@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
   isLoading = false;
   data: Data = { input: [] };
   error: string | null = null;
-  pageIds = Object.freeze(['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page']);
+  pageIds = Object.freeze(['user-authentication', 'dashboard', 'modal.tokai-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page']);
 
   // Dependency injection in the constructor utilizing updated DataService with new API keys
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) {}
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  // Modern styled Navigation functions with use of Angular 17
+  
   private navigateToPage(pageIndex: number) {
     this.isLoading = true;
     this.fetchData().subscribe(res => {
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
     }
   }
    
-  // Document upload function utilizing new API endpoints
+  // modal.tokai upload function utilizing new API endpoints
   onFileUpload(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
     const formData = new FormData();
@@ -85,15 +85,15 @@ export class AppComponent implements OnInit {
 
     this.dataService.uploadDocument(formData).subscribe(response => {
       if (response.success) {
-        console.log('Document uploaded successfully');
+        console.log('modal.tokai uploaded successfully');
       } else {
-        // Error handling for failed document upload
-        console.log('Failed to upload document');
+        // Error handling for failed modal.tokai upload
+        console.log('Failed to upload modal.tokai');
       }
     },
     error => {
-      // Error handling for failed API call to upload document
-      console.log('Failed to make API call to upload document');
+      // Error handling for failed API call to upload modal.tokai
+      console.log('Failed to make API call to upload modal.tokai');
     }
     );
   }
