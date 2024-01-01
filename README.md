@@ -14,17 +14,20 @@ The UI of the application is intentionally designed with proper theming and resp
 
 It only requires internet connection and a browser to function effectively, and can be powered on with a single click similar to a web or mobile app.
 
-## Deployment using Docker
+## Deployment using Docker and New Combined Procfile
 
-The deployment of modal.tokai has been simplified with Docker. Provided you have Docker installed, starting up the service should be as simple as following the subsequent instructions.
+Deployment and application management has now been simplified by combining all processes in a singular Procfile. This new processes management approach ensures all processes run continuously. If you're familiar with it, we're now using a process manager like 'foreman' or 'honcho' for ease and reliability.
 
 ### Getting Started
 
-These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes. 
+The deployment of modal.tokai remains simple with Docker. Provided you have Docker installed, starting up the service should be as simple as following the subsequent instructions. But now instead of managing processes individually, we'll use a singular Procfile.
 
 ### Prerequisites
 
-Ensure you have the latest version of Docker and Docker-compose installed on your machine. For installation guide check [here](https://docs.docker.com/install/)
+Ensure you have the latest version of Docker, Docker-compose and Foreman installed on your machine. 
+
+1. Docker and Docker-compose: For installation guide check [here](https://docs.docker.com/install/)
+2. Foreman: To install Foreman, run `gem install foreman`
 
 ### Installation
 
@@ -38,18 +41,28 @@ Ensure you have the latest version of Docker and Docker-compose installed on you
     cd modal.tokai
     ```
 
-3. Build the Docker image with the following command:
+3. If you haven't already, install Foreman with:
+    ```bash
+    gem install foreman
+    ```
+
+4. Build the Docker image with the following command:
     ```bash
     docker build -t modal-tokai-image .
     ```
 
-4. After successful image build, initiate the Docker Compose with:
+5. After successful image build, initiate the Docker Compose with:
     ```bash
     docker-compose up
+    ```
+6. Start the processes using Foreman:
+    ```bash
+    foreman start
     ```
 The application will now be accessible at localhost:8000
 
 ## Deployment on Kinsta
+The deployment on Kinsta remains largely unchanged, but please remember to use the new Procfile in this revised process.
 
 To deploy modal.tokai on Kinsta, follow these instructions:
 
@@ -60,16 +73,16 @@ To deploy modal.tokai on Kinsta, follow these instructions:
 5. Under the 'SFTP/SSH' section, you can find your SSH/SFTP details. Use this info to enable Git and SSH on your Kinsta site.
 6. Log in to your Kinsta site via SSH and clone your Git repository.
 7. After successful repository cloning, navigate to your site's root directory (/www/your_site/public), and setup the .env file with your environment variables.
-8. Finally, you can deploy the application using the Procfile and docker-compose.
+8. Finally, you can deploy the application using the new combined Procfile and docker-compose.
 
 ### Kinsta Start Commands
 To start the modal.tokai application on Kinsta use the command:
 
 ```
-gunicorn app:app
+foreman start
 ```
 
-This command starts the Gunicorn server with app:app being the location of the python WSGI application.
+This command will start all the processes defined in the Procfile continuously.
 
 ### Kinsta Environmental Variables
 Sensitive information such as configurations, secret keys, passwords are stored as environmental variables on Kinsta. These variables can be accessed through the following location:

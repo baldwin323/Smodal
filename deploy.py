@@ -14,26 +14,22 @@ def check_for_unstaged_changes():
         print("Unstaged changes detected. Please commit them before deploying.")
         exit(1)
 
-def check_and_install_docker_compose():
-    if shutil.which("docker-compose") is None:
-        print("docker-compose not found. Installing now.")
-        subprocess.run('apt-get update'.split())
-        subprocess.run('apt-get install docker-compose'.split())
-    print("docker-compose is installed.")
+def install_foreman():
+    # We'll be using Foreman to run our combined Procfile
+    if shutil.which("foreman") is None:
+        print("Foreman not found. Installing now.")
+        subprocess.run('gem install foreman'.split())
+    print("Foreman is installed.")
 
 def pull_app():
     subprocess.run('appservices pull --remote=data-evpxv mv data/* . && rm -r data'.split())
-
-def build_angular_app():
-    subprocess.run('npm run build --omit=dev'.split())
 
 def git_add_commit_push():
     subprocess.run(['git', 'add', '.'])
     subprocess.run(['git', 'commit', '-m', 'Update and build application'])
     subprocess.run(['git', 'push', 'origin', 'master'])
 
-def create_workflow_file():
-    # Create a workflow file for a Github action that deploys the app using Kinsta Deployment
+def create_workflow_file():   
     workflow_content = f'''
 name: Deploy App with Kinsta Deployment
 on:   
@@ -61,25 +57,17 @@ jobs:
     with open('.github/workflows/deploy.yaml', 'w') as workflow_file:
         workflow_file.write(workflow_content)
 
-def build_docker_image():
-    subprocess.run([docker, 'build', '-t', 'myapp', '.'])
-
-def push_docker_image():
-    subprocess.run([docker, 'push', 'myapp:latest'])
-
-def run_docker_compose():
-    subprocess.run([docker, 'compose', 'up', '-d'])
+def run_foreman():
+    # Run foreman to start all processes defined in the Procfile
+    subprocess.run('foreman start'.split())
 
 def main():
     check_for_unstaged_changes()
-    check_and_install_docker_compose() 
+    install_foreman() 
     pull_app()
-    build_angular_app()
-    create_workflow_file()
     git_add_commit_push()
-    build_docker_image()
-    push_docker_image()
-    run_docker_compose()
+    create_workflow_file()
+    run_foreman()
 
 if __name__ == '__main__':
     main()
