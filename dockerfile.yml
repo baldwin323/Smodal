@@ -4,7 +4,8 @@ services:
   web: 
     build: 
       context: ./Web
-      dockerfile: Dockerfile
+      # Updated the dockerfile location to reflect the new repository name
+      dockerfile: modal.tokai/Dockerfile
     # Using ngxin + gunicorn as the WSGI HTTP Server to increase performance and security
     command: nginx && gunicorn app:app 
     volumes:
@@ -25,7 +26,8 @@ services:
       command: >
         bash -c "which docker-compose || (apt-get update && apt-get install -y docker-compose) && (ng version | grep 'Angular CLI: 17.' || npm i -g @angular/cli@17)"
       context: ./client
-      dockerfile: Dockerfile.angular
+      # Updated the dockerfile location to reflect the new repository name
+      dockerfile: modal.tokai/Dockerfile.angular
       args:
         - environment=production
     volumes: 
@@ -53,6 +55,7 @@ volumes:
   mongo_data:
 
 # Changes made:
+# Updated all instances of the old repository name to "modal.tokai"
 # Added nginx in 'web' service's command along with gunicorn as the WSGI HTTP Server for improved performance and security.
 # Made sure docker-compose is installed in 'client' service.
 # Checked and made sure that the Angular version of the project is 17. If not, installed the specific version.

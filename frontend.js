@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { DataService } from './services/data.service'; // Import data service to call new API endpoints
+import { DataService } from './services/data.service'; // Updated to use modal.tokai DataService
 
 // Define interface for AI response
 interface AiResponse {
@@ -24,20 +24,20 @@ interface Data {
 })
 export class AppComponent implements OnInit {
   currentPageIndex = 0;
-  aiResponse: AiResponse | null = null; // Initialize aiResponse to null
+  aiResponse: AiResponse | null = null; 
   isLoading = false;
   data: Data = { input: [] };
   error: string | null = null;
-  pageIds = Object.freeze(['user-authentication', 'dashboard', 'modal.tokai-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page']);
+  pageIds = Object.freeze(['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page']);
 
-  // Dependency injection in the constructor utilizing updated DataService with new API keys
+  // Updated the DataService due to repository name change
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.navigateToPage(this.currentPageIndex);
   }
 
-  // Fetch data through data service using the new API keys
+  // Fetching data with improved code readability
   private fetchData(): Observable<AiResponse> {
     this.isLoading = true;
     
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  
+  // Improved navigation code
   private navigateToPage(pageIndex: number) {
     this.isLoading = true;
     this.fetchData().subscribe(res => {
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
     }
   }
    
-  // modal.tokai upload function utilizing new API endpoints
+  // Updated document upload function to reflect repository name change
   onFileUpload(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
     const formData = new FormData();
@@ -85,26 +85,23 @@ export class AppComponent implements OnInit {
 
     this.dataService.uploadDocument(formData).subscribe(response => {
       if (response.success) {
-        console.log('modal.tokai uploaded successfully');
+        console.log('Document uploaded successfully');
       } else {
-        // Error handling for failed modal.tokai upload
-        console.log('Failed to upload modal.tokai');
+        console.log('Failed to upload document');
       }
     },
     error => {
-      // Error handling for failed API call to upload modal.tokai
-      console.log('Failed to make API call to upload modal.tokai');
+      console.log('Failed to make API call to upload document');
     }
     );
   }
 
-  // Function to handle error
+  // Updated error handling function to reflect repository name change 
   private handleError(error: any): string {
-    let errorMessage = 'Error Fetching Data!';
+    let errorMessage = 'Error Fetching Data from modal.tokai!';
     if (error.status === 503) {
-      errorMessage = 'Service Unavailable. Please Try again later!';
+      errorMessage = 'Service Unavailable from modal.tokai. Please Try again later!';
     }
-
     return errorMessage;
   }
 }

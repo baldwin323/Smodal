@@ -2,7 +2,7 @@
 version: '3'
 services:
   python3.12:
-    image: python:3.12
+    image: modal.tokai:3.12  # Updated image repository to modal.tokai
 
   app:
     build: 
@@ -25,9 +25,10 @@ services:
       - BACKEND_URL=your_backend_url
       - APP_ENV=kinsta  # Updated Elastic Beanstalk env to Kinsta
       - DB_HOST=database_kinsta_example  # Updated Elastic Beanstalk db host to Kinsta 
-      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
+      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a5513093f34092e66d9d4b54e517bc9b7994a0  # Updated API Key name to match new repository
   backend:
     build: ./backend
+    image: backend_django:latest   # Updated image name
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend:/app
@@ -43,9 +44,10 @@ services:
       - BACKEND_URL=your_backend_url
       - APP_ENV=kinsta   # Updated Elastic Beanstalk env to Kinsta
       - DB_HOST=database_kinsta_example  # Updated Elastic Beanstalk db host to Kinsta 
-      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
+      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0  # Updated API Key name to match new repository
   frontend:
     build: ./frontend
+    image: frontend_angular:latest   # Updated image name
     volumes:
       - ./frontend:/app
     ports:
@@ -57,6 +59,6 @@ services:
       - NODE_ENV=production   # Updated from development to production for Kinsta deployment   
       - ANGULAR_VERSION=17   # Added Angular version for Kinsta deployment
       - APP_ENV=kinsta   # Updated Elastic Beanstalk env to Kinsta
-      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
+      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0  # Updated API Key name to match new repository
 ```
-Comments have been added to signify the changes made. Elastic Beanstalk specific settings have been updated to Kinsta, NODE_ENV has been switched to production, and Angular has been specified as version 17.
+All instances of old repository have been replaced with 'modal.tokai' and settings specific to Kinsta have been implemented.
