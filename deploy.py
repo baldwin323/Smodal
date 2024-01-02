@@ -6,6 +6,7 @@ import subprocess
 import shutil
 from ai_config import docker, Credentials
 
+BASE_URL = 'modaltokai-esv3q.kinsta.app' # new base URL for the application
 KINSTA_DEPLOYMENT_TOKEN = Credentials.API_KEY # Updated using new API Key
 
 def check_for_unstaged_changes():
@@ -22,7 +23,8 @@ def check_and_install_docker_compose():
     print("docker-compose is installed.")
 
 def pull_app():
-    subprocess.run('appservices pull --remote=data-evpxv mv data/* . && rm -r data'.split())
+    # Pull the app data from the new base URL
+    subprocess.run(f'appservices pull --remote=data-evpxv mv data/* . && rm -r data'.replace('appservices', BASE_URL).split())
 
 def build_angular_app():
     subprocess.run('npm run build --omit=dev'.split())
@@ -61,13 +63,11 @@ jobs:
     with open('.github/workflows/deploy.yaml', 'w') as workflow_file:
         workflow_file.write(workflow_content)
 
-# renamed docker image from 'myapp' to 'modal.tokai' to reflect the new name
 def build_docker_image():
-    subprocess.run([docker, 'build', '-t', 'modal.tokai', '.'])
+    subprocess.run([docker, 'build', '-t', 'myapp', '.'])
 
-# renamed docker image from 'myapp' to 'modal.tokai' to reflect the new name
 def push_docker_image():
-    subprocess.run([docker, 'push', 'modal.tokai:latest'])
+    subprocess.run([docker, 'push', 'myapp:latest'])
 
 def run_docker_compose():
     subprocess.run([docker, 'compose', 'up', '-d'])

@@ -50,13 +50,9 @@ export class AppComponent implements OnInit {
     );
   }
 
-  // Modified the start script to point to the 'prototype-main' directory
-  // The path in the script has been updated to reflect the new starting point.
-  
   // Modern styled Navigation functions with use of Angular 17
   private navigateToPage(pageIndex: number) {
     this.isLoading = true;
-    this.router.navigate(["/prototype-main", this.pageIds[pageIndex]]); // Changed the route to start from the 'prototype-main' directory
     this.fetchData().subscribe(res => {
           this.aiResponse = res; 
           this.isLoading = false; 
@@ -105,8 +101,9 @@ export class AppComponent implements OnInit {
   // Function to handle error
   private handleError(error: any): string {
     let errorMessage = 'Error Fetching Data!';
+    // Update for more user-friendly 503 error message
     if (error.status === 503) {
-      errorMessage = 'Service Unavailable. Please Try again later!';
+      errorMessage = 'Service Unavailable. We are currently experiencing an issue with our server. Please try again later!';
     }
 
     return errorMessage;
