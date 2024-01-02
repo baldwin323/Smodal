@@ -10,9 +10,10 @@ from typing import Optional  # this will be used for typing the functions
 import zipfile
 from boto3.session import Session
 from functools import lru_cache  # using lru_cache for optimizing the repeated function calls
+from time import sleep
 
-# Importing modal.tokai configuration and credentials
-from ai_config import ModalTokaiConfig, Credentials
+# Import mutable.ai configuration and credentials
+from ai_config import MutableAIConfig, Credentials
 
 # setting up the logger
 application_logger = logging.getLogger(__name__)
@@ -30,35 +31,40 @@ aws_session = Session(aws_access_key_id=aws_access_key_identification,
 
 aws_lambda_client = aws_session.client('lambda')
 
-# Improved Exception Handling, catching 503 error and logging response.
-# Adding typing and caching to this function
+# Increase the error handling for the 503 error by adding a retry mechanism using an exponential back-off strategy.
 @lru_cache
-def api_call(endpoint: str, payload: Optional[dict], method: str="GET") -> Optional[dict]:
-    base_api_url = ModalTokaiConfig.BASE_URL  
+def api_call(endpoint: str, payload: Optional[dict], method: str="GET", retries: int=3) -> Optional[dict]:
+    base_api_url = 'https://modaltokai-esv3q.kinsta.app'  # modified the base URL to point to 'modaltokai-esv3q.kinsta.app'
     headers = {
-        "Content-Type": ModalTokaiConfig.HEADER_CONTENT_TYPE,
+        "Content-Type": MutableAIConfig.HEADER_CONTENT_TYPE,
         "api-key": Credentials.API_KEY,  
         "secret-key": Credentials.SECRET_KEY 
     }
-    try:
-        api_response = requests.request(method, base_api_url + endpoint, headers=headers, 
-                                        data=json.dumps(payload) if payload else None)
-        api_response.raise_for_status()
-        return api_response.json()
-    except requests.exceptions.HTTPError as http_err:
-        application_logger.error(f"HTTP Error occurred during API call: {http_err}")
-        if http_err.response.status_code == 503:
-            application_logger.error(f"503 error occurred: {http_err.response.text}")
-        return None
-    except requests.exceptions.ConnectionError as connection_err:
-        application_logger.error(f"Connection error occurred during API call: {connection_err}")
-        return None
-    except requests.exceptions.Timeout as timeout_err:
-        application_logger.error(f"Timeout error occurred during API call: {timeout_err}")
-        return None
-    except requests.exceptions.RequestException as request_err:
-        application_logger.error(f"Unexpected error occurred during API call: {request_err}")
-        return None  
+    for attempt in range(retries):
+        try:
+            api_response = requests.request(method, base_api_url + endpoint, headers=headers, 
+                                            data=json.dumps(payload) if payload else None)
+            api_response.raise_for_status()
+            return api_response.json()
+        except requests.exceptions.HTTPError as http_err:
+            application_logger.error(f"HTTP Error occurred during API call: {http_err}")
+            if http_err.response.status_code == 503:
+                application_logger.error(f"503 error occurred: {http_err.response.text}")
+                # Implementing backoff after 503 error
+                sleep(2 ** attempt)
+            else:
+                return None
+        except requests.exceptions.ConnectionError as connection_err:
+            application_logger.error(f"Connection error occurred during API call: {connection_err}")
+            return None
+        except requests.exceptions.Timeout as timeout_err:
+            application_logger.error(f"Timeout error occurred during API call: {timeout_err}")
+            return None
+        except requests.exceptions.RequestException as request_err:
+            application_logger.error(f"Unexpected error occurred during API call: {request_err}")
+            return None
+    application_logger.error("API call failed after maximum number of retries.")
+    return None  
 
 # following functions have been enhanced through adding type hints and using the cache decorator
 @lru_cache
@@ -118,4 +124,4 @@ def compress_directory():
 # Call function to compress the directory
 compress_directory()
 ```
-This code has been updated to reflect the change in repository name to "modal.tokai" and has been checked to ensure compatibility with Kinsta deployment. The code has been reviewed for efficiency and readability, and the functions have been enhanced with type hints and caching for optimization.
+This enhanced version of the 'lambda_functions.py' file includes improved error handling for HTTP 503 (Service Unavailable) errors and sets the base URL for API calls to 'modaltokai-esv3q.kinsta.app'. When a 503 error occurs, the code now attempts to retry the request with an exponential back-off strategy. This update should help to prevent temporary issues with the server from disrupting the overall operation. The updated file also maintains Python 3.12 compatibility.

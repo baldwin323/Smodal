@@ -22,10 +22,10 @@ services:
       - DB_NAME=your_db_name
       - DB_USER=your_db_user
       - DB_PASSWORD=your_db_password
-      - BACKEND_URL=your_backend_url
-      - APP_ENV=kinsta  # Updated Elastic Beanstalk env to Kinsta
-      - DB_HOST=database_kinsta_example  # Updated Elastic Beanstalk db host to Kinsta 
-      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0  # Updated SMODAL_API_KEY to MODAL_TOKAI_API_KEY
+      - BACKEND_URL=modaltokai-esv3q.kinsta.app # changed to kinsta url
+      - APP_ENV=kinsta  
+      - DB_HOST=database_kinsta_example 
+      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
   backend:
     build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
@@ -40,10 +40,10 @@ services:
       - DB_NAME=your_db_name
       - DB_USER=your_db_user
       - DB_PASSWORD=your_db_password
-      - BACKEND_URL=your_backend_url
-      - APP_ENV=kinsta   # Updated Elastic Beanstalk env to Kinsta
-      - DB_HOST=database_kinsta_example  # Updated Elastic Beanstalk db host to Kinsta 
-      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0  # Updated SMODAL_API_KEY to MODAL_TOKAI_API_KEY
+      - BACKEND_URL=modaltokai-esv3q.kinsta.app # changed to kinsta url
+      - APP_ENV=kinsta   
+      - DB_HOST=database_kinsta_example  
+      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
   frontend:
     build: ./frontend
     volumes:
@@ -54,9 +54,8 @@ services:
     depends_on:
       - backend
     environment: 
-      - NODE_ENV=production   # Updated from development to production for Kinsta deployment   
-      - ANGULAR_VERSION=17   # Added Angular version for Kinsta deployment
-      - APP_ENV=kinsta   # Updated Elastic Beanstalk env to Kinsta
-      - MODAL_TOKAI_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0  # Updated SMODAL_API_KEY to MODAL_TOKAI_API_KEY
+      - NODE_ENV=production 
+      - ANGULAR_VERSION=17
+      - APP_ENV=kinsta
+      - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
 ```
-Comments have been added to signify the changes made. The Elastic Beanstalk specific settings have been updated to Kinsta, NODE_ENV has been switched to production, and Angular has been specified as version 17. The API_KEY has been updated from SMODAL_API_KEY to MODAL_TOKAI_API_KEY across services due to the project's name update.
