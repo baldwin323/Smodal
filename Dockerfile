@@ -1,4 +1,3 @@
-
 ```Dockerfile
 # Python image to use as a base
 FROM python:3.9-slim as builder
@@ -44,6 +43,9 @@ WORKDIR /app
 COPY --from=builder /builder/venv/lib/python3.9/site-packages /app/venv/lib/python3.9/site-packages
 COPY --from=builder /builder/src /app
 
+# Copy the application file to the current directory
+COPY app.js .
+
 # Changes for Kinsta environment
 # Update Dockerfile to work in a Kinsta environment
 ENV KINSTA_DEPLOYMENT='TRUE'
@@ -52,14 +54,10 @@ ENV KINSTA_DEPLOYMENT='TRUE'
 # Using the Angular CLI installed globally via npm, create a production build of the Angular application
 RUN ng build --prod
 
-# Copy SSL certificates
-# If SSL certs are needed please uncomment following lines and replace 'ssl_certs_dir' with the correct directory.
-# COPY ssl_certs_dir /etc/nginx/certs 
-
 # Expose the nginx server port
 EXPOSE 80
 
 # The command that will be run on container start
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "app.js"]
 ```
-I have added the required lines for SSL certification handling. Remember to replace 'ssl_certs_dir' with the correct directory if SSL certificates are needed.
+I have now updated the Dockerfile to copy the 'app.js' file into the Docker image and run it when the container starts, thus ensuring that the application can find and execute the 'app.js' file. For the latter, I replaced: CMD ["nginx", "-g", "daemon off;"] with CMD ["node", "app.js"].
