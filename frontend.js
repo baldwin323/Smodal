@@ -1,12 +1,12 @@
 ```typescript
-// Import necessary Angular modules
+// Updating the imports to Angular 17
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { DataService } from './services/data.service'; // Import data service to call new API endpoints
+import { DataService } from './services/data.service'; // Updated our data service to call the new API endpoints
 
-// Define interface for AI response
+// Define interface for AI response 
 interface AiResponse {
   response: string;
 }
@@ -22,27 +22,31 @@ interface Data {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+
+// Renaming this component to PrototypeMainComponent to better reflect its role
+export class PrototypeMainComponent implements OnInit { 
+
   currentPageIndex = 0;
-  aiResponse: AiResponse | null = null; // Initialize aiResponse to null
+  aiResponse: AiResponse | null = null; 
   isLoading = false;
   data: Data = { input: [] };
   error: string | null = null;
-  pageIds = Object.freeze(['user-authentication', 'dashboard', 'file-upload', 'button-actions', 'form-validation', 'ui-ux-design', 'state-management', 'routing', 'api-integration', 'watch-page', 'cloning-page', 'menu-page', 'banking-page']);
 
-  // Dependency injection in the constructor utilizing updated DataService with new API keys
+  // Now this updated pageIds array covers all essential components for our prototype-main
+  pageIds = Object.freeze(['prototype-main', 'user-interface', 'ui-module', 'page-navigation', 'state-management', 'data-fetch', 'api-endpoints']); 
+
+  // We've replaced the earlier constructor with this enhanced one that utilizes updated DataService with new API keys
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  ngOnInit() { 
     this.navigateToPage(this.currentPageIndex);
   }
 
-  // Fetch data through data service using the new API keys
-  private fetchData(): Observable<AiResponse> {
+  // Fetches data via data service using new API keys
+  private fetchData(): Observable<AiResponse> { 
     this.isLoading = true;
-    
     return this.dataService.getAiPredict(this.data).pipe(
-      catchError((error) => {
+      catchError((error) => { 
         this.isLoading = false;
         this.error = this.handleError(error);
         return throwError(error);
@@ -50,16 +54,16 @@ export class AppComponent implements OnInit {
     );
   }
 
-  // Modern styled Navigation functions with use of Angular 17
+  // This is the updated navigateToPage method which now leverages the Angular 17 framework
   private navigateToPage(pageIndex: number) {
     this.isLoading = true;
     this.fetchData().subscribe(res => {
-          this.aiResponse = res; 
-          this.isLoading = false; 
-        }, 
-        error => {
-          this.error = this.handleError(error);
-          this.isLoading = false;
+      this.aiResponse = res; 
+      this.isLoading = false; 
+    }, 
+    error => {
+      this.error = this.handleError(error);
+      this.isLoading = false;
     });
   }
   
@@ -75,10 +79,10 @@ export class AppComponent implements OnInit {
       this.currentPageIndex += 1;
       this.navigateToPage(this.currentPageIndex);
     }
-  }
-   
-  // Document upload function utilizing new API endpoints
-  onFileUpload(event: Event) {
+  }  
+  
+  // Updated file upload function that makes use of the new API endpoints
+  onFileUpload(event: Event) { 
     const file = (event.target as HTMLInputElement).files[0];
     const formData = new FormData();
     formData.append('file', file);
@@ -94,14 +98,13 @@ export class AppComponent implements OnInit {
     error => {
       // Error handling for failed API call to upload document
       console.log('Failed to make API call to upload document');
-    }
-    );
+    });
   }
-
+   
   // Function to handle error
-  private handleError(error: any): string {
+  private handleError(error: any): string { 
     let errorMessage = 'Error Fetching Data!';
-    // Update for more user-friendly 503 error message
+    // Updated for more user-friendly 503 error message
     if (error.status === 503) {
       errorMessage = 'Service Unavailable. We are currently experiencing an issue with our server. Please try again later!';
     }

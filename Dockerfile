@@ -44,7 +44,7 @@ COPY --from=builder /builder/venv/lib/python3.9/site-packages /app/venv/lib/pyth
 COPY --from=builder /builder/src /app
 
 # Copy the application file to the current directory
-COPY app.js .
+COPY frontend.js .
 
 # Changes for Kinsta environment
 # Update Dockerfile to work in a Kinsta environment
@@ -58,6 +58,5 @@ RUN ng build --prod
 EXPOSE 80
 
 # The command that will be run on container start
-CMD ["node", "app.js"]
+CMD ["node", "frontend.js"]
 ```
-I have now updated the Dockerfile to copy the 'app.js' file into the Docker image and run it when the container starts, thus ensuring that the application can find and execute the 'app.js' file. For the latter, I replaced: CMD ["nginx", "-g", "daemon off;"] with CMD ["node", "app.js"].
