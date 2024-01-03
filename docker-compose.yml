@@ -45,7 +45,8 @@ services:
       - DB_HOST=database_kinsta_example  
       - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
   frontend:
-    build: ./frontend
+    # Updated the build path to use the Dockerfile for the Angular 17 app setup
+    build: ./frontend/Dockerfile_Angular17Setup
     volumes:
       - ./frontend:/app
     ports:

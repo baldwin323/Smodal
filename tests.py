@@ -12,16 +12,16 @@ import json
 from subprocess import Popen, PIPE
 from Smodal.logging import logger
 
+# New import for testing frontend
+from .views import PrototypeMainComponent
+
 from .models import AIConversation, Banking, FileUpload, UserProfile, UIPageData
 import xmlrunner
 from teamcity.unittestpy import TeamcityTestRunner
 
-# Modified the test cases to be compatible with Team City by changing the
-# way test results are outputted so that they can be properly read by Team City.
 
 # Custom test runner XMLTestRunner that outputs XML reports compatible with
 # the TeamCity JUnit reporter is implemented.
-
 class XMLTestRunner(TeamcityTestRunner):
     """
     Test runner that outputs XML reports compatible with the TeamCity JUnit reporter.
@@ -46,8 +46,37 @@ class XMLTestRunner(TeamcityTestRunner):
 
         return self.suite_result(suite, result)
 
+
+# Adding a test class for frontend
+class TestPrototypeMainComponent(TestCase):
+    """
+    Test cases for PrototypeMainComponent from frontend.js
+    """
+
+    def setUp(self):
+        """
+        Set up for test cases.
+        """
+        self.component = PrototypeMainComponent()
+
+    def test_navigate_to_page(self):
+        """
+        Test navigateToPage method.
+        """
+        # Test for valid page index
+        self.component.navigateToPage(0)
+        self.assertIsNotNone(self.component.aiResponse)
+
+        # Test for invalid page index
+        with self.assertRaises(IndexError):
+            self.component.navigateToPage(len(self.component.pageIds))
+
+
 # Update the Django test settings to use the XMLTestRunner.
 TEST_RUNNER = 'Smodal.tests.XMLTestRunner'
 ```
 # Note: The implementation of XMLTestRunner class and TEST_RUNNER might be project specific and might require additional packages like xmlrunner. The above code is a general approach and can be modified according to the specific requirements of the project.
 # Note: You would need to pass XML_REPORTS_DIRECTORY as an environment variable where you want to generate XML reports.
+# Note: In the TestPrototypeMainComponent, replace PrototypeMainComponent() with the correct way to get the PrototypeMainComponent instance in your project. All instances of self.component should be replaced with the actual component instance variable name. The test cases are made for the conceptual understanding, and need to be adapted to the specifics of the frontend.js functionality.
+# Also consider adding more tests for other functions like handlePrevClick, handleNextClick, onFileUpload and so on.
+```
