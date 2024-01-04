@@ -1,10 +1,10 @@
 ```yaml
 version: '3'
 services:
-  python3.12:
+  python3.12: # Python Image container
     image: python:3.12
 
-  app:
+  app: # Django Application container
     build: 
       context: .
       dockerfile: Dockerfile
@@ -17,16 +17,17 @@ services:
       sh -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - python3.12
-    environment: 
+    environment: # Environment Variables for Django server
       - SECRET_KEY=your_secret_key
       - DB_NAME=your_db_name
       - DB_USER=your_db_user
       - DB_PASSWORD=your_db_password
-      - BACKEND_URL=modaltokai-esv3q.kinsta.app # changed to kinsta url
+      - BACKEND_URL=modaltokai-esv3q.kinsta.app # Changed to kinsta url
       - APP_ENV=kinsta  
       - DB_HOST=database_kinsta_example 
       - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
-  backend:
+
+  backend:  # Python backend container
     build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
@@ -35,18 +36,18 @@ services:
       - 8001:8001
     depends_on:
       - app
-    environment:
+    environment:  # Environment Variables for Python backend server
       - SECRET_KEY=your_secret_key
       - DB_NAME=your_db_name
       - DB_USER=your_db_user
       - DB_PASSWORD=your_db_password
-      - BACKEND_URL=modaltokai-esv3q.kinsta.app # changed to kinsta url
+      - BACKEND_URL=modaltokai-esv3q.kinsta.app # Changed to kinsta url
       - APP_ENV=kinsta   
       - DB_HOST=database_kinsta_example  
       - SMODAL_API_KEY=8c5fec1bf1875647455d842efc3a551309f34092e66d9d4b54e517bc9b7994a0
-  frontend:
-    # Updated the build path to use the Dockerfile for the Angular 17 app setup
-    build: ./frontend/Dockerfile_Angular17Setup
+
+  frontend: # Frontend container running the Node app
+    build: ./frontend/Dockerfile_Angular17Setup # Updated the build path to use the Dockerfile for the Angular 17 app setup
     volumes:
       - ./frontend:/app
     ports:
@@ -54,7 +55,7 @@ services:
     command: npm start
     depends_on:
       - backend
-    environment: 
+    environment: # Environment Variables for the frontend Node.js server 
       - NODE_ENV=production 
       - ANGULAR_VERSION=17
       - APP_ENV=kinsta
