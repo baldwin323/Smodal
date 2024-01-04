@@ -45,7 +45,8 @@ export class PrototypeMainComponent implements OnInit {
   // Fetches data via data service using new API keys
   private fetchData(): Observable<AiResponse> { 
     this.isLoading = true;
-    return this.dataService.getAiPredict(this.data).pipe(
+    // Modified this line to point to the correct endpoint which will call the Python API
+    return this.dataService.getAiPredict(this.data, 'https://modaltokai-esv3q.kinsta.app').pipe(
       catchError((error) => { 
         this.isLoading = false;
         this.error = this.handleError(error);
@@ -87,7 +88,8 @@ export class PrototypeMainComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.dataService.uploadDocument(formData).subscribe(response => {
+    // Updated this line to point to the correct endpoint which will call the Python API
+    this.dataService.uploadDocument(formData, 'https://modaltokai-esv3q.kinsta.app').subscribe(response => {
       if (response.success) {
         console.log('Document uploaded successfully');
       } else {
