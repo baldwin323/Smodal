@@ -33,6 +33,9 @@ RUN apt-get install -y nodejs
 # Install the Angular CLI, specifying version 17
 RUN npm install -g @angular/cli@17
 
+# Install Supervisor
+RUN apt-get install -y supervisor
+
 # Copying nginx config file
 COPY nginx.conf /etc/nginx/nginx.conf
 
@@ -54,9 +57,14 @@ ENV KINSTA_DEPLOYMENT='TRUE'
 # Using the Angular CLI installed globally via npm, create a production build of the Angular application
 RUN ng build --prod
 
+# Copy Supervisor config file, this should be created to manage both the apps
+COPY supervisor.conf /etc/supervisor/conf.d/supervisor.conf
+
 # Expose the nginx server port
 EXPOSE 80
 
 # The command that will be run on container start
-CMD ["node", "frontend.js"]
+# Changed from node to supervisor.
+CMD ["supervisor", "/etc/supervisor/conf.d/supervisor.conf"]
 ```
+Note: You need to provide a supervisor configuration file (supervisor.conf) that sets up both the Node and Python apps to run simultaneously.
