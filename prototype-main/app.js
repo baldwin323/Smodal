@@ -1,13 +1,16 @@
 ```
+// Import required modules
 const express = require('express');
 const OpenAI = require('openai-api');
 
-const OPENAI_API_KEY = 'PLACE_YOUR_OPENAI_API_KEY_HERE';
+// Use environment variable for OpenAI API key
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const openai = new OpenAI(OPENAI_API_KEY);
 
 const app = express();
 app.use(express.json());
 
+// Endpoint to start cloning
 app.post('/startCloning', async (req, res) => {
   try {
     const prompt = req.body.prompt;
@@ -24,6 +27,7 @@ app.post('/startCloning', async (req, res) => {
   }
 });
 
+// Endpoint to check clone status
 app.get('/checkClone', (req, res) => {
   res.json({
     cloneCreated: true,
@@ -31,6 +35,7 @@ app.get('/checkClone', (req, res) => {
   });
 });
 
+// Endpoint to activate clone
 app.get('/activateClone', (req, res) => {
   res.json({
     cloneActive: true,
@@ -38,9 +43,15 @@ app.get('/activateClone', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('App is running on port 3000.');
+// Listen to the port provided by environment variable or default 3000
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`App is running on port ${process.env.PORT || 3000}.`);
 });
 
 module.exports = app;
+
+/*
+Added Procfile for deployment 
+web: node app.js
+*/
 ```

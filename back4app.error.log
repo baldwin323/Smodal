@@ -1,0 +1,1091 @@
+2023-11-13T03:35:31.619Z
+SYSTEM
+PREPARING DEPLOYMENT...
+
+2023-11-13T03:35:31.650Z
+SYSTEM
+FETCHING GITHUB REPOSITORY...
+
+2023-11-13T03:35:31.994Z
+SYSTEM
+BUILDING IMAGE...
+
+2023-11-13T03:35:32.681Z
+INFO
+Enumerating objects: 21670, done.
+
+2023-11-13T03:35:32.683Z
+INFO
+Counting objects: 0% (1/795)
+
+2023-11-13T03:35:32.684Z
+INFO
+Counting objects: 1% (8/795)
+
+2023-11-13T03:35:32.685Z
+INFO
+Counting objects: 2% (16/795)
+
+2023-11-13T03:35:32.686Z
+INFO
+Counting objects: 3% (24/795)
+
+2023-11-13T03:35:32.687Z
+INFO
+Counting objects: 4% (32/795)
+
+2023-11-13T03:35:32.688Z
+INFO
+Counting objects: 5% (40/795)
+
+2023-11-13T03:35:32.689Z
+INFO
+Counting objects: 6% (48/795)
+
+2023-11-13T03:35:32.690Z
+INFO
+Counting objects: 7% (56/795)
+
+2023-11-13T03:35:32.691Z
+INFO
+Counting objects: 8% (64/795)
+
+2023-11-13T03:35:32.692Z
+INFO
+Counting objects: 9% (72/795)
+
+2023-11-13T03:35:32.693Z
+INFO
+Counting objects: 10% (80/795)
+
+2023-11-13T03:35:32.694Z
+INFO
+Counting objects: 11% (88/795)
+
+2023-11-13T03:35:32.695Z
+INFO
+Counting objects: 12% (96/795)
+
+2023-11-13T03:35:32.696Z
+INFO
+Counting objects: 13% (104/795)
+
+2023-11-13T03:35:32.697Z
+INFO
+Counting objects: 14% (112/795)
+
+2023-11-13T03:35:32.698Z
+INFO
+Counting objects: 15% (120/795)
+
+2023-11-13T03:35:32.699Z
+INFO
+Counting objects: 16% (128/795)
+
+2023-11-13T03:35:32.700Z
+INFO
+Counting objects: 17% (136/795)
+
+2023-11-13T03:35:32.701Z
+INFO
+Counting objects: 18% (144/795)
+
+2023-11-13T03:35:32.702Z
+INFO
+Counting objects: 19% (152/795)
+
+2023-11-13T03:35:32.703Z
+INFO
+Counting objects: 20% (159/795)
+
+2023-11-13T03:35:32.704Z
+INFO
+Counting objects: 21% (167/795)
+
+2023-11-13T03:35:32.705Z
+INFO
+Counting objects: 22% (175/795)
+
+2023-11-13T03:35:32.706Z
+INFO
+Counting objects: 23% (183/795)
+
+2023-11-13T03:35:32.707Z
+INFO
+Counting objects: 24% (191/795)
+
+2023-11-13T03:35:32.708Z
+INFO
+Counting objects: 25% (199/795)
+
+2023-11-13T03:35:32.709Z
+INFO
+Counting objects: 26% (207/795)
+
+2023-11-13T03:35:32.710Z
+INFO
+Counting objects: 27% (215/795)
+
+2023-11-13T03:35:32.711Z
+INFO
+Counting objects: 28% (223/795)
+
+2023-11-13T03:35:32.712Z
+INFO
+Counting objects: 29% (231/795)
+
+2023-11-13T03:35:32.713Z
+INFO
+Counting objects: 30% (239/795)
+
+2023-11-13T03:35:32.714Z
+INFO
+Counting objects: 31% (247/795)
+
+2023-11-13T03:35:32.715Z
+INFO
+Counting objects: 32% (255/795)
+
+2023-11-13T03:35:32.716Z
+INFO
+Counting objects: 33% (263/795)
+
+2023-11-13T03:35:32.717Z
+INFO
+Counting objects: 34% (271/795)
+
+2023-11-13T03:35:32.718Z
+INFO
+Counting objects: 35% (279/795)
+
+2023-11-13T03:35:32.719Z
+INFO
+Counting objects: 36% (287/795)
+
+2023-11-13T03:35:32.720Z
+INFO
+Counting objects: 37% (295/795)
+
+2023-11-13T03:35:32.721Z
+INFO
+Counting objects: 38% (303/795)
+
+2023-11-13T03:35:32.722Z
+INFO
+Counting objects: 39% (311/795)
+
+2023-11-13T03:35:32.723Z
+INFO
+Counting objects: 40% (318/795)
+
+2023-11-13T03:35:32.724Z
+INFO
+Counting objects: 41% (326/795)
+
+2023-11-13T03:35:32.725Z
+INFO
+Counting objects: 42% (334/795)
+
+2023-11-13T03:35:32.726Z
+INFO
+Counting objects: 43% (342/795)
+
+2023-11-13T03:35:32.727Z
+INFO
+Counting objects: 44% (350/795)
+
+2023-11-13T03:35:32.728Z
+INFO
+Counting objects: 45% (358/795)
+
+2023-11-13T03:35:32.729Z
+INFO
+Counting objects: 46% (366/795)
+
+2023-11-13T03:35:32.730Z
+INFO
+Counting objects: 47% (374/795)
+
+2023-11-13T03:35:32.731Z
+INFO
+Counting objects: 48% (382/795)
+
+2023-11-13T03:35:32.732Z
+INFO
+Counting objects: 49% (390/795)
+
+2023-11-13T03:35:32.733Z
+INFO
+Counting objects: 50% (398/795)
+
+2023-11-13T03:35:32.734Z
+INFO
+Counting objects: 51% (406/795)
+
+2023-11-13T03:35:32.735Z
+INFO
+Counting objects: 52% (414/795)
+
+2023-11-13T03:35:32.736Z
+INFO
+Counting objects: 53% (422/795)
+
+2023-11-13T03:35:32.737Z
+INFO
+Counting objects: 54% (430/795)
+
+2023-11-13T03:35:32.738Z
+INFO
+Counting objects: 55% (438/795)
+
+2023-11-13T03:35:32.739Z
+INFO
+Counting objects: 56% (446/795)
+
+2023-11-13T03:35:32.740Z
+INFO
+Counting objects: 57% (454/795)
+
+2023-11-13T03:35:32.741Z
+INFO
+Counting objects: 58% (462/795)
+
+2023-11-13T03:35:32.742Z
+INFO
+Counting objects: 59% (470/795)
+
+2023-11-13T03:35:32.743Z
+INFO
+Counting objects: 60% (477/795)
+
+2023-11-13T03:35:32.744Z
+INFO
+Counting objects: 61% (485/795)
+
+2023-11-13T03:35:32.745Z
+INFO
+Counting objects: 62% (493/795)
+
+2023-11-13T03:35:32.746Z
+INFO
+Counting objects: 63% (501/795)
+
+2023-11-13T03:35:32.747Z
+INFO
+Counting objects: 64% (509/795)
+
+2023-11-13T03:35:32.748Z
+INFO
+Counting objects: 65% (517/795)
+
+2023-11-13T03:35:32.749Z
+INFO
+Counting objects: 66% (525/795)
+
+2023-11-13T03:35:32.750Z
+INFO
+Counting objects: 67% (533/795)
+
+2023-11-13T03:35:32.751Z
+INFO
+Counting objects: 68% (541/795)
+
+2023-11-13T03:35:32.752Z
+INFO
+Counting objects: 69% (549/795)
+
+2023-11-13T03:35:32.753Z
+INFO
+Counting objects: 70% (557/795)
+
+2023-11-13T03:35:32.754Z
+INFO
+Counting objects: 71% (565/795)
+
+2023-11-13T03:35:32.755Z
+INFO
+Counting objects: 72% (573/795)
+
+2023-11-13T03:35:32.756Z
+INFO
+Counting objects: 73% (581/795)
+
+2023-11-13T03:35:32.757Z
+INFO
+Counting objects: 74% (589/795)
+
+2023-11-13T03:35:32.758Z
+INFO
+Counting objects: 75% (597/795)
+
+2023-11-13T03:35:32.759Z
+INFO
+Counting objects: 76% (605/795)
+
+2023-11-13T03:35:32.760Z
+INFO
+Counting objects: 77% (613/795)
+
+2023-11-13T03:35:32.761Z
+INFO
+Counting objects: 78% (621/795)
+
+2023-11-13T03:35:32.762Z
+INFO
+Counting objects: 79% (629/795)
+
+2023-11-13T03:35:32.763Z
+INFO
+Counting objects: 80% (636/795)
+
+2023-11-13T03:35:32.764Z
+INFO
+Counting objects: 81% (644/795)
+
+2023-11-13T03:35:32.765Z
+INFO
+Counting objects: 82% (652/795)
+
+2023-11-13T03:35:32.766Z
+INFO
+Counting objects: 83% (660/795)
+
+2023-11-13T03:35:32.767Z
+INFO
+Counting objects: 84% (668/795)
+
+2023-11-13T03:35:32.768Z
+INFO
+Counting objects: 85% (676/795)
+
+2023-11-13T03:35:32.769Z
+INFO
+Counting objects: 86% (684/795)
+
+2023-11-13T03:35:32.770Z
+INFO
+Counting objects: 87% (692/795)
+
+2023-11-13T03:35:32.771Z
+INFO
+Counting objects: 88% (700/795)
+
+2023-11-13T03:35:32.772Z
+INFO
+Counting objects: 89% (708/795)
+
+2023-11-13T03:35:32.773Z
+INFO
+Counting objects: 90% (716/795)
+
+2023-11-13T03:35:32.774Z
+INFO
+Counting objects: 91% (724/795)
+
+2023-11-13T03:35:32.775Z
+INFO
+Counting objects: 92% (732/795)
+
+2023-11-13T03:35:32.776Z
+INFO
+Counting objects: 93% (740/795)
+
+2023-11-13T03:35:32.777Z
+INFO
+Counting objects: 94% (748/795)
+
+2023-11-13T03:35:32.778Z
+INFO
+Counting objects: 95% (756/795)
+
+2023-11-13T03:35:32.779Z
+INFO
+Counting objects: 96% (764/795)
+
+2023-11-13T03:35:32.780Z
+INFO
+Counting objects: 97% (772/795)
+
+2023-11-13T03:35:32.781Z
+INFO
+Counting objects: 98% (780/795)
+
+2023-11-13T03:35:32.782Z
+INFO
+Counting objects: 99% (788/795)
+
+2023-11-13T03:35:32.783Z
+INFO
+Counting objects: 100% (795/795)
+
+2023-11-13T03:35:32.784Z
+INFO
+Counting objects: 100% (795/795), done.
+
+2023-11-13T03:35:32.785Z
+INFO
+Compressing objects: 0% (1/446)
+
+2023-11-13T03:35:32.786Z
+INFO
+Compressing objects: 1% (5/446)
+
+2023-11-13T03:35:32.787Z
+INFO
+Compressing objects: 2% (9/446)
+
+2023-11-13T03:35:32.788Z
+INFO
+Compressing objects: 3% (14/446)
+
+2023-11-13T03:35:32.789Z
+INFO
+Compressing objects: 4% (18/446)
+
+2023-11-13T03:35:32.790Z
+INFO
+Compressing objects: 5% (23/446)
+
+2023-11-13T03:35:32.791Z
+INFO
+Compressing objects: 6% (27/446)
+
+2023-11-13T03:35:32.792Z
+INFO
+Compressing objects: 7% (32/446)
+
+2023-11-13T03:35:32.793Z
+INFO
+Compressing objects: 8% (36/446)
+
+2023-11-13T03:35:32.794Z
+INFO
+Compressing objects: 9% (41/446)
+
+2023-11-13T03:35:32.795Z
+INFO
+Compressing objects: 10% (45/446)
+
+2023-11-13T03:35:32.796Z
+INFO
+Compressing objects: 11% (50/446)
+
+2023-11-13T03:35:32.797Z
+INFO
+Compressing objects: 12% (54/446)
+
+2023-11-13T03:35:32.798Z
+INFO
+Compressing objects: 13% (58/446)
+
+2023-11-13T03:35:32.799Z
+INFO
+Compressing objects: 14% (63/446)
+
+2023-11-13T03:35:32.800Z
+INFO
+Compressing objects: 15% (67/446)
+
+2023-11-13T03:35:32.801Z
+INFO
+Compressing objects: 16% (72/446)
+
+2023-11-13T03:35:32.802Z
+INFO
+Compressing objects: 17% (76/446)
+
+2023-11-13T03:35:32.803Z
+INFO
+Compressing objects: 18% (81/446)
+
+2023-11-13T03:35:32.804Z
+INFO
+Compressing objects: 19% (85/446)
+
+2023-11-13T03:35:32.805Z
+INFO
+Compressing objects: 20% (90/446)
+
+2023-11-13T03:35:32.806Z
+INFO
+Compressing objects: 21% (94/446)
+
+2023-11-13T03:35:32.807Z
+INFO
+Compressing objects: 22% (99/446)
+
+2023-11-13T03:35:32.808Z
+INFO
+Compressing objects: 23% (103/446)
+
+2023-11-13T03:35:32.809Z
+INFO
+Compressing objects: 24% (108/446)
+
+2023-11-13T03:35:32.810Z
+INFO
+Compressing objects: 25% (112/446)
+
+2023-11-13T03:35:32.811Z
+INFO
+Compressing objects: 26% (116/446)
+
+2023-11-13T03:35:32.812Z
+INFO
+Compressing objects: 27% (121/446)
+
+2023-11-13T03:35:32.813Z
+INFO
+Compressing objects: 28% (125/446)
+
+2023-11-13T03:35:32.814Z
+INFO
+Compressing objects: 29% (130/446)
+
+2023-11-13T03:35:32.815Z
+INFO
+Compressing objects: 30% (134/446)
+
+2023-11-13T03:35:32.816Z
+INFO
+Compressing objects: 31% (139/446)
+
+2023-11-13T03:35:32.817Z
+INFO
+Compressing objects: 32% (143/446)
+
+2023-11-13T03:35:32.818Z
+INFO
+Compressing objects: 33% (148/446)
+
+2023-11-13T03:35:32.819Z
+INFO
+Compressing objects: 34% (152/446)
+
+2023-11-13T03:35:32.820Z
+INFO
+Compressing objects: 35% (157/446)
+
+2023-11-13T03:35:32.821Z
+INFO
+Compressing objects: 36% (161/446)
+
+2023-11-13T03:35:32.822Z
+INFO
+Compressing objects: 37% (166/446)
+
+2023-11-13T03:35:32.823Z
+INFO
+Compressing objects: 38% (170/446)
+
+2023-11-13T03:35:32.824Z
+INFO
+Compressing objects: 39% (174/446)
+
+2023-11-13T03:35:32.825Z
+INFO
+Compressing objects: 40% (179/446)
+
+2023-11-13T03:35:32.826Z
+INFO
+Compressing objects: 41% (183/446)
+
+2023-11-13T03:35:32.827Z
+INFO
+Compressing objects: 42% (188/446)
+
+2023-11-13T03:35:32.828Z
+INFO
+Compressing objects: 43% (192/446)
+
+2023-11-13T03:35:32.829Z
+INFO
+Compressing objects: 44% (197/446)
+
+2023-11-13T03:35:32.830Z
+INFO
+Compressing objects: 45% (201/446)
+
+2023-11-13T03:35:32.831Z
+INFO
+Compressing objects: 46% (206/446)
+
+2023-11-13T03:35:32.832Z
+INFO
+Compressing objects: 47% (210/446)
+
+2023-11-13T03:35:32.833Z
+INFO
+Compressing objects: 48% (215/446)
+
+2023-11-13T03:35:32.834Z
+INFO
+Compressing objects: 49% (219/446)
+
+2023-11-13T03:35:32.835Z
+INFO
+Compressing objects: 50% (223/446)
+
+2023-11-13T03:35:32.836Z
+INFO
+Compressing objects: 51% (228/446)
+
+2023-11-13T03:35:32.837Z
+INFO
+Compressing objects: 52% (232/446)
+
+2023-11-13T03:35:32.838Z
+INFO
+Compressing objects: 53% (237/446)
+
+2023-11-13T03:35:32.839Z
+INFO
+Compressing objects: 54% (241/446)
+
+2023-11-13T03:35:32.840Z
+INFO
+Compressing objects: 55% (246/446)
+
+2023-11-13T03:35:32.841Z
+INFO
+Compressing objects: 56% (250/446)
+
+2023-11-13T03:35:32.842Z
+INFO
+Compressing objects: 57% (255/446)
+
+2023-11-13T03:35:32.843Z
+INFO
+Compressing objects: 58% (259/446)
+
+2023-11-13T03:35:32.844Z
+INFO
+Compressing objects: 59% (264/446)
+
+2023-11-13T03:35:32.845Z
+INFO
+Compressing objects: 60% (268/446)
+
+2023-11-13T03:35:32.846Z
+INFO
+Compressing objects: 61% (273/446)
+
+2023-11-13T03:35:32.847Z
+INFO
+Compressing objects: 62% (277/446)
+
+2023-11-13T03:35:32.848Z
+INFO
+Compressing objects: 63% (281/446)
+
+2023-11-13T03:35:32.849Z
+INFO
+Compressing objects: 64% (286/446)
+
+2023-11-13T03:35:32.850Z
+INFO
+Compressing objects: 65% (290/446)
+
+2023-11-13T03:35:32.851Z
+INFO
+Compressing objects: 66% (295/446)
+
+2023-11-13T03:35:32.852Z
+INFO
+Compressing objects: 67% (299/446)
+
+2023-11-13T03:35:32.853Z
+INFO
+Compressing objects: 68% (304/446)
+
+2023-11-13T03:35:32.854Z
+INFO
+Compressing objects: 69% (308/446)
+
+2023-11-13T03:35:32.855Z
+INFO
+Compressing objects: 70% (313/446)
+
+2023-11-13T03:35:32.856Z
+INFO
+Compressing objects: 71% (317/446)
+
+2023-11-13T03:35:32.857Z
+INFO
+Compressing objects: 72% (322/446)
+
+2023-11-13T03:35:32.858Z
+INFO
+Compressing objects: 73% (326/446)
+
+2023-11-13T03:35:32.859Z
+INFO
+Compressing objects: 74% (331/446)
+
+2023-11-13T03:35:32.860Z
+INFO
+Compressing objects: 75% (335/446)
+
+2023-11-13T03:35:32.861Z
+INFO
+Compressing objects: 76% (339/446)
+
+2023-11-13T03:35:32.862Z
+INFO
+Compressing objects: 77% (344/446)
+
+2023-11-13T03:35:32.863Z
+INFO
+Compressing objects: 78% (348/446)
+
+2023-11-13T03:35:32.864Z
+INFO
+Compressing objects: 79% (353/446)
+
+2023-11-13T03:35:32.865Z
+INFO
+Compressing objects: 80% (357/446)
+
+2023-11-13T03:35:32.866Z
+INFO
+Compressing objects: 81% (362/446)
+
+2023-11-13T03:35:32.867Z
+INFO
+Compressing objects: 82% (366/446)
+
+2023-11-13T03:35:32.868Z
+INFO
+Compressing objects: 83% (371/446)
+
+2023-11-13T03:35:32.869Z
+INFO
+Compressing objects: 84% (375/446)
+
+2023-11-13T03:35:32.870Z
+INFO
+Compressing objects: 85% (380/446)
+
+2023-11-13T03:35:32.871Z
+INFO
+Compressing objects: 86% (384/446)
+
+2023-11-13T03:35:32.872Z
+INFO
+Compressing objects: 87% (389/446)
+
+2023-11-13T03:35:32.873Z
+INFO
+Compressing objects: 88% (393/446)
+
+2023-11-13T03:35:32.874Z
+INFO
+Compressing objects: 89% (397/446)
+
+2023-11-13T03:35:32.875Z
+INFO
+Compressing objects: 90% (402/446)
+
+2023-11-13T03:35:32.876Z
+INFO
+Compressing objects: 91% (406/446)
+
+2023-11-13T03:35:32.877Z
+INFO
+Compressing objects: 92% (411/446)
+
+2023-11-13T03:35:32.878Z
+INFO
+Compressing objects: 93% (415/446)
+
+2023-11-13T03:35:32.879Z
+INFO
+Compressing objects: 94% (420/446)
+
+2023-11-13T03:35:32.880Z
+INFO
+Compressing objects: 95% (424/446)
+
+2023-11-13T03:35:32.881Z
+INFO
+Compressing objects: 96% (429/446)
+
+2023-11-13T03:35:32.882Z
+INFO
+Compressing objects: 97% (433/446)
+
+2023-11-13T03:35:32.883Z
+INFO
+Compressing objects: 98% (438/446)
+
+2023-11-13T03:35:32.884Z
+INFO
+Compressing objects: 99% (442/446)
+
+2023-11-13T03:35:32.885Z
+INFO
+Compressing objects: 100% (446/446)
+
+2023-11-13T03:35:32.886Z
+INFO
+Compressing objects: 100% (446/446), done.
+
+2023-11-13T03:35:36.535Z
+INFO
+Total 21670 (delta 385), reused 623 (delta 346), pack-reused 20875
+
+2023-11-13T03:35:44.060Z
+ERROR
+Error: error resolving source context: worktree contains unstaged changes
+
+2023-11-13T03:35:44.062Z
+ERROR
+Usage:
+
+2023-11-13T03:35:44.063Z
+ERROR
+executor [flags]
+
+2023-11-13T03:35:44.064Z
+ERROR
+executor [command]
+
+2023-11-13T03:35:44.065Z
+ERROR
+Available Commands:
+
+2023-11-13T03:35:44.066Z
+ERROR
+completion Generate the autocompletion script for the specified shell
+
+2023-11-13T03:35:44.067Z
+ERROR
+help Help about any command
+
+2023-11-13T03:35:44.068Z
+ERROR
+version Print the version number of kaniko
+
+2023-11-13T03:35:44.069Z
+ERROR
+Flags:
+
+2023-11-13T03:35:44.070Z
+ERROR
+--build-arg multi-arg type This flag allows you to pass in ARG values at build time. Set it repeatedly for multiple values.
+
+2023-11-13T03:35:44.071Z
+ERROR
+--cache Use cache when building image
+
+2023-11-13T03:35:44.072Z
+ERROR
+--cache-copy-layers Caches copy layers
+
+2023-11-13T03:35:44.073Z
+ERROR
+--cache-dir string Specify a local directory to use as a cache. (default "/cache")
+
+2023-11-13T03:35:44.074Z
+ERROR
+--cache-repo string Specify a repository to use as a cache, otherwise one will be inferred from the destination provided
+
+2023-11-13T03:35:44.075Z
+ERROR
+--cache-run-layers Caches run layers (default true)
+
+2023-11-13T03:35:44.076Z
+ERROR
+--cache-ttl duration Cache timeout in hours. Defaults to two weeks. (default 336h0m0s)
+
+2023-11-13T03:35:44.077Z
+ERROR
+--cleanup Clean the filesystem at the end
+
+2023-11-13T03:35:44.078Z
+ERROR
+--compressed-caching Compress the cached layers. Decreases build time, but increases memory usage. (default true)
+
+2023-11-13T03:35:44.079Z
+ERROR
+-c, --context string Path to the dockerfile build context. (default "/workspace/")
+
+2023-11-13T03:35:44.080Z
+ERROR
+--context-sub-path string Sub path within the given context.
+
+2023-11-13T03:35:44.081Z
+ERROR
+--custom-platform string Specify the build platform if different from the current host
+
+2023-11-13T03:35:44.082Z
+ERROR
+--customPlatform string This flag is deprecated. Please use '--custom-platform'.
+
+2023-11-13T03:35:44.083Z
+ERROR
+-d, --destination multi-arg type Registry the final image should be pushed to. Set it repeatedly for multiple destinations. (default )
+
+2023-11-13T03:35:44.084Z
+ERROR
+--digest-file string Specify a file to save the digest of the built image to.
+
+2023-11-13T03:35:44.085Z
+ERROR
+-f, --dockerfile string Path to the dockerfile to be built. (default "Dockerfile")
+
+2023-11-13T03:35:44.086Z
+ERROR
+--force Force building outside of a container
+
+2023-11-13T03:35:44.087Z
+ERROR
+--force-build-metadata Force add metadata layers to build image
+
+2023-11-13T03:35:44.088Z
+ERROR
+--git gitoptions Branch to clone if build context is a git repository (default branch=,single-branch=false,recurse-submodules=false)
+
+2023-11-13T03:35:44.089Z
+ERROR
+-h, --help help for executor
+
+2023-11-13T03:35:44.090Z
+ERROR
+--ignore-path multi-arg type Ignore these paths when taking a snapshot. Set it repeatedly for multiple paths.
+
+2023-11-13T03:35:44.091Z
+ERROR
+--ignore-var-run Ignore /var/run directory when taking image snapshot. Set it to false to preserve /var/run/ in destination image. (default true)
+
+2023-11-13T03:35:44.092Z
+ERROR
+--image-fs-extract-retry int Number of retries for image FS extraction
+
+2023-11-13T03:35:44.093Z
+ERROR
+--image-name-tag-with-digest-file string Specify a file to save the image name w/ image tag w/ digest of the built image to.
+
+2023-11-13T03:35:44.094Z
+ERROR
+--image-name-with-digest-file string Specify a file to save the image name w/ digest of the built image to.
+
+2023-11-13T03:35:44.095Z
+ERROR
+--insecure Push to insecure registry using plain HTTP
+
+2023-11-13T03:35:44.096Z
+ERROR
+--insecure-pull Pull from insecure registry using plain HTTP
+
+2023-11-13T03:35:44.097Z
+ERROR
+--insecure-registry multi-arg type Insecure registry using plain HTTP to push and pull. Set it repeatedly for multiple registries.
+
+2023-11-13T03:35:44.098Z
+ERROR
+--kaniko-dir string Path to the kaniko directory, this takes precedence over the KANIKO_DIR environment variable. (default "/kaniko")
+
+2023-11-13T03:35:44.099Z
+ERROR
+--label multi-arg type Set metadata for an image. Set it repeatedly for multiple labels.
+
+2023-11-13T03:35:44.100Z
+ERROR
+--log-format string Log format (text, color, json) (default "color")
+
+2023-11-13T03:35:44.101Z
+ERROR
+--log-timestamp Timestamp in log output
+
+2023-11-13T03:35:44.102Z
+ERROR
+--no-push Do not push the image to the registry
+
+2023-11-13T03:35:44.103Z
+ERROR
+--no-push-cache Do not push the cache layers to the registry
+
+2023-11-13T03:35:44.104Z
+ERROR
+--oci-layout-path string Path to save the OCI image layout of the built image.
+
+2023-11-13T03:35:44.105Z
+ERROR
+--push-retry int Number of retries for the push operation
+
+2023-11-13T03:35:44.106Z
+ERROR
+--registry-certificate key-value-arg type Use the provided certificate for TLS communication with the given registry. Expected format is 'my.registry.url=/path/to/the/server/certificate'.
+
+2023-11-13T03:35:44.107Z
+ERROR
+--registry-mirror multi-arg type Registry mirror to use as pull-through cache instead of docker.io. Set it repeatedly for multiple mirrors.
+
+2023-11-13T03:35:44.108Z
+ERROR
+--reproducible Strip timestamps out of the image to make it reproducible
+
+2023-11-13T03:35:44.109Z
+ERROR
+--single-snapshot Take a single snapshot at the end of the build.
+
+2023-11-13T03:35:44.110Z
+ERROR
+--skip-tls-verify Push to insecure registry ignoring TLS verify
+
+2023-11-13T03:35:44.111Z
+ERROR
+--skip-tls-verify-pull Pull from insecure registry ignoring TLS verify
+
+2023-11-13T03:35:44.112Z
+ERROR
+--skip-tls-verify-registry multi-arg type Insecure registry ignoring TLS verify to push and pull. Set it repeatedly for multiple registries.
+
+2023-11-13T03:35:44.113Z
+ERROR
+--skip-unused-stages Build only used stages if defined to true. Otherwise it builds by default all stages, even the unnecessaries ones until it reaches the target stage / end of Dockerfile
+
+2023-11-13T03:35:44.114Z
+ERROR
+--snapshot-mode string Change the file attributes inspected during snapshotting (default "full")
+
+2023-11-13T03:35:44.115Z
+ERROR
+--snapshotMode string This flag is deprecated. Please use '--snapshot-mode'.
+
+2023-11-13T03:35:44.116Z
+ERROR
+--tar-path string Path to save the image in as a tarball instead of pushing
+
+2023-11-13T03:35:44.117Z
+ERROR
+--tarPath string This flag is deprecated. Please use '--tar-path'.
+
+2023-11-13T03:35:44.118Z
+ERROR
+--target string Set the target build stage to build
+
+2023-11-13T03:35:44.119Z
+ERROR
+--use-new-run Use the experimental run implementation for detecting changes without requiring file system snapshots.
+
+2023-11-13T03:35:44.120Z
+ERROR
+-v, --verbosity string Log level (trace, debug, info, warn, error, fatal, panic) (default "info")
+
+2023-11-13T03:35:44.121Z
+ERROR
+Use "executor [command] --help" for more information about a command.
+
+2023-11-13T03:35:45.415Z
+SYSTEM
+unexpected error
+
+2023-11-13T03:35:45.416Z
+SYSTEM
+deployment failed
+
+Logs
+Go to Logs
+

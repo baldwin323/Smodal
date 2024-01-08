@@ -1,43 +1,60 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <!-- The meta character set for the document, in this case UTF-8 -->
     <meta charset="UTF-8">
-    
-    <!-- The title block of the document. It can be overridden in children templates. -->
-    {% block title %}<title>Watch Page</title>{% endblock %}
-    
-    <!-- Linking to an external CSS file. {% static 'css/style.css' %} is used to include static files. -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}
+        <title>Watch Page</title>
+    {% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/watch_page.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 </head>
 
 <body>
-    <!-- Including the navigation bar HTML file. -->
     {% include "nav.html" %}
-    
-    <!-- Start of the server-side logic looping over interactions in order to display each interaction in the frontend. -->
-    {% for interaction in interactions %}
-        <!-- Each interaction is encapsulated in a div container for styling and layout purposes. -->
-        <div class="container" id="live-chat">
-            <!-- The user and bot interactions are placed within paragraph (p) tags for proper space distribution and line breaks. -->
-            <p>User: {{ interaction.user_input }}</p>
-            <p>Bot: {{ interaction.bot_response }}</p>
+    <main role="main" id="main-content">
+        <div class="interaction">
+            {% for interaction in interactions %}
+                <div class="container" id="live-chat">
+                    <p>User: {{ interaction.user_input }}</p>
+                    <p>Bot: {{ interaction.bot_response }}</p>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-    
-    <!-- Div container for for the chat interaction options, in this case a button to take over the chat session -->
-    <div class="interact">
-        <button id="takeover">Take Over Chat</button>
-    </div>
+        <div class="interact">
+            <!-- New frontend elements go here -->
+            <button id="new-front-end-element1">Element1</button>
+            <button id="new-front-end-element2">Element2</button>
+            <button id="new-front-end-element3">Element3</button>
+            <button id="takeover">Take Over Chat</button>
+            <button id="bot">Give Bot Control</button>
+        </div>
+    </main>
 
-    <!-- Including the footer HTML file. -->
-    {% include "footer.html" %}
+    {% if request.user.is_staff %}
+        <main role="main" id="admin-content">
+            <!-- Admins can see this part of the page -->
+            {% include "footer.html" %}
+        
+            <!-- New frontend functions go here -->
+            <script src="{% static 'js/newFunction1.js' %}"></script>
+            <script src="{% static 'js/newFunction2.js' %}"></script>
+            <script src="{% static 'js/newFunction3.js' %}"></script>
 
-    <!-- Linking to an external JavaScript file for button functionality. -->
-    <script src="{% static 'js/takeover.js' %}"></script>
+            <script src="{% static 'js/takeover.js' %}"></script>
+            <script src="{% static 'js/giveBotControl.js' %}"></script>
+            <script>
+                var socket = io.connect('http://localhost:5000');
+                socket.on('bot_interaction', function(msg) {
+                    $('#live-chat').append('<p>Bot: ' + msg.bot_response + '</p>');
+                });
+            </script>
+        </main>
+    {% else %}
+        <h1>Access denied. You must be an admin to access this page.</h1>
+    {% endif %}
 </body>
 
 </html>

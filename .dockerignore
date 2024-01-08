@@ -1,0 +1,42 @@
+# .dockerignore file to ignore files and directories for Docker build
+# Can improve the build performance
+
+# Ignore configuration files that may contain sensitive information
+*.config
+
+# Ignore all logs
+*.log
+
+# Ignore all compiler and transpiler output files
+/build
+
+# Ignore node modules directory as it can be rebuilt using package.json
+node_modules
+
+# Ignore git directory to ensure git data does not end up in the final image
+.git
+
+# Ignore all output files
+/dist
+
+# Ignore all test and example related files or directories
+/test
+/examples
+
+# Ignore all documentation
+*.md
+/docs
+
+# Ignore temporary files that may be created by IDEs and editors
+*.tmp
+*.swp
+*.swo
+*.bak
+*.swx
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore OS specific files
+.DS_Store
+.Thumbs.db

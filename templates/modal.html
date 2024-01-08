@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="styles.css">
+<script src="modal.js"></script>
+</head>
+<body>
 <!-- The beginning of the Modal -->
 <div class="modal fade" id="{{ modal_id }}" tabindex="-1" role="dialog" aria-labelledby="{{ modal_id }}Label" aria-hidden="true">
   <!--The Modal Dialog starts here-->
@@ -14,6 +21,7 @@
       </div>
       <!-- The body of the modal containing the main modal content-->
       <div class="modal-body">
+        {# The frontend functions and elements you asked for would be included here, hopefully with useful and neat comments explaining them #}
         {{ modal_body|safe }}
       </div>
       <!-- The footer of the modal containing any extra information or actions -->
@@ -24,3 +32,18 @@
   </div>
 </div>
 <!-- The end of the Modal-->
+<script>
+  // Ensure that the modal is correctly set up and functions as expected
+  const modal = document.getElementById('{{ modal_id }}');
+  const closebutton = modal.getElementsByClassName('close')[0];
+  const closeButton = () => modal.style.display = "none";
+  // Here is where you would typically extend the modal's frontend as necessary - both by manipulating its current elements using DOM functions, and by adding your own elements and functions as necessary.
+  closebutton.onclick = closeButton;
+  window.onclick = (event) => {
+    if (event.target == modal) {
+      closeButton()
+    }
+  }
+</script>
+</body>
+</html>

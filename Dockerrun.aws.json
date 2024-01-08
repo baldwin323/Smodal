@@ -1,0 +1,25 @@
+```json
+{
+   "AWSEBDockerrunVersion": "1",
+   "Image": {
+      "Name": "your Docker Hub account/image-name", // Image field updated to pull from Docker Hub
+      "Update": "true"
+   },
+   "Ports": [
+     {
+       "ContainerPort": "8000", // Changed from 8080 to 8000 to map the exposed container port to the Vultr instance
+       "HostPort": "80" // Added HostPort to enable connections to Vultr instance
+     }
+   ],
+   "environment": {
+       "AWS_ACCESS_KEY": "your AWS access key",
+       "AWS_SECRET_KEY": "your AWS secret key",
+       "BACKEND_URL": "your_backend_url", 
+       "AWS_EB_NUM_INSTANCES": "1",
+       "AWS_EB_INSTANCE_TYPE": "t2.micro"
+   },
+   "Volumes": [],
+   "Logging": "/var/log/nginx"
+}
+```
+<!-- Modifications: Updated Image field to pull from Docker Hub. Updated Ports field to expose the required ports on the Vultr instance.-->

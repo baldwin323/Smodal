@@ -1,52 +1,15 @@
-# .gitignore
+# This is a .gitignore file which will prevent certain files
+# such as those containing sensitive information (like .env) from being committed to the repository.
 
-# Ignore Python build artifacts
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.egg-info/
-dist/
-build/
-*.egg
-
-# Ignore IDE and editor files
-.idea/
-.vscode/
-*.swp
-*.swo
-*.swn
-*.bak
-
-# Ignore database files
-*.db
-*.sqlite
-
-# Ignore log files
-*.log
-
-# Ignore OS generated files
-.DS_Store
-Thumbs.db
-
-# Ignore Python environment files
-venv/
-*.venv
+# First, start with ignoring .env file which typically holds sensitive environment variables
 .env
 
-# Ignore deployment files
-deploy.sh
+# Ignore node modules - they should be recreated at install time
+node_modules/
 
-# Ignore Docker files
-Dockerfile
-*.dockerignore
+# Ignore log files and databases
+*.log
+*.sqlite
 
-# Ignore test files
-src/tests/
-
-# Ignore setup files
-setup.py
-
-# Ignore license and readme
-LICENSE
-README.md
+# Ignore the build output directory
+dist/

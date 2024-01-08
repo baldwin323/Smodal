@@ -1,13 +1,17 @@
-
+import os  # added import to fetch environment variables
 from Crypto.Cipher import AES
 from Crypto import Random
 import hashlib, base64
 
 class EncryptionManager:
     
-    def __init__(self, key):
-        self.key = hashlib.sha256(key.encode()).digest()
-
+    def __init__(self):
+        # Changed to use environment variable "ENCRYPTION_KEY" for initializing
+        if "ENCRYPTION_KEY" in os.environ:
+            self.key = hashlib.sha256(os.environ["ENCRYPTION_KEY"].encode()).digest()
+        else:
+            raise EnvironmentError("ENCRYPTION_KEY not present in environment variables.")  # raise an error if the environment variable is not present. 
+            
     def encrypt(self, plaintext):
         try:
             iv = Random.new().read(AES.block_size)

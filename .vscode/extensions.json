@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "firefox-devtools.vscode-firefox-debug",
+        "mutable-ai.mutable-ai",
+        "sourcery.sourcery",
+        "formulahendry.docker-explorer",
+        "ms-azuretools.vscode-docker",
+        "ms-python.python"
+    ]
+}

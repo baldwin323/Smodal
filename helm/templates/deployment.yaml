@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: modal-tokai
+  labels:
+    app: modal-tokai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: modal-tokai
+  template:
+    metadata:
+      labels:
+        app: modal-tokai
+    spec:
+      containers:
+      - name: modal-tokai
+        image: sobereyed/modaltokai:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

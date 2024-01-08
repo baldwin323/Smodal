@@ -1,36 +1,93 @@
-import logging
 import os
+import sys
+import traceback
+from logging import handlers
+from logging import getLogger, Formatter, DEBUG, INFO
+from django.conf import settings
 
-# This script is for logging purposes for our application.
-# It includes both console logging and file logging.
-# Console logging is set to level INFO, which means it will record every detail at or above INFO level (DEBUG < INFO < WARNING < ERROR < CRITICAL)
-# File logging is set to level ERROR, which means it will record only ERROR and CRITICAL level details.
+# Initialized the project, build and detail loggers
+project_logger = getLogger(__name__)
+build_logger = getLogger('build_process')
+detailed_logger = getLogger('detailed')
 
-# Create a custom logger
-logger = logging.getLogger(__name__)
+# Loaded settings from configuration file
+conf = settings.LOGGING
+LOGGING_HOST = conf.get('LOGGING_HOST', 'localhost')
+LOGGING_PORT = conf.get('LOGGING_PORT', 534)
 
-# Create handlers for console and file
-console_handler = logging.StreamHandler()
-if os.getenv('REPLIT') == '1':
-  filename = 'replit_app.log'
-else:
-  filename = 'app.log'
-file_handler = logging.FileHandler(filename)
+# TeamCity specific settings
+TEAMCITY_HOST = conf.get('TEAMCITY_HOST', 'localhost')
+TEAMCITY_PORT = conf.get('TEAMCITY_PORT', 12345)
 
-# We set the level of logging for console and file
-# console logging is lowered to INFO level,
-# whereas file logging is kept at ERROR level.
-console_handler.setLevel(logging.INFO)
-file_handler.setLevel(logging.ERROR)
+# Error handling for logging setup
+try:
+    # Optimized handler with server info using SysLogHandler
+    handler = handlers.SysLogHandler(address=(LOGGING_HOST, LOGGING_PORT)) # Used LOGGING_HOST and LOGGING_PORT instead of TeamCity settings 
+    formatter = Formatter('%(asctime)s [%(name)s][%(levelname)s] - %(message)s (%(funcName)s in %(pathname)s line %(lineno)d)', datefmt='%Y-%m-%d %H:%M:%S')
+    handler.setFormatter(formatter)
+    project_logger.addHandler(handler)
+    build_logger.addHandler(handler)
+    detailed_logger.addHandler(handler)
+    project_logger.setLevel(DEBUG)
+    build_logger.setLevel(INFO)
+    detailed_logger.setLevel(DEBUG)
+except Exception as e:
+    project_logger.error('An error occurred while setting up the logger and formatter.', exc_info=True)
 
-# Create formatters to specify the format of log message and add these formatters to the handlers 
-# Console formatter does not have timestamp information and it only logs name of the logger, level of logging and the message
-# File formatter logs more about the error, including timestamp, name of the logger, level of logging, message, pathname of the module where error occurred and the line number of the code where error occurred
-console_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-file_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s - %(pathname)s - line %(lineno)d')
-console_handler.setFormatter(console_format)
-file_handler.setFormatter(file_format)
+# Error handling for applying logger configuration
+try:
+    logging.config.dictConfig(conf)
+except Exception as e:
+    project_logger.error('An error occurred while applying the configuration to the logger. Error: %s', e, exc_info=True)
 
-# Finally, we add these handlers to our logger
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
+# Handlers for different types of logging situations
+def handle_worktree_change_error(error_message: str):
+    # Added Error Handling
+    try:
+        detailed_logger.error('Worktree contains unstaged changes. Exact Error: %s', error_message, exc_info=True)
+    except Exception as e:
+        detailed_logger.error('An error occurred while logging worktree change error.', exc_info=True)
+
+def log_pactflow_response(headers: dict, body: str) -> None:
+    # Improved Error Handling
+    try:
+        detailed_logger.info('Pactflow Response Headers: %s', str(headers))
+        detailed_logger.info('Pactflow Response Body: %s', body)
+    except Exception as e:
+        detailed_logger.error('An error occurred during the logging of pactflow response.', exc_info=True)
+
+def log_build_process(msg: str, level: str = 'info') -> None:
+    # Improved Error Handling
+    try:
+        log_func = getattr(build_logger, level, None)
+        if log_func:
+            log_func(msg)
+        else:
+            build_logger.warning('Log level %s not known, using info level instead', level)
+            build_logger.info(msg)
+    except Exception as e:
+        detailed_logger.error('An error occurred during the logging of build process.', exc_info=True)
+
+# Executor logger for function execution details
+def log_execution_details(func):
+    def wrapper(*args, **kwargs):
+        detailed_logger.info('Function %s called with args: %s, and kwargs: %s', func.__name__, args, kwargs)
+        detailed_logger.info('Running function %s...', func.__name__)
+        try:
+            result = func(*args, **kwargs)
+            detailed_logger.info('Function %s completed successfully.', func.__name__)
+            return result
+        except Exception as e:
+            detailed_logger.error('An error occurred while executing function %s.', func.__name__, exc_info=True)
+            tb = traceback.format_exc()
+            detailed_logger.error('Traceback:\n{}'.format(tb))
+            raise e
+    return wrapper
+
+# Error logger for unhandled exceptions
+def uncaught_exception_handler(type, value, tb):
+    detailed_logger.error('Uncaught exception: {}'.format(str(value)))
+    tb = traceback.format_exception(type, value, tb)
+    detailed_logger.error('Traceback: {}'.format(''.join(tb)))
+
+sys.excepthook = uncaught_exception_handler

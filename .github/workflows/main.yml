@@ -1,0 +1,20 @@
+            - name: ServiceNow CI/CD Instance Scan
+  # You may pin to the exact commit or the version.
+  # uses: ServiceNow/sncicd-instance-scan@3acee37296d42bfafcb50cb04253409a83b42c44
+  uses: ServiceNow/sncicd-instance-scan@2.0.0
+  with:
+    # Type of scan process. Can be equal to full, point, suite_combo, suite_scoped, suite_update.
+    scantype: 
+    # URL param if point scan type is specified.
+    targetTable: # optional
+    # URL param if point scan type is specified.
+    targetSysId: # optional
+    # URL param if suite_combo scan type is specified.
+    comboSysId: # optional
+    # URL param if suite_scoped or suite_update scan type is specified.
+    suiteSysId: # optional
+    # Payload params, comma separated(if suite_scoped or suite_update scan type is specified).
+    appScopeSysIds: # optional
+    # Payload params, comma separated(if suite_scoped or suite_update scan type is specified).
+    updateSetSysIds: # optional
+          

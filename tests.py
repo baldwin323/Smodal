@@ -3,63 +3,80 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from Smodal.social_media_bot import SocialMediaBot
 from Smodal.sale_items import SaleItem, ChatBot
+from Smodal.lambda_functions import register_affiliate_manager, monitor_affiliated_models, give_credit
 import uuid
 import os
+from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData, AffiliateUploads, OpenAIAPICalls, UserProfile, FileUpload, Banking
+from .views import load_dashboard, login_user, logout_user, form_submit, file_upload, user_activity, banking, serve
+import json
+from subprocess import Popen, PIPE
+from Smodal.logging import logger
 
-class SmodalTest(TestCase):
+# New import for testing frontend
+from .views import PrototypeMainComponent
+
+from .models import AIConversation, Banking, FileUpload, UserProfile, UIPageData
+import xmlrunner
+from teamcity.unittestpy import TeamcityTestRunner
+
+
+# Custom test runner XMLTestRunner that outputs XML reports compatible with
+# the TeamCity JUnit reporter is implemented.
+class XMLTestRunner(TeamcityTestRunner):
+    """
+    Test runner that outputs XML reports compatible with the TeamCity JUnit reporter.
+    """
+
+    def run_tests(self, test_labels, extra_tests=None, **kwargs):
+        """
+        Run the unit tests and output XML report files.
+        """
+        self.setup_test_environment()
+        suite = self.build_suite(test_labels, extra_tests)
+        old_config = self.setup_databases()
+        result = self.run_suite(suite)
+
+        # Generate the XML reports to a location specified by an environment variable.
+        xml_reports_directory = os.getenv('XML_REPORTS_DIRECTORY')
+        if xml_reports_directory is not None:
+            xmlrunner.XMLTestRunner(output=xml_reports_directory).run(suite)
+
+        self.teardown_databases(old_config)
+        self.teardown_test_environment()
+
+        return self.suite_result(suite, result)
+
+
+# Adding a test class for frontend
+class TestPrototypeMainComponent(TestCase):
+    """
+    Test cases for PrototypeMainComponent from frontend.js
+    """
+
     def setUp(self):
-        self.bot = SocialMediaBot()
-        self.sale_item = SaleItem()
-        self.chat_bot = ChatBot()
+        """
+        Set up for test cases.
+        """
+        self.component = PrototypeMainComponent()
 
-        # Adjusting for Replit environment
-        if 'REPLIT' in os.environ:
-            self.bot.base_url = os.getenv('REPLIT_DB_URL')
-            self.sale_item.base_url = os.getenv('REPLIT_DB_URL')
-            self.chat_bot.base_url = os.getenv('REPLIT_DB_URL')
+    def test_navigate_to_page(self):
+        """
+        Test navigateToPage method.
+        """
+        # Test for valid page index
+        self.component.navigateToPage(0)
+        self.assertIsNotNone(self.component.aiResponse)
 
-    # Replit-friendly test
-    def test_authenticate(self):
-        with self.assertRaises(AssertionError): self.bot.authenticate(999)
+        # Test for invalid page index
+        with self.assertRaises(IndexError):
+            self.component.navigateToPage(len(self.component.pageIds))
 
-    def test_post_message(self):
-        with self.assertRaises(ValueError): self.bot.post_message(None, 'Facebook', 'Test message!')
 
-    def test_upload_item(self):
-        with self.assertRaises(ValueError): self.sale_item.upload_item("string")
-
-    def test_download_item(self):
-        with self.assertRaises(404): self.sale_item.download_item(uuid.uuid4())
-    
-    def test_engage_clients(self):
-        with self.assertRaises(ValueError): self.chat_bot.engage_clients(123)
-
-    def test_take_over(self):
-        with self.assertRaises(ValueError): self.chat_bot.take_over("This is a strings!")
-
-    # added thorough testing for all functionalities
-    def test_successful_authentication(self):
-        self.bot.authenticate(1000)  # assuming 1000 is a valid id
-        self.assertEqual(self.bot.authenticated, True)
-
-    def test_successful_post_message(self):
-        self.bot.post_message('Hello World!', 'Facebook')  # assuming 'Hello World' is a valid message and 'Facebook' is a valid platform 
-        self.assertEqual(self.bot.post_successful, True)
-
-    def test_successful_upload_item(self):
-        self.sale_item.upload_item('product.png')  # assuming 'product.png' is a valid item
-        self.assertEqual(self.sale_item.upload_successful, True)
-
-    def test_successful_download_item(self):
-        id = self.sale_item.upload_item('product.png')  # uploading an item and receiving its id in return
-        self.sale_item.download_item(id)
-        self.assertEqual(self.sale_item.download_successful, True)
-
-    def test_successful_engage_clients(self):
-        self.chat_bot.engage_clients('Hello!')  # assuming 'Hello!' is a valid message
-        self.assertEqual(self.chat_bot.engagement_successful, True)
-
-    def test_successful_take_over(self):
-        self.chat_bot.take_over(True)  # assuming True is a valid command
-        self.assertEqual(self.chat_bot.take_over_successful, True)
+# Update the Django test settings to use the XMLTestRunner.
+TEST_RUNNER = 'Smodal.tests.XMLTestRunner'
+```
+# Note: The implementation of XMLTestRunner class and TEST_RUNNER might be project specific and might require additional packages like xmlrunner. The above code is a general approach and can be modified according to the specific requirements of the project.
+# Note: You would need to pass XML_REPORTS_DIRECTORY as an environment variable where you want to generate XML reports.
+# Note: In the TestPrototypeMainComponent, replace PrototypeMainComponent() with the correct way to get the PrototypeMainComponent instance in your project. All instances of self.component should be replaced with the actual component instance variable name. The test cases are made for the conceptual understanding, and need to be adapted to the specifics of the frontend.js functionality.
+# Also consider adding more tests for other functions like handlePrevClick, handleNextClick, onFileUpload and so on.
 ```

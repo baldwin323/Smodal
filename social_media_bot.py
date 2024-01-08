@@ -1,68 +1,51 @@
 ```python
-import os
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.views.decorators.http import require_http_methods
-from django.core.exceptions import ValidationError, SuspiciousOperation
-from django.views import View
-from .models import User, Platform, AccessToken, SocialMediaBot
-from replit import db
+from pydantic import ValidationError
+from .logging import logger
+from .models import UserProfileModel, FileUploadModel, BankingModel, AIConversationModel, UIPageDataModel
+from .models import UserProfile, FileUpload, Banking, AIConversation, UIPageData
 
-# This file defines the SocialMediaBotView class, which encapsulates the behavior of a basic social media bot.
-# This bot has the ability to authenticate a user, post a message on behalf of the user, and fetch data from both GitHub and OpenAI.
+import hashlib, binascii, os
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import pad, unpad
 
-# Define your views here.
-class SocialMediaBotView(View):
-    # The bot attribute will store an instance of the SocialMediaBot class.
-    bot = None
+SECRET_KEY = "This is a secret"
+BLOCK_SIZE = 16
 
-    # The get method allows the bot to authenticate a user.
-    def get(self, request, user_id):
+class SocialMediaBot:
+
+    def encrypt(self, plain_text: str, password: str) -> bytes:
         try:
-            self.bot = SocialMediaBot()
-            self.bot.authenticate(user_id)
-            return HttpResponse(f"Authenticated user {user_id}!")
-        except User.DoesNotExist:
-            return HttpResponse("User does not exist", status=404)
+            salt = os.urandom(BLOCK_SIZE)
+            key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
+            cipher_config = AES.new(key, AES.MODE_CBC)
+            cipher_text = cipher_config.encrypt(pad(plain_text.encode(), BLOCK_SIZE))
+            return binascii.hexlify(salt + cipher_text)
         except Exception as e:
-            return HttpResponse(f"Error: {e}", status=500)
+            logger.error(f"Error during encryption: {e}")
+            return f"Error during encryption: {e}"
 
-    # The post method allows the bot  to post a message to a specified platform on behalf of the user.
-    def post(self, request, user_id, platform_name, message):
-        if not all([user_id, platform_name, message]):
-          # Data validation for the request params.
-          raise SuspiciousOperation("Invalid form data")
-
+    def decrypt(self, cipher_text: bytes, password: str) -> bytes:
         try:
-            self.bot.post_message(user_id, platform_name, message)
-            return HttpResponse(f"Posted message {message} to {platform_name} for user {user_id}!")
-        except Platform.DoesNotExist:
-            return HttpResponse("Platform does not exist", status=404)
-        except AccessToken.DoesNotExist:
-            return HttpResponse("Invalid Access Token", status=403)
+            cipher_text = binascii.unhexlify(cipher_text)
+            salt, cipher_text = cipher_text[:BLOCK_SIZE], cipher_text[BLOCK_SIZE:]
+            key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
+            cipher_config = AES.new(key, AES.MODE_CBC, iv=salt)
+            return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE).decode()
         except Exception as e:
-            return HttpResponse(f"Error: {e}", status=500)
+            logger.error(f"Error during decryption: {e}")
+            return f"Error during decryption: {e}"
 
-    # The get_data_from_github method will fetch data from GitHub.
-    def get_data_from_github(self, user_id):
-        try:
-            data = self.bot.get_github_data(user_id)
-            db[f"github_data_{user_id}"] = data
-            return HttpResponse("Fetched data from GitHub")
-        except Exception as e:
-            # Include option to log same while on Replit for error monitoring 
-            print(f"Error fetching Github data: {e}", file=os.sys.stderr)
-            return HttpResponse(f"Error: {e}", status=500)
+    def authenticate(self, user_id: str, decoded_data: str):
+        # authenticate method using the new pydantic model
+        user = UserProfile.parse_raw(decoded_data)
+        if user_id != user.id:
+            raise ValidationError(f"User id did not match")
 
-    # The get_data_from_openai method will fetch data from OpenAI.
-    def get_data_from_openai(self, user_id):
-        try:
-            data = self.bot.get_openai_data(user_id)
-            db[f"openai_data_{user_id}"] = data
-            return HttpResponse("Fetched data from OpenAI")
-        except Exception as e:
-            # Include option to log same while on Replit for error monitoring
-            print(f"Error fetching OpenAI data: {e}", file=os.sys.stderr)
-            return HttpResponse(f"Error: {e}", status=500)
+    def post_message(self, user_id: str, platform_name: str, message: str):
+        # method for performing api call to post message using the new pydantic models
+        post_data = UIPageData.parse_raw(message)
+        # Simulating API call and response
+        response = post_data
+        return response
 ```
-Based on the plan, I made adjustments to ensure that the methods for user authentication, posting messages, and fetching data work correctly on Replit. Notably, I've used the `replit` built-in database to store Github and OpenAI data fetched for the user. This database can be used for persistent data storage in a Replit environment.
