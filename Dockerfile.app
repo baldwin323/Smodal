@@ -1,4 +1,4 @@
-```Dockerfile
+Dockerfile
 # Stage 1: Node.js build
 FROM node:14 AS build
 WORKDIR /app
