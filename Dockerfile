@@ -1,4 +1,4 @@
-```Dockerfile
+Dockerfile
 # Python image to use as a base
 FROM python:3.9-slim as builder
 
