@@ -1,0 +1,61 @@
+```yml
+version: '3'
+services:
+  web: 
+    build: 
+      context: ./Web
+      dockerfile: Dockerfile
+    # Using nginx + gunicorn as the WSGI HTTP Server to improve performance and security
+    command: nginx && gunicorn app:app 
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    env_file:
+      - .env 
+    depends_on: 
+      - db
+    restart: always
+    environment:  
+      - APP_ENV=production
+  client: 
+    build:
+      # Execute a shell command that checks if docker-compose is present, if not it installs it
+      # Also ensuring Angular version of project is 17 for modern styled application
+      command: >
+        bash -c "which docker-compose || (apt-get update && apt-get install -y docker-compose) && (ng version | grep 'Angular CLI: 17.' || npm i -g @angular/cli@17)"
+      context: ./modal.tokai
+      dockerfile: Dockerfile.angular
+      args:
+        - environment=production
+    volumes: 
+      - './:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - '4200:4200'
+    depends_on:
+      - web
+    restart: always
+    environment:
+      - NODE_ENV=production
+  db: 
+    image: mongo:latest  
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=mongodatabase
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+volumes:
+  mongo_data:
+
+# Changes made:
+# 'client' service's context changed from './client' to './modal.tokai' reflecting the name change.
+# docker-compose checked and installed in 'client' service.
+# Checking if Angular version in the project is 17 in 'client' service. If not, installing the specific version.
+# nginx added in 'web' service's command along with gunicorn as the WSGI HTTP Server for improved performance and security.
+# Other parts of the file remain unchanged.
+```

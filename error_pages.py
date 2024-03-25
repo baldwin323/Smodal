@@ -1,20 +1,90 @@
-from django.shortcuts import render
+import logging
 
-# Create your views here.
-# Custom 404 error page for Replit
-def handler404(request, exception):
-    # Render the '404.html' template and return an HTTP response with status code 404.
-    content = {
-        'error_code': '404', 
-        'error_message': 'Page Not Found'
-    }
-    return render(request, '404.html', content, status=404)
+from pydantic.error_wrappers import ErrorWrapper, ValidationError
+from Smodal.models import UserProfileModel, FileUploadModel, BankingModel, AIConversationModel, UIPageDataModel
 
-# Custom 500 error page for Replit
-def handler500(request):
-    # Render the '500.html' template and return an HTTP response with status code 500.
-    content = {
-        'error_code': '500', 
-        'error_message': 'Internal Server Error'
+# Import the logging module to allow logging of exceptions
+logger = logging.getLogger(__name__)
+
+class ErrorDetails:
+    '''
+    A class to handle HTTP errors
+    Contains properties for HTTP status code and appropriate HTML template
+    Also have a property to handle API related errors
+    '''
+    def __init__(self, code, message):
+        self.code = code
+        self.message = message
+
+# Adding 503 error to the error_detail dictionary.
+error_details = {
+    400: ErrorDetails(400, "Bad Request. The server could not understand the request."),
+    404: ErrorDetails(404, "Page Not Found. The resource requested could not be found on the server."),
+    500: ErrorDetails(500, "Internal Server Error. The server encountered an unexpected condition."),
+    503: ErrorDetails(503, "Service Unavailable. The server is currently unable to handle the request."),
+
+}
+
+def handle_exception(exception, error_code):
+    error_detail = error_details.get(error_code)
+    error_message = error_detail.message if error_detail else "Unknown Error"
+
+    if isinstance(exception, (ErrorWrapper, ValidationError)):
+        # Pydantic model related errors are handled here
+        logger.error(f'HTTP {error_code}: {str(exception)}, Error: {error_message}')
+    else if error_code in [500, 503]:  # Include 503 along with 500
+        logger.error(f'HTTP {error_code}: Unhandled exception, Error: {error_message}')
+
+    return error_code, error_message
+
+def error_handler(exception, error_code):
+    '''
+    A function to handle HTTP errors
+    Returns HTTP status code and error message
+    Note: Unlike Django, Pydantic errors don't involve rendering HTML templates
+    '''
+
+    error_code, error_message = handle_exception(exception, error_code)
+    if 'API' in str(exception):
+        error_message = f"API Error: {str(exception)}"
+        logger.error(f'API Error, Error: {error_message}')
+
+    return {
+        'error_code': error_code,
+        'error_message': error_message,
     }
-    return render(request, '500.html', content, status=500)
+
+
+def handler400(exception=None):
+    '''
+    Function to handle 400 error,
+    calls error_handler with 400 code
+    and handles the logging
+    '''
+    return error_handler(exception, 400)
+
+
+def handler404(exception=None):
+    '''
+    Function to handle 404 error,
+    calls error_handler with 404 code
+    and handles the logging
+    '''
+    return error_handler(exception, 404)
+
+
+def handler500(exception=None):
+    ''' 
+    Function to handle 500 error,
+    calls error_handler with 500 code
+    and handles the logging
+    '''
+    return error_handler(exception, 500)
+    
+def handler503(exception=None):
+    ''' 
+    Function to handle 503 error, 
+    calls error_handler with 503 code 
+    and handles the logging 
+    ''' 
+    return error_handler(exception, 503)

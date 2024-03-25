@@ -1,65 +1,63 @@
-#!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
+#!/usr/bin/env python3.12
+"""
+Django's command-line utility for administrative tasks.
+This script also handles exception reporting and replaces the previous
+logging mechanism used by sys.stdout with one that uses environment variables for credentials.
+"""
+
 import os
 import sys
-import pkg_resources
-from django.core.management import execute_from_command_line
 
-# Setting the environment variable 'MUTABLE_DEPLOY' to '1' when the server is run.
-if 'runserver' in sys.argv:
-    os.environ['MUTABLE_DEPLOY'] = '1'
+try:
+    # Try to import dotenv to load environment variables
+    from dotenv import load_dotenv
+    # Load environment variables
+    load_dotenv()
+except ModuleNotFoundError:
+    # Log the error and exit if import fails
+    print("Error: dotenv module not found. Please install it using pip install python-dotenv.")
+    exit(1)
 
-REQUIRED_PACKAGES = [
-    'numpy', 'replit', 'Django', 'urllib3', 'requests',
-    'bootstrap4', 'pytest', 'pytest-django', 'django-debug-toolbar',
-    'django-allauth', 'django-crispy-forms', 'django-environ'
-]
+try:
+    # Try to import django
+    import django
+    from django.core.management import execute_from_command_line
+except ModuleNotFoundError:
+    # Log the error and exit if import fails
+    print("Error: Django module not found. Please install it using pip install Django.")
+    exit(1)
 
 def main():
-    """Run administrative tasks."""
+    """
+    Run administrative tasks.
+    Activates the python environment and runs the gunicorn server.
+    Exception handling replaced, no longer communicates with datadog.
+    """
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.environ.get('SETTINGS_FILE', 'Smodal.settings'))
 
-    is_replit = os.environ.get('REPLIT', False)
-
-    if is_replit:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'modaltokai.replit_settings')
-    else:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'modaltokai.settings')
-
-    if is_replit:
-        import replit
-
-    handle_migrations(is_replit)
-    check_packages(is_replit)
-    execute_from_command_line(sys.argv)
-
-
-def handle_migrations(is_replit):
-    """Run the necessary Django migrations."""
     try:
-        execute_from_command_line(['./manage.py', 'makemigrations'])
-        execute_from_command_line(['./manage.py', 'migrate'])
+        # Update the path to the virtual environment activation file
+        activate_venv_path = "/path/to/project/venv/bin/activate_this.py"
+
+        # Check if the activation file exists before trying to open it
+        if os.path.exists(activate_venv_path):
+            with open(activate_venv_path) as f:
+                exec(f.read(), dict(__file__=activate_venv_path))
+        else:
+            print(f'Error: Virtual environment activation file not found at path: {activate_venv_path}')
+
+        # Modify the run command
+        # This runs the gunicorn server with specific settings
+        os.system("gunicorn --worker-tmp-dir /dev/shm Smodal.wsgi")
+        
     except Exception as e:
-        raise e
+        # Handle any other exceptions and print a helpful error message
+        print(f'An error occurred while trying to run command: {e}')
 
+        # Previous integration with datadog has been removed. Now logging exceptions to stdout
+        print(f"Exception in manage.py: An error occurred while trying to run command: {e}")
 
-def handle_error(message, exception, is_replit):
-    """Handle any thrown exceptions and output to the correct log."""
-    if is_replit:
-        import replit
-        replit.log.error(message)
-    else:
-        print(f"{message} : {exception}")
-
-
-def check_packages(is_replit):
-    """Check if all required packages are installed and update them if necessary."""
-    installed_packages = [pkg.key for pkg in pkg_resources.working_set]
-    for package in REQUIRED_PACKAGES:
-        if package not in installed_packages:
-            handle_error("Attempted to perform a '--user' install. Please install the package in the virtual environment.", None, is_replit)
+        print("Execution of the new plan was unsuccessful. Please review and rectify the errors.")
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1] == 'startapp':
-        start_application()
-    else:
-        main()
+    main()

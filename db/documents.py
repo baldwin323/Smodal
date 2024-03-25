@@ -1,10 +1,14 @@
 
+# added import for os to retrieve environment variables
+import os
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
 # mongo setup
-client = MongoClient('your-connection-string')
-db = client['database-name']
+# modified the MongoClient connection string to use environment variables for better security
+client = MongoClient(os.getenv('MONGO_CONNECTION_STRING'))
+# modified the database name to use environment variable for better compatibility
+db = client[os.getenv('MONGO_DATABASE_NAME')]
 
 col_documents = db['documents']
 

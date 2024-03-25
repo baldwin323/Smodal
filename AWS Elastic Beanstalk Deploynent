@@ -1,0 +1,25 @@
+- /Smodal/lambda_functions.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/logging.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/models.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/watch_page_modal.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/tests.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/social_media_bot.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/views.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/pull_request_editor.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/deploy.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/kubectl_nodes.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/error_pages.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/urls.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.
+
+- /Smodal/manage.py: No changes are required, but this file is needed for the AWS Elastic Beanstalk deployment as it is a Python script that makes up the application.

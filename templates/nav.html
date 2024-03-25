@@ -3,18 +3,50 @@
 
 <head>
     <!-- Start of head section -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Navigation</title> <!-- Title of the page -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"> <!-- Linking CSS for this page -->
+    <!-- External CSS for this page. Colors updated to dark gray and chrome -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nav_darkgray_chrome.css' %}">
     <!-- End of head section -->
 </head>
 
 <body>
     <!-- Start of body section -->
-    <div class="navbar"> <!-- Navbar for the application -->
-        <a href="{% url 'home' %}">Home</a> <!-- Home page link -->
-        <a href="{% url 'watch' %}">Watch</a> <!-- Watch page link -->
-        <a href="{% url 'about' %}">About</a> <!-- About page link -->
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> <!-- Navbar colors updated for the application -->
+        <a class="navbar-brand" href="{% url 'home' %}">Home</a> <!-- Home page link -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'watch' %}">Watch</a> <!-- Watch page link -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">About</a> <!-- About page link -->
+                </li>
+                <!-- Updated page links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'newPage1' %}">New Page 1</a> <!-- New Page 1 link -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'newPage2' %}">New Page 2</a> <!-- New Page 2 link -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'newPage3' %}">New Page 3</a> <!-- New Page 3 link -->
+                </li>
+                <!-- Added new features link -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'affiliate_manager' %}">Affiliate Manager</a> <!-- Affiliate Manager page link -->
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'openAI_APIcalls' %}">AI Services</a> <!-- AI Services page link -->
+                </li>
+            </ul>
+        </div>
+    </nav>
     <!-- End of body section -->
 </body>
 

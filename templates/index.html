@@ -6,22 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'styles/style.css' %}">
     <link rel="stylesheet" href="{% static 'styles/responsive.css' %}">
-    <script>
-        function delayRedirection() {
-            setTimeout(function() {
-                window.location.href = "/login";
-            }, 7000);
-        }
-        window.onload = delayRedirection;
-    </script>
+    <link rel="stylesheet" href="{% static 'styles/index.css' %}">
+    <script src="{% static 'js/delayRedirection.js' %}"></script>
 </head>
 <body>
     {% include 'includes/header.html' %}
 
     {% if user_id %}
+        <section>
+            <h2>Social Media Credentials</h2>
+            <form method="post" action="{% url 'social_login' %}">
+                <label for="social_site">Select Social Media Site:</label>
+                <select id="social_site" name="social_site">
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="instagram">Instagram</option>
+                    <!-- Add more options for social media sites as required -->
+                </select>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required="required">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required="required">
+                <label for="api_key">API Key:</label>
+                <input type="text" id="api_key" name="api_key" required="required">
+                <input type="submit" value="Submit">
+            </form>
+        </section>
         {% include 'users/dashboard.html' %}
     {% else %}
-        {% include 'users/login.html' %}
+        <section>
+            <h2>Welcome to Python Flask ReplAuth</h2>
+            <p>This application allows you to authenticate with your social media accounts and manage your data. Click on the Login button to get started!</p>
+            {% include 'users/login.html' %}
+        </section>
     {% endif %}
 
     {% include 'includes/footer.html' %}

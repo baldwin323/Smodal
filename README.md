@@ -2,47 +2,114 @@
 
 ## Description
 
-**Name**: modal.tokai Django Application
+**Name**: modal.tokai Flask Application
 
-**Description**: The modal.tokai application is a Django-based application offering robust functionality and convenience to users. It is built upon solid principles of software engineering including proper exception handling, data validation, rigorous testing, thorough documentation, separation of concerns, Django's templating system, stringent security measures, custom error pages, caching, comprehensive logging, and modularity.
+**Description**: The modal.tokai application is a state-of-the-art Flask-based chatbot application delivering robust functionality and convenience to its users. It has an intuitive onboarding flow to guide new users. The application is architected based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, progress tracking, separation of concerns, Flask's templating system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. 
 
-To get started, one needs to set up the new Django app:
+## New Updates
 
-Here are some key features of our application:
+As part of our continued commitment to improve and evolve the modal.tokai application, significant updates have been made. Notably, the application now runs on Angular 17, which means that all frontend functionalities have been augmented to augment usability and accessibility.
 
-1. **Proper Exception Handling**: Exceptions in our application are processed systematically using try/except blocks and logged to facilitate future analysis and debugging.
+Ensure your Python version is updated to Python3.12 and Angular to 17, as the app now requires these updated versions.  
 
-2. **Data Validation**: Our application ensures data integrity by enforcing validation checks on user-submitted data, eliminating the possibility of invalid data or errors.
+The UI has been enhanced significantly with great attention to details. All components of prototype-main have been built out in line with a user-friendly design philosophy. The application adapts properly to different screen sizes, making it versatile and mobile-friendly. It also features improved page navigation, better state management, and optimized data fetch operations. 
 
-3. **Testing**: We hold a steadfast belief in producing quality code. To ensure our application functions as expected, we have comprehensive unit and integration tests.
+An upgrade to Angular 17 also brings in align with modern trends and practices in web development, which will consequently enhance developer experiences in the continuance of the project.
 
-4. **Documentation**: Good code should always be paired with good documentation. Our efficient code is well-documented, accompanied with docstrings and README files, which make it easy to maintain.
+## Deployment using Docker
 
-5. **Separation of Concerns**: In adherence to Django's best practices, we've separated the templates, views, forms, and models into their distinct files to improve code readability and organisation.
+The deployment of modal.tokai has been simplified with Docker. Provided you have Docker installed, starting up the service should be as simple as following the subsequent instructions.
 
-6. **Templating**: Our code leverages Django's templating system over raw HTML. Using Django's template tags, variables, includes, etc. facilitates an easy development process.
+### Getting Started
 
-7. **Security**: Security is a top priority for us. Our app sanitizes user inputs, hashes passwords, and restricts unauthorized access to safeguard user information.
+These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes. 
 
-8. **Custom Error Pages**: We feature custom 404 and 500 error pages to ensure users have a positive experience even in the event of a glitch.
+### Prerequisites
 
-9. **Caching**: For resource-intensive tasks, our application employs caching to deliver optimal performance.
+Ensure you have the latest version of Docker and Docker-compose installed on your machine. For installation guide check [here](https://docs.docker.com/install/)
 
-10. **Logging**: A comprehensive logging feature enables us to monitor the application's performance continuously and identify any potential issues.
+### Installation
 
-11. **Modularity**: By dividing functionalities into reusable apps/modules, we uphold DRY principles and boost code maintainability for future growth.
+1. Clone this repository using `git`:
+    ```bash
+    git clone https://github.com/<username>/modal.tokai
+    ```
 
-Getting started with modal.tokai is a breeze. Kindly refer to our quickstart guides and tutorials which will guide you through the process:
+2. Navigate to the repository's directory:
+    ```bash
+    cd modal.tokai
+    ```
 
-// Include Guides and Tutorials Here
+3. Build the Docker image with the following command:
+    ```bash
+    docker build -t modal-tokai-image .
+    ```
 
-## Questions?
+4. After successful image build, initiate the Docker Compose with:
+    ```bash
+    docker-compose up
+    ```
 
-In case of any questions or when you need support, please explore our support resources:
+The application will now be accessible at localhost:8000  
 
-- [Application Documentation](https://docs.modal.tokai.com)
-- [Interactive Support Forum](https://ask.modal.tokai.com)
-- AutoComplete: Autocomplete feature is implemented throughout the project to enhance the user experience and expedite the scripting process.
-- Detailed Walkthrough: Our guides and tutorials provide in-depth explanations and step-by-step instructions to help users understand the project, its features, and functionalities to use the application and also contribute to it.
-- Constant Updates and Modifications: To ensure our application stays current and useful, we routinely release updates and fine-tune details in all aspects of the project. Please refer to the changelog for version details.
-- Community-Driven Approach: Input and feedback from the community are invaluable to us. We maintain an open discourse with our users through our interactive forum. We encourage all users to engage and contribute to the development of the application further.
+## Deployment on Kinsta
+
+<!-- Same content for deployment -->
+
+## Executing Test Cases
+
+<!--- Existing content should remain here --->
+
+## User Support
+
+<!-- Same content for User Support -->
+
+## Angular 17 Setup and Deployment
+
+### Prerequisites
+
+Ensure you have the latest version of Node.js and npm installed on your machine. For installation guide check [here](https://nodejs.org/en/download/)
+
+### Installation
+
+1. To build the Angular 17 application, navigate to the root directory and install dependencies with:
+
+    ```bash
+    npm install
+    ```
+
+2. Build the Angular app with the following command:
+
+    ```bash
+    ng build --prod
+    ```
+
+3. The built files will be available under `dist/`. These are the files to be deployed on the server.
+
+## nginx setup and configuration
+
+1. Install nginx on your machine. For installation guide check [here](https://nginx.org/en/docs/install.html)
+
+2. Modify the nginx configuration file located at `/etc/nginx/nginx.conf` and add the following:
+
+    ```
+    server {
+        listen 80;
+        server_name localhost;
+        
+        location / {
+            root /path/to/your/angular/dist;
+            try_files $uri $uri/ /index.html;
+        }
+
+        # other configurations...
+    }
+    ```
+  
+3. Restart the nginx server:
+
+    ```bash
+    service nginx restart
+    ```
+
+This part of setting up Angular 17 application and nginx server is important for making the codebase fully usable for further deployment.

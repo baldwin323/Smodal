@@ -1,0 +1,19 @@
+dockerfile
+# Use a Python base image
+FROM python:3.8
+
+# Set the working directory in the Docker image
+WORKDIR /
+
+# Copy the deployment script and any necessary configuration files into the Docker image
+COPY deploy.py /
+COPY Dockerrun.aws.json /
+
+# Install the AWS CLI and Elastic Beanstalk CLI
+RUN pip install awscli --upgrade --user && \
+    pip install awsebcli --upgrade --user
+
+# Set the entrypoint to the deployment script
+ENTRYPOINT ["python", "/deploy.py"]
+```
+This Dockerfile sets up the necessary environment for deploying your application to AWS. It uses a Python image, installs the AWS CLI and Elastic Beanstalk CLI, and sets the entrypoint to your deployment script. The Dockerrun.aws.json configuration file is also copied into the Docker image.

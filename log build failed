@@ -1,0 +1,128 @@
+2023-10-20T10:30:33.049797534Z [34m╭────────────[34m[30m[44m git repo clone [0m[0m[34m───────────╼[0m
+2023-10-20T10:30:33.049821692Z [34m│[0m [34m › fetching app source code[0m
+2023-10-20T10:30:33.049824945Z [34m│[0m => Selecting branch "main"
+2023-10-20T10:30:39.599642969Z [34m│[0m => Checking out commit "ec492b676da5c315db1c04baccdd32f0cdb58dcd"
+2023-10-20T10:30:44.319326650Z [34m│[0m 
+2023-10-20T10:30:44.320651449Z [34m│[0m [32m ✔ cloned repo to [35m/workspace[0m[0m
+2023-10-20T10:30:44.337566037Z [34m╰────────────────────────────────────────╼[0m
+2023-10-20T10:30:44.337602930Z 
+2023-10-20T10:30:44.479427158Z [34m › configuring build-time app environment variables:[0m
+2023-10-20T10:30:44.479455714Z      DJANGO_SECRET_KEY SECRET_KEY SETTINGS_FILE DEBUG DJANGO_USER DJANGO_USER_PASSWORD DJANGO_POSTGRESS_PASS
+2023-10-20T10:30:44.479459150Z 
+2023-10-20T10:30:44.481787223Z [34m › configuring custom build command to be run at the end of the build:[0m
+2023-10-20T10:30:44.483707624Z    [34m│[0m source /path/to/project/venv/bin/activate 
+2023-10-20T10:30:44.483911116Z    [34m│[0m pip install django
+2023-10-20T10:30:44.483915267Z    [34m│[0m pip install -r requirements.txt
+2023-10-20T10:30:44.483917036Z    [34m│[0m python manage.py makemigrations
+2023-10-20T10:30:44.483918829Z    [34m│[0m python manage.py migrate   
+2023-10-20T10:30:44.483920720Z    [34m│[0m python manage.py collectstatic
+2023-10-20T10:30:44.484273806Z    [34m│[0m exit
+2023-10-20T10:30:44.484276853Z 
+2023-10-20T10:30:44.636683182Z [34m╭────────────[34m[30m[44m buildpack detection [0m[0m[34m───────────╼[0m
+2023-10-20T10:30:44.651764314Z [34m│[0m [34m › using Ubuntu 22.04 stack[0m
+2023-10-20T10:30:44.820102295Z [34m│[0m Detected the following buildpacks suitable to build your app:
+2023-10-20T10:30:44.820130545Z [34m│[0m 
+2023-10-20T10:30:44.820135055Z [34m│[0m    heroku/nodejs-engine           v0.5.2    
+2023-10-20T10:30:44.820137498Z [34m│[0m    digitalocean/node              v0.3.6    (Node.js)
+2023-10-20T10:30:44.820140056Z [34m│[0m    digitalocean/python-appdetect  v0.0.3    
+2023-10-20T10:30:44.820142470Z [34m│[0m    heroku/python                  v2.234.4  (Python)
+2023-10-20T10:30:44.820159334Z [34m│[0m    digitalocean/procfile          v0.0.4    (Procfile)
+2023-10-20T10:30:44.820162383Z [34m│[0m    digitalocean/custom            v0.1.2    (Custom Build Command)
+2023-10-20T10:30:44.820164621Z [34m│[0m 
+2023-10-20T10:30:44.820167383Z [34m│[0m For documentation on the buildpacks used to build your app, please see:
+2023-10-20T10:30:44.820169710Z [34m│[0m 
+2023-10-20T10:30:44.820172059Z [34m│[0m    Node.js  v0.3.6    https://do.co/apps-buildpack-node
+2023-10-20T10:30:44.820174665Z [34m│[0m    Python   v2.234.4  https://do.co/apps-buildpack-python
+2023-10-20T10:30:44.822402757Z [34m╰─────────────────────────────────────────────╼[0m
+2023-10-20T10:30:44.822572936Z 
+2023-10-20T10:30:44.825193031Z [34m╭────────────[34m[30m[44m app build [0m[0m[34m───────────╼[0m
+2023-10-20T10:30:44.851479471Z [34m│[0m ---> Node.js Buildpack
+2023-10-20T10:30:44.883828871Z [34m│[0m ---> Installing toolbox
+2023-10-20T10:30:44.884562860Z [34m│[0m ---> - jq
+2023-10-20T10:30:45.315492735Z [34m│[0m ---> - yj
+2023-10-20T10:30:45.654604689Z [34m│[0m ---> Getting Node version
+2023-10-20T10:30:45.657957316Z [34m│[0m ---> Resolving Node version
+2023-10-20T10:30:46.521875007Z [34m│[0m ---> Downloading and extracting Node v16.20.2
+2023-10-20T10:30:48.428596218Z [34m│[0m ---> Parsing package.json
+2023-10-20T10:30:48.861340671Z [34m│[0m ---> No file to start server
+2023-10-20T10:30:48.861562860Z [34m│[0m ---> either use 'docker run' to start container or add index.js or server.js
+2023-10-20T10:30:48.872413944Z [34m│[0m Project contains package-lock.json, using npm
+2023-10-20T10:30:49.215699416Z [34m│[0m Using npm v8.19.4. To configure a different version of npm, set the engines.npm property in package.json.
+2023-10-20T10:30:49.215740303Z [34m│[0m   See https://do.co/apps-buildpack-node for further instructions.
+2023-10-20T10:30:49.215985476Z [34m│[0m Installing node_modules using npm (from package-lock.json)
+2023-10-20T10:30:49.464239877Z [34m│[0m Running npm ci
+2023-10-20T10:30:49.464276010Z [34m│[0m 
+2023-10-20T10:30:52.318774417Z [34m│[0m 
+2023-10-20T10:30:52.318813748Z [34m│[0m added 120 packages, and audited 121 packages in 3s
+2023-10-20T10:30:52.318819355Z [34m│[0m 
+2023-10-20T10:30:52.318822991Z [34m│[0m 10 packages are looking for funding
+2023-10-20T10:30:52.318826044Z [34m│[0m   run `npm fund` for details
+2023-10-20T10:30:52.321191865Z [34m│[0m 
+2023-10-20T10:30:52.321216315Z [34m│[0m 2 critical severity vulnerabilities
+2023-10-20T10:30:52.321221156Z [34m│[0m 
+2023-10-20T10:30:52.321224537Z [34m│[0m To address all issues, run:
+2023-10-20T10:30:52.321407931Z [34m│[0m   npm audit fix
+2023-10-20T10:30:52.321421492Z [34m│[0m 
+2023-10-20T10:30:52.321425158Z [34m│[0m Run `npm audit` for details.
+2023-10-20T10:30:52.321749157Z [34m│[0m npm notice 
+2023-10-20T10:30:52.321766723Z [34m│[0m npm notice New major version of npm available! 8.19.4 -> 10.2.1
+2023-10-20T10:30:52.321770200Z [34m│[0m npm notice Changelog: <https://github.com/npm/cli/releases/tag/v10.2.1>
+2023-10-20T10:30:52.321772581Z [34m│[0m npm notice Run `npm install -g npm@10.2.1` to update!
+2023-10-20T10:30:52.321774836Z [34m│[0m npm notice 
+2023-10-20T10:30:52.328679938Z [34m│[0m 
+2023-10-20T10:30:52.470975835Z [34m│[0m -----> No Python version was specified. Using the buildpack default: python-3.11.4
+2023-10-20T10:30:52.471011122Z [34m│[0m        To use a different version, see: https://devcenter.heroku.com/articles/python-runtimes
+2023-10-20T10:30:53.091958603Z [34m│[0m -----> Installing python-3.11.4
+2023-10-20T10:30:55.788619702Z [34m│[0m -----> Installing pip 23.2.1, setuptools 68.0.0 and wheel 0.41.0
+2023-10-20T10:30:59.535572508Z [34m│[0m -----> Installing SQLite3
+2023-10-20T10:31:06.307239069Z [34m│[0m -----> Installing requirements with pip
+2023-10-20T10:31:07.337454204Z [34m│[0m Running custom build command: source /path/to/project/venv/bin/activate 
+2023-10-20T10:31:07.337487757Z [34m│[0m pip install django
+2023-10-20T10:31:07.337492887Z [34m│[0m pip install -r requirements.txt
+2023-10-20T10:31:07.337496511Z [34m│[0m python manage.py makemigrations
+2023-10-20T10:31:07.337499431Z [34m│[0m python manage.py migrate   
+2023-10-20T10:31:07.337502575Z [34m│[0m python manage.py collectstatic
+2023-10-20T10:31:07.337505872Z [34m│[0m exit
+2023-10-20T10:31:07.340608980Z [34m│[0m bash: line 1: /path/to/project/venv/bin/activate: No such file or directory
+2023-10-20T10:31:07.360715988Z [34m│[0m Traceback (most recent call last):
+2023-10-20T10:31:07.360747722Z [34m│[0m   File "/app/.heroku/python/bin/pip", line 5, in <module>
+2023-10-20T10:31:07.361035736Z [34m│[0m     from pip._internal.cli.main import main
+2023-10-20T10:31:07.361056534Z [34m│[0m   File "/app/.heroku/python/lib/python3.11/site-packages/pip/_internal/__init__.py", line 4, in <module>
+2023-10-20T10:31:07.361061204Z [34m│[0m     from pip._internal.utils import _log
+2023-10-20T10:31:07.361067082Z [34m│[0m   File "/app/.heroku/python/lib/python3.11/site-packages/pip/_internal/utils/_log.py", line 8, in <module>
+2023-10-20T10:31:07.361070252Z [34m│[0m     import logging
+2023-10-20T10:31:07.361073340Z [34m│[0m   File "/app/logging.py", line 2, in <module>
+2023-10-20T10:31:07.361076713Z [34m│[0m     from logging import handlers
+2023-10-20T10:31:07.361316922Z [34m│[0m ImportError: cannot import name 'handlers' from partially initialized module 'logging' (most likely due to a circular import) (/app/logging.py)
+2023-10-20T10:31:07.384932793Z [34m│[0m Traceback (most recent call last):
+2023-10-20T10:31:07.384963238Z [34m│[0m   File "/app/.heroku/python/bin/pip", line 5, in <module>
+2023-10-20T10:31:07.384969961Z [34m│[0m     from pip._internal.cli.main import main
+2023-10-20T10:31:07.384973453Z [34m│[0m   File "/app/.heroku/python/lib/python3.11/site-packages/pip/_internal/__init__.py", line 4, in <module>
+2023-10-20T10:31:07.384976784Z [34m│[0m     from pip._internal.utils import _log
+2023-10-20T10:31:07.384979658Z [34m│[0m   File "/app/.heroku/python/lib/python3.11/site-packages/pip/_internal/utils/_log.py", line 8, in <module>
+2023-10-20T10:31:07.385004404Z [34m│[0m     import logging
+2023-10-20T10:31:07.385008144Z [34m│[0m   File "/app/logging.py", line 2, in <module>
+2023-10-20T10:31:07.385304232Z [34m│[0m     from logging import handlers
+2023-10-20T10:31:07.385324153Z [34m│[0m ImportError: cannot import name 'handlers' from partially initialized module 'logging' (most likely due to a circular import) (/app/logging.py)
+2023-10-20T10:31:07.407837375Z [34m│[0m Traceback (most recent call last):
+2023-10-20T10:31:07.407861552Z [34m│[0m   File "/workspace/manage.py", line 12, in <module>
+2023-10-20T10:31:07.407866053Z [34m│[0m     from django.core.management import execute_from_command_line
+2023-10-20T10:31:07.407868364Z [34m│[0m ModuleNotFoundError: No module named 'django'
+2023-10-20T10:31:07.429893707Z [34m│[0m Traceback (most recent call last):
+2023-10-20T10:31:07.429913537Z [34m│[0m   File "/workspace/manage.py", line 12, in <module>
+2023-10-20T10:31:07.429917486Z [34m│[0m     from django.core.management import execute_from_command_line
+2023-10-20T10:31:07.429919702Z [34m│[0m ModuleNotFoundError: No module named 'django'
+2023-10-20T10:31:07.451652073Z [34m│[0m Traceback (most recent call last):
+2023-10-20T10:31:07.451674152Z [34m│[0m   File "/workspace/manage.py", line 12, in <module>
+2023-10-20T10:31:07.451678281Z [34m│[0m     from django.core.management import execute_from_command_line
+2023-10-20T10:31:07.451680459Z [34m│[0m ModuleNotFoundError: No module named 'django'
+2023-10-20T10:31:07.456826838Z [34m│[0m building: exit status 1
+2023-10-20T10:31:07.457327650Z [34m│[0m [31;1mERROR: [0mfailed to build: exit status 1
+2023-10-20T10:31:07.703602508Z [34m│[0m 
+2023-10-20T10:31:07.706609137Z [34m│[0m 
+2023-10-20T10:31:07.706779847Z [34m│[0m For documentation on the buildpacks used to build your app, please see:
+2023-10-20T10:31:07.706790494Z [34m│[0m 
+2023-10-20T10:31:07.706794626Z [34m│[0m    Node.js  v0.3.6    https://do.co/apps-buildpack-node
+2023-10-20T10:31:07.706797563Z [34m│[0m    Python   v2.234.4  https://do.co/apps-buildpack-python
+2023-10-20T10:31:07.707317277Z [34m│[0m 
+2023-10-20T10:31:07.715128648Z [34m│[0m [31m ✘ build failed[0m

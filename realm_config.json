@@ -1,0 +1,13 @@
+{
+    // Updated App ID as per the new information
+    "app_id": "data-evpxv",
+    "config_version": 20210101,
+    "name": "data",
+    "location": "US-OR",
+    
+    // Removed AWS provider. Changed to local provider for local deployment.
+    "provider_region": "local",
+
+    // Deployment model changed to local
+    "deployment_model": "LOCAL"
+}
